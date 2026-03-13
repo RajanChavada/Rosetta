@@ -27,14 +27,29 @@ const __dirname = path.dirname(__filename);
  * Beautiful ASCII Banner
  */
 function showBanner() {
-  const banner = `
-   ${chalk.cyan.bold('┏┓┏┓┏┳┓┏┓┏┓')}
-   ${chalk.cyan.bold('┃┃┃┃ ┃ ┣┫┃┃')}
-   ${chalk.cyan.bold('┛┗┗┛ ┻ ┛┗┗┛')}
-   ${chalk.blue.bold('ROSETTA')} ${chalk.gray('v0.1.0')}
-  `;
-  console.log(banner);
-  console.log(chalk.gray('  Single Source of Truth for AI Agents\n'));
+  const width = process.stdout.columns || 80;
+  const line = '━'.repeat(Math.min(width, 60));
+
+  const banner = [
+    ' ██████╗  ██████╗ ███████╗███████╗████████╗███████╗ █████╗ ',
+    ' ██╔══██╗██╔═══██╗██╔════╝██╔════╝╚══██╔══╝██╔════╝██╔══██╗',
+    ' ██████╔╝██║   ██║███████╗█████╗     ██║   █████╗  ███████║',
+    ' ██╔══██╗██║   ██║╚════██║██╔══╝     ██║   ██╔══╝  ██╔══██║',
+    ' ██║  ██║╚██████╔╝███████║███████╗    ██║   ███████╗██║  ██║',
+    ' ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝    ╚═╝   ╚══════╝╚═╝  ╚═╝'
+  ].map(l => l.padStart(l.length + Math.floor((width - 60) / 2))).join('\n');
+
+  const versionPill = chalk.bgBlue.white.bold(' 🏷️ v0.1.0 ');
+  const statusPill = chalk.bgGreen.black.bold(' ✨ STABLE ');
+  const modePill = chalk.bgMagenta.white.bold(' ⚡ CLI ');
+
+  const pills = `${versionPill} ${statusPill} ${modePill}`;
+  const pillPadding = ' '.repeat(Math.max(0, Math.floor((width - 34) / 2))); // 34 is approx width of 3 pills
+
+  console.log('\n' + banner);
+  console.log(`${pillPadding}${pills}\n`);
+  console.log(chalk.gray(`${' '.repeat(Math.floor((width - 40) / 2))}Single Source of Truth for AI Agents\n`));
+  console.log(chalk.gray(`${' '.repeat(Math.floor((width - Math.min(width, 60)) / 2))}${line}\n`));
 }
 
 
@@ -256,7 +271,7 @@ async function loadConfig() {
   if (await fs.pathExists(profileFile)) {
     const activeData = await fs.readJson(profileFile);
     config._activeProfile = activeData.active;
-    
+
     const registryPath = path.join(profileDir, 'registry.json');
     if (await fs.pathExists(registryPath)) {
       const registry = await fs.readJson(registryPath);
