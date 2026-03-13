@@ -1,12 +1,12 @@
 <div align="center">
 
 ```text
- ██████╗  ██████╗ ███████╗███████╗████████╗███████╗ █████╗ 
- ██╔══██╗██╔═══██╗██╔════╝██╔════╝╚══██╔══╝██╔════╝██╔══██╗
- ██████╔╝██║   ██║███████╗█████╗     ██║   █████╗  ███████║
- ██╔══██╗██║   ██║╚════██║██╔══╝     ██║   ██╔══╝  ██╔══██║
- ██║  ██║╚██████╔╝███████║███████╗    ██║   ███████╗██║  ██║
- ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝    ╚═╝   ╚══════╝╚═╝  ╚═╝
+ ██████╗  ██████╗ ███████╗███████╗████████╗████████╗ █████╗ 
+ ██╔══██╗██╔═══██╗██╔════╝██╔════╝╚══██╔══╝╚══██╔══╝██╔══██╗
+ ██████╔╝██║   ██║███████╗█████╗     ██║      ██║   ███████║
+ ██╔══██╗██║   ██║╚════██║██╔══╝     ██║      ██║   ██╔══██║
+ ██║  ██║╚██████╔╝███████║███████╗    ██║      ██║   ██║  ██║
+ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝    ╚═╝      ╚═╝   ╚═╝  ╚═╝
 ```
 
 **Single source of truth for AI agent rules and engineering memory.**
@@ -26,8 +26,12 @@ Instead of duplicating instructions in every IDE-specific hidden file, you defin
 > **Status: v0.1 Beta** - Core semantics are stable. Commands marked with `(planned)` are on the roadmap.
 
 ```bash
-# Using node (recommended)
-node cli.js scaffold
+# Using npx (no installation required)
+npx rosetta-ai-blueprint scaffold
+
+# Or install globally
+npm install -g rosetta-ai-blueprint
+rosetta scaffold
 ```
 
 ---
@@ -38,7 +42,7 @@ node cli.js scaffold
 Run the following command in your project root to set up the architecture:
 
 ```bash
-node cli.js scaffold
+npx rosetta-ai-blueprint scaffold
 ```
 
 **Scaffold Output:**
@@ -89,24 +93,24 @@ Engineering memory usually answers "why was this built?" Rosetta answers "how sh
 
 **Scaffold** — Set up the `.ai/` directory and configure IDEs
 ```bash
-node cli.js scaffold
+rosetta scaffold
 ```
 
 **Sync** — Verify IDE wrappers or regenerate them from templates
 ```bash
-node cli.js sync --regenerate-wrappers
+rosetta sync --regenerate-wrappers
 ```
 
 **Watch** — Monitor `.ai/master-skill.md` for changes
 ```bash
-node cli.js watch
+rosetta watch
 ```
 
 ### Skill Management
 
 **New Skill** — Create a new stateless skill folder
 ```bash
-node cli.js new-skill api-auth
+rosetta new-skill api-auth
 ```
 
 ### Migration & Adoption (v1)
@@ -135,7 +139,7 @@ node cli.js new-skill api-auth
 Check if the repository is "Rosetta-compliant" and compute a health score.
 
 ```bash
-node cli.js health
+rosetta health
 ```
 
 **Health Check Output:**
