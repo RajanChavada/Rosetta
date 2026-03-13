@@ -1,68 +1,104 @@
-# Rosetta CLI
+# ┏┓┏┓┏┳┓┏┓┏┓
+# ┃┃┃┃ ┃ ┣┫┃┃
+# ┛┗┗┛ ┻ ┛┗┗┛
+# ROSETTA
 
-Rosetta is a single source of truth for AI coding "rules" and skills. It syncs or scaffolds platform-specific files for multiple IDEs and agents (Claude Code, Cursor, Antigravity, GitHub Copilot, GSD, etc.) from one master spec.
+> **Single Source of Truth for AI Agent Rules and Engineering Memory.**
 
-## Goal
+Rosetta is a CLI tool designed to help engineering teams maintain a consistent "Global Brain" for their AI agents (GitHub Copilot, Cursor, Windsurf, Claude Code) across an entire repository.
 
-- Manage a single source of truth in .ai/master-skill.md.
-- Align rules across multiple IDEs and agents.
-- Simple filesystem utility with no external dependencies or LLM calls.
+Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers (like `CLAUDE.md` or `.cursorrules`) that reference your project spec *without* using symlinks, ensuring maximum compatibility across all tools.
 
-## Installation
+---
 
-```bash
-# Clone the repo and install dependencies
-npm install
+## ⚡ Quickstart (Today)
 
-# Or use via npx (when published)
-npx rosetta
-```
+1. **Initialize Rosetta** in your repo:
+   ```bash
+   node cli.js scaffold
+   ```
+   *Note: In the future, this will be `npx rosetta scaffold`.*
 
-## Usage
+2. **Choose Your Path**:
+   - Select **"Scaffold new agentic coding setup"**.
+   - Pick the **"Agentic starter"** preset.
+   - Provide your tech stack and context (or skip to use defaults).
+   - Select the IDEs you use (VSCode, Cursor, etc.).
 
-Run the tool in your repository:
+3. **Explore Your Brain**:
+   - Inspect `.ai/master-skill.md` – This is your primary specification.
+   - Inspect `.ai/memory/PROJECT_MEMORY.md` – The home for architectural decisions.
+   - Look at your IDE wrappers (`CLAUDE.md`, `.cursorrules`) – They now point to the `.ai/` directory.
 
-```bash
-node cli.js
-# or if installed globally/linked
-rosetta
-```
+---
 
-### Commands
+## ✨ Key Features
 
-- **Interactive Mode**: `node cli.js` (or simply `rosetta`)
-- **Sync**: `rosetta sync [-r]` - Verify IDE wrappers (or regenerate from templates with `-r`).
-- **Watch**: `rosetta watch` - Watch master spec and log changes.
-- **New Skill**: `rosetta new-skill <name>` - Scaffold a new skill folder with boilerplate.
+- **Centralized Spec**: One master markdown file to rule them all.
+- **3-Layer Memory Protocol**:
+  - `PROJECT_MEMORY.md`: Long-lived architectural decisions.
+  - `AUTO_MEMORY.md`: Learned heuristics and agent "gotchas."
+  - `Daily Logs`: Chronological record of progress and experiments.
+- **Multi-IDE Support**: Automatically generates and updates wrappers for all major AI editors.
+- **Stateless Skills**: Pull in reusable skill templates from a global or local catalog.
 
-### Main Flows
+---
 
-1. **Scaffold New Setup**: For new or empty repositories. It creates .ai/master-skill.md and links it to selected IDE targets. Now includes Starter Templates (Minimal, Anthropic, Agentic Booster).
-2. **Sync Existing Setup**: For repositories that already have a master spec. It updates the target files from the master spec.
-3. **Migrate Existing Files**: For repositories that have existing agent files (like CLAUDE.md or .cursorrules) but no master spec yet. It helps create the master spec from existing sources and then syncs to other IDEs.
+## 🛠️ Commands & Roadmap
 
-## Starter Templates
+> **Status Note**: Rosetta is under active development. Commands marked with `(planned)` are on the roadmap but not yet fully implemented.
 
-When scaffolding, Rosetta now offers several baseline templates:
-- **Minimal**: A blank slate for your own rules.
-- **Anthropic / Claude Code Best Practices**: Follows the recommended structure for CLAUDE.md (Overview, Tech Stack, Architecture, Rules, Commands).
-- **Agentic Starter**: A set of rules optimized for agentic workflows (Research first, Plan before action, Incremental progress).
+### Core Commands
+- **Scaffold**: `rosetta scaffold` – Set up the `.ai/` architecture.
+- **Sync**: `rosetta sync` – Ensure IDE wrappers are consistent with the master spec.
+- **Watch**: `rosetta watch` – Monitor the master spec and notify on changes.
+- **New Skill**: `rosetta new-skill <name>` – Create a new stateless skill.
 
-## Supported IDEs & Targets
+### Planned Features
+- **Rescaffold (planned)**: `rosetta rescaffold <type>` – Selective re-generation of memory or IDE files.
+- **Migration (planned)**: 
+  - `rosetta migrate` – Interactive wizard to convert existing repos.
+  - `migrate-from-cursor` / `migrate-from-claude` – Specialized one-click migrations.
+- **Profiles (planned)**: `rosetta use-profile <name>` – Switch between team/org defaults.
+- **Registry / Market (planned)**: `rosetta search`, `rosetta install-skill` – Use community skills.
+- **Health & Validation (planned)**: `rosetta health`, `rosetta validate` – Check repo compliance.
+- **Memory Sync (planned)**: `rosetta sync-memory` – Automatically rotate and summarize daily logs.
 
-- **VSCode / Claude Code**: CLAUDE.md
-- **Cursor**: .cursorrules
-- **Antigravity**: .agent/skills/project-skill.md
-- **GitHub Copilot**: .github/copilot-instructions.md
-- **GSD / Generic**: skills/gsd-skill.md
+---
 
-## Design Principles
+## 📂 Architecture & Design
 
-- **Single Source of Truth**: Edit .ai/master-skill.md and sync everywhere.
-- **Symlink Support**: Uses symlinks on Unix-like systems so changes to the master spec are immediately reflected.
-- **Safe Overwrites**: Always prompts or backups before overwriting existing files.
-- **Git Friendly**: Human-readable diffs for all changes.
+Deep dives into the system design can be found in the `Features/` directory:
 
-## License
+- [Plugin System Overview](file:///Users/jimmychavada/Documents/Rosetta/Features/1.md)
+- [Discovery & Resolution Rules](file:///Users/jimmychavada/Documents/Rosetta/Features/2.md)
+- [Config-Driven Scaffolding](file:///Users/jimmychavada/Documents/Rosetta/Features/4.md)
+- [Migration Wizard Logic](file:///Users/jimmychavada/Documents/Rosetta/Features/6.md)
+- [Roadmap & Priorities](file:///Users/jimmychavada/Documents/Rosetta/Features/9.md)
 
-MIT
+---
+
+## 🏢 Extending Rosetta in Your Org
+
+You don’t need to fork Rosetta to customize it for your team:
+
+1. **Custom Skills**: Drop `.skill.md` files into `skills/` or `.rosetta/skills/`.
+2. **Custom Presets**: Create `.preset.md` files in `.rosetta/presets/`.
+3. **Configuration**: Use a `.rosetta.json` file in your repo root to define:
+   - `defaultPreset` / `defaultIdes`
+   - `skills.alwaysInclude`
+   - `postScaffoldHooks` (runs shell scripts after scaffolding)
+
+---
+
+## 🎨 Starter Templates
+
+- **Minimal**: A blank structure for experienced users.
+- **Agentic starter**: Optimized for general software development.
+- **Skill-creator style starter**: Specifically designed to help you build and iterate on `SKILL.md` files.
+
+---
+
+## ⚖️ License
+
+MIT © [Rajan Chavada](https://github.com/RajanChavada)
