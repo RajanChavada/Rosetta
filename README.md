@@ -1,10 +1,15 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/RajanChavada/Rosetta/main/assets/rosetta-logo.svg" alt="rosetta" width="200">
-</p>
+<div align="center">
 
-<p align="center">
-  <strong>Single source of truth for AI agent rules and engineering memory.</strong>
-</p>
+```text
+ ██████╗  ██████╗ ███████╗███████╗████████╗███████╗ █████╗ 
+ ██╔══██╗██╔═══██╗██╔════╝██╔════╝╚══██╔══╝██╔════╝██╔══██╗
+ ██████╔╝██║   ██║███████╗█████╗     ██║   █████╗  ███████║
+ ██╔══██╗██║   ██║╚════██║██╔══╝     ██║   ██╔══╝  ██╔══██║
+ ██║  ██║╚██████╔╝███████║███████╗    ██║   ███████╗██║  ██║
+ ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝    ╚═╝   ╚══════╝╚═╝  ╚═╝
+```
+
+**Single source of truth for AI agent rules and engineering memory.**
 
 <p align="center">
   <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version"></a>
@@ -30,15 +35,20 @@ node cli.js scaffold
 ### 1. Initialize Rosetta
 Run the following command in your project root to set up the architecture:
 
-```ansi
-[1;35m● Scaffolding atlas-pay...[0m
-[90m┣━ [0mContext gathered [32m✓[0m
-[90m┣━ [0m.ai/ brain created [32m✓[0m
-[90m┣━ [0m2 IDEs configured [32m✓[0m
-[90m┣━ [0m4 starter skills added [32m✓[0m
-[90m┗━ [0mMemory initialized [32m✓[0m
+```bash
+node cli.js scaffold
+```
 
-[1;32mNew agentic structure created with preset: agentic-starter[0m
+**Scaffold Output:**
+```text
+● Scaffolding atlas-pay...
+┣━ Context gathered ✓
+┣━ .ai/ brain created ✓
+┣━ 2 IDEs configured ✓
+┣━ 4 starter skills added ✓
+┗━ Memory initialized ✓
+
+New agentic structure created with preset: agentic-starter
 ```
 
 ### 2. Verify Your Brain
@@ -81,31 +91,23 @@ node cli.js scaffold
 ```
 
 **Sync** — Verify IDE wrappers or regenerate them from templates
-```ansi
-[34mRegenerating IDE wrappers from templates...[0m
-[32mCreated/Updated CLAUDE.md from template anthropic-claude.md[0m
-[32mCreated/Updated .cursorrules from template cursorrules.md[0m
-
-[32mMaster spec: .ai/master-skill.md is the source of truth.[0m
+```bash
+node cli.js sync --regenerate-wrappers
 ```
 
 **Watch** — Monitor `.ai/master-skill.md` for changes
-```ansi
-[36mWatching .ai/master-skill.md for changes...[0m
-[34m[13:42:01] Change detected in master spec.[0m
-[90mIDE wrappers already reference .ai/master-skill.md; no file changes needed.[0m
+```bash
+node cli.js watch
 ```
 
 ### Skill Management
 
 **New Skill** — Create a new stateless skill folder
-```ansi
-[32mCreated skill directory at skills/api-auth[0m
-[90m- skills/api-auth/SKILL.md[0m
-[90m- skills/api-auth/tests/prompts.md[0m
+```bash
+node cli.js new-skill api-auth
 ```
 
-### Migration & Adoption
+### Migration & Adoption (v1)
 
 | Command | Description |
 |---------|-------------|
@@ -130,17 +132,22 @@ node cli.js scaffold
 
 Check if the repository is "Rosetta-compliant" and compute a health score.
 
-```ansi
-[1;35m● Validating Rosetta structure...[0m
-[90m┣━ [0m.ai/master-skill.md [32m✓[0m
-[90m┣━ [0m.ai/AGENT.md [32m✓[0m
-[90m┣━ [0m.ai/task.md [32m✓[0m
-[90m┣━ [0m.ai/memory/PROJECT_MEMORY.md [32m✓[0m
-[90m┣━ [0m.ai/memory/AUTO_MEMORY.md [32m✓[0m
-[90m┗━ [0m.ai/logs/daily/ [32m✓[0m
+```bash
+node cli.js health
+```
 
-[32mRosetta Score: 100/100[0m
-[1;32mYour repo is 100% Rosetta-ready! 🚀[0m
+**Health Check Output:**
+```text
+● Validating Rosetta structure...
+┣━ .ai/master-skill.md ✓
+┣━ .ai/AGENT.md ✓
+┣━ .ai/task.md ✓
+┣━ .ai/memory/PROJECT_MEMORY.md ✓
+┣━ .ai/memory/AUTO_MEMORY.md ✓
+┗━ .ai/logs/daily/ ✓
+
+Rosetta Score: 100/100
+Your repo is 100% Rosetta-ready!
 ```
 
 ---
