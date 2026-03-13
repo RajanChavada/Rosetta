@@ -1,31 +1,35 @@
-<div align="center">
+<p align="center">
+  <img src="https://raw.githubusercontent.com/RajanChavada/Rosetta/main/assets/rosetta-logo.svg" alt="rosetta" width="200">
+</p>
 
-# ROSETTA
-**Single Source of Truth for AI Agent Rules and Engineering Memory.**
+<p align="center">
+  <strong>Single source of truth for AI agent rules and engineering memory.</strong>
+</p>
 
-[![Version](https://img.shields.io/badge/version-0.1.0-blue.svg?style=for-the-badge)]()
-[![Status](https://img.shields.io/badge/status-stable-green.svg?style=for-the-badge)]()
-[![License](https://img.shields.io/badge/license-MIT-magenta.svg?style=for-the-badge)]()
+<p align="center">
+  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version"></a>
+  <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+  <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
+</p>
 
-</div>
+Rosetta is a CLI tool designed to help engineering teams maintain a consistent **Global Brain** for their AI agents (GitHub Copilot, Cursor, Windsurf, Claude Code) across an entire repository.
 
----
+Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec without using symlinks, ensuring maximum compatibility.
 
-Rosetta is a CLI tool designed to help engineering teams maintain a consistent "Global Brain" for their AI agents (**GitHub Copilot**, **Cursor**, **Windsurf**, **Claude Code**) across an entire repository.
+> **Status: v0.1 Beta** - Core semantics are stable. Commands marked with `(planned)` are on the roadmap.
 
-Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec *without* using symlinks, ensuring maximum compatibility.
-
----
-
-## ⚡ Quickstart (Today)
-
-### 1. Initialize Rosetta
-Run the following command in your project root:
 ```bash
+# Using node (recommended)
 node cli.js scaffold
 ```
 
-**Example Output:**
+---
+
+## Quick Start
+
+### 1. Initialize Rosetta
+Run the following command in your project root to set up the architecture:
+
 ```ansi
 [1;35m● Scaffolding atlas-pay...[0m
 [90m┣━ [0mContext gathered [32m✓[0m
@@ -37,24 +41,46 @@ node cli.js scaffold
 [1;32mNew agentic structure created with preset: agentic-starter[0m
 ```
 
+### 2. Verify Your Brain
+Once scaffolded, your project will have a structured context layer:
+
+```text
+.ai/
+├── master-skill.md       <-- The Source of Truth
+├── AGENT.md              <-- Agent-specific identity
+├── task.md               <-- Current task tracking
+├── memory/
+│   ├── PROJECT_MEMORY.md <-- Long-lived architecture notes
+│   └── AUTO_MEMORY.md    <-- Learned heuristics
+└── logs/
+    └── daily/            <-- Chronological logbook
+```
+
 ---
 
-## 🛠️ CLI Command Reference
+## Why Rosetta?
 
-### 🏗️ Setup & Core Flow
+Engineering memory usually answers "why was this built?" Rosetta answers "how should the agent help me built it right now?"
 
-#### `rosetta scaffold`
-Set up the `.ai/` directory, initializes the master spec from a preset, and configures chosen IDEs.
+| Problem | Rosetta's Answer |
+|---------|----------------|
+| Fragmented IDE rules | One master spec synced to all wrappers |
+| Agent "forgets" conventions | 3-layer memory (Project, Auto, Logs) |
+| Root directory pollution | Centralized state in the `.ai/` folder |
+| Brittle symlinks | Independent markdown wrappers |
+
+---
+
+## Core Commands
+
+### Setup & Core Flow
+
+**Scaffold** — Set up the `.ai/` directory and configure IDEs
 ```bash
 node cli.js scaffold
 ```
 
-#### `rosetta sync`
-Verify IDE wrappers or regenerate them from templates.
-```bash
-node cli.js sync --regenerate-wrappers
-```
-**Output:**
+**Sync** — Verify IDE wrappers or regenerate them from templates
 ```ansi
 [34mRegenerating IDE wrappers from templates...[0m
 [32mCreated/Updated CLAUDE.md from template anthropic-claude.md[0m
@@ -63,66 +89,47 @@ node cli.js sync --regenerate-wrappers
 [32mMaster spec: .ai/master-skill.md is the source of truth.[0m
 ```
 
-#### `rosetta watch`
-Monitor `.ai/master-skill.md` and log status when changes are detected.
-```bash
-node cli.js watch
-```
-**Output:**
+**Watch** — Monitor `.ai/master-skill.md` for changes
 ```ansi
 [36mWatching .ai/master-skill.md for changes...[0m
 [34m[13:42:01] Change detected in master spec.[0m
 [90mIDE wrappers already reference .ai/master-skill.md; no file changes needed.[0m
 ```
 
----
+### Skill Management
 
-### 🧪 Skill Management
-
-#### `rosetta new-skill <name>`
-Create a new skill folder with `SKILL.md` and tests boilerplate.
-```bash
-node cli.js new-skill api-auth
-```
-**Output:**
+**New Skill** — Create a new stateless skill folder
 ```ansi
 [32mCreated skill directory at skills/api-auth[0m
 [90m- skills/api-auth/SKILL.md[0m
 [90m- skills/api-auth/tests/prompts.md[0m
 ```
 
----
+### Migration & Adoption
 
-### 🚀 Migration & Adoption
-
-#### `rosetta migrate`
-Interactive wizard to migrate existing agent files (`CLAUDE.md`, `.cursorrules`) into the `.ai/` architecture.
-```bash
-node cli.js migrate
-```
-
-#### `rosetta migrate-from-cursor`
-Specifically convert `.cursorrules` into `.ai/master-skill.md`.
-```bash
-node cli.js migrate-from-cursor
-```
-
-#### `rosetta migrate-from-claude`
-Specifically convert `CLAUDE.md` into the `.ai/` structure.
-```bash
-node cli.js migrate-from-claude
-```
+| Command | Description |
+|---------|-------------|
+| `migrate` | Interactive wizard for existing repos |
+| `migrate-from-cursor` | Convert `.cursorrules` to `.ai/` |
+| `migrate-from-claude` | Convert `CLAUDE.md` to `.ai/` |
 
 ---
 
-### 🩺 Health & Validation
+## Key Features
 
-#### `rosetta health` (alias: `audit`)
-Report the "Rosetta Score" and repository health compliance.
-```bash
-node cli.js health
-```
-**Output:**
+| Feature | Description |
+|---------|-------------|
+| **3-Layer Memory** | Project decisions, heuristics, and daily logs |
+| **Multi-Source Skills** | Local, global (`~/.rosetta`), or git-sourced skills |
+| **Config Driven** | Use `.rosetta.json` for non-interactive scaffolding |
+| **Post-Scaffold Hooks** | Run scripts automatically after setup |
+
+---
+
+## Health & Validation
+
+Check if the repository is "Rosetta-compliant" and compute a health score.
+
 ```ansi
 [1;35m● Validating Rosetta structure...[0m
 [90m┣━ [0m.ai/master-skill.md [32m✓[0m
@@ -136,68 +143,11 @@ node cli.js health
 [1;32mYour repo is 100% Rosetta-ready! 🚀[0m
 ```
 
-#### `rosetta validate`
-Perform a check of the `.ai/` structure for completeness.
-```bash
-node cli.js validate
-```
-
 ---
 
-### 🧠 Memory & Profiles
+## Architecture & Roadmap
 
-#### `rosetta sync-memory`
-Rotate old logs and summarize progress into `AUTO_MEMORY.md`.
-```bash
-node cli.js sync-memory
-```
-**Output:**
-```ansi
-[34mSyncing memory...[0m
-[90mFound 12 daily logs.[0m
-[34mRotating 5 old logs to archive...[0m
-[34mSummarizing logs to AUTO_MEMORY.md...[0m
-[32m✓ Memory synced and summarized.[0m
-```
-
-#### `rosetta use-profile <name>`
-Switch to a specific Rosetta profile to bundle context and preferences.
-```bash
-node cli.js use-profile heavy-ml
-```
-**Output:**
-```ansi
-[1;32m✓ Switched to profile: heavy-ml[0m
-[90mNext time you run "scaffold", Rosetta will prefer heavy-ml defaults.[0m
-```
-
----
-
-### 🏪 Registry & Market
-
-#### `rosetta search <type>`
-Search for presets or skills in the registry.
-```bash
-node cli.js search skills --domain financial
-```
-
-#### `rosetta install-preset <name>`
-Install a preset from the registry into `.ai/master-skill.md`.
-```bash
-node cli.js install-preset agentic-starter
-```
-
-#### `rosetta install-skill <name>`
-Install a skill from the registry into the `skills/` directory.
-```bash
-node cli.js install-skill node-express-postgres
-```
-
----
-
-## 📂 Architecture & Design
-
-Deep dives into the system design can be found in the `Features/` directory:
+Deep dives into the system design are available in the `Features/` directory:
 
 - [Plugin System Overview](file:///Users/jimmychavada/Documents/Rosetta/Features/1.md)
 - [Discovery & Resolution Rules](file:///Users/jimmychavada/Documents/Rosetta/Features/2.md)
@@ -205,6 +155,14 @@ Deep dives into the system design can be found in the `Features/` directory:
 
 ---
 
-## ⚖️ License
+## Contributing
+
+Contributions are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+**Security issues**: Email security@rosetta.ai.
+
+---
+
+## License
 
 MIT © [Rajan Chavada](https://github.com/RajanChavada)
