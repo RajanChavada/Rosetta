@@ -1453,3 +1453,41 @@ In CLAUDE.md / .cursorrules:
   ```
 This encodes your 3‑level memory architecture directly into the scaffolding, so any agent that reads the wrapper files understands how to use it.
 
+
+## 12. Post-Scaffold Hooks
+
+Rosetta supports running custom logic immediately after the scaffolding process is complete. This is useful for automating repetitive setup tasks like installing dependencies, running migrations, or creating additional project files.
+
+### 12.1 Shell Command Hooks (JSON)
+
+You can define a list of shell commands in a `.rosetta.json` file in the project root. Rosetta will execute these commands in sequence after scaffolding.
+
+```json
+// .rosetta.json
+{
+  "postScaffoldHooks": [
+    "npm install",
+    "yarn db:migrate",
+    "docker-compose up -d"
+  ]
+}
+```
+
+### 12.2 JavaScript Hooks
+
+For more complex logic, you can create a JavaScript hook file at `hooks/post-scaffold.js`. Rosetta will execute the exported function, passing the project `context` (containing `projectName`, `projectType`, etc.).
+
+```javascript
+// hooks/post-scaffold.js
+export default async function(context) {
+  if (context.projectType === 'Data / ML project') {
+    // Example: Generate a requirements.txt for ML projects
+    const fs = await import('fs-extra');
+    await fs.writeFile('requirements.txt', 'transformers\npytorch\nscikit-learn');
+    console.log('Post-scaffold: Created requirements.txt for ML project.');
+  }
+};
+```
+
+Rosetta supports both ESM (`export default`) and CommonJS (`module.exports`) for these hooks.
+
