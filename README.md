@@ -1,7 +1,7 @@
 <div align="center">
 
 ```text
- ██████╗  ██████╗ ███████╗███████╗████████╗████████╗ █████╗ 
+ ██████╗  ██████╗ ███████╗███████╗████████╗████████╗ █████╗
  ██╔══██╗██╔═══██╗██╔════╝██╔════╝╚══██╔══╝╚══██╔══╝██╔══██╗
  ██████╔╝██║   ██║███████╗█████╗     ██║      ██║   ███████║
  ██╔══██╗██║   ██║╚════██║██╔══╝     ██║      ██║   ██╔══██║
@@ -12,18 +12,18 @@
 **Single source of truth for AI agent rules and engineering memory.**
 
 <p align="center">
-  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.1.0-blue.svg" alt="Version"></a>
+  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.2.0-blue.svg" alt="Version"></a>
   <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
 </p>
 
 </div>
 
-Rosetta is a CLI tool designed to help engineering teams maintain a consistent **Global Brain** for their AI agents (GitHub Copilot, Cursor, Windsurf, Claude Code) across an entire repository.
+Rosetta is a CLI tool designed to help engineering teams maintain a consistent **Global Brain** for their AI agents (GitHub Copilot, Cursor, Windsurf, Claude Code, Codex CLI, Kilo Code, Continue.dev) across an entire repository.
 
 Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec without using symlinks, ensuring maximum compatibility.
 
-> **Status: v0.1 Beta** - Core semantics are stable. Commands marked with `(planned)` are on the roadmap.
+> **Status: v0.2.0** - Enhanced with new IDE support, translation commands, and AI-powered context detection.
 
 ```bash
 # Using npx (no installation required)
@@ -39,7 +39,7 @@ rosetta scaffold
 ## Quick Start
 
 ### 1. Initialize Rosetta
-Run the following command in your project root to set up the architecture:
+Run the following command in your project root to set up architecture:
 
 ```bash
 npx rosetta-ai-blueprint scaffold
@@ -74,6 +74,24 @@ Once scaffolded, your project will have a structured context layer:
 
 ---
 
+## Supported IDEs
+
+Rosetta supports 9 IDEs out of the box:
+
+| IDE | Config File |
+|-----|-------------|
+| VSCode / Claude Code | `CLAUDE.md` |
+| Cursor | `.cursorrules` |
+| GitHub Copilot | `.github/copilot-instructions.md` |
+| Windsurf | `.windsurf/rules/rosetta-rules.md` |
+| Antigravity | `.agent/skills/project-skill.md` |
+| GSD/generic | `skills/gsd-skill.md` |
+| Codex CLI | `.codex/rules.md` |
+| Kilo Code | `.kilo/rules.md` |
+| Continue.dev | `.continue/config.md` |
+
+---
+
 ## Why Rosetta?
 
 Engineering memory usually answers "why was this built?" Rosetta answers "how should the agent help me built it right now?"
@@ -82,8 +100,9 @@ Engineering memory usually answers "why was this built?" Rosetta answers "how sh
 |---------|----------------|
 | Fragmented IDE rules | One master spec synced to all wrappers |
 | Agent "forgets" conventions | 3-layer memory (Project, Auto, Logs) |
-| Root directory pollution | Centralized state in the `.ai/` folder |
+| Root directory pollution | Centralized state in `.ai/` folder |
 | Brittle symlinks | Independent markdown wrappers |
+| Manual context gathering | Auto-detection of project type & stack |
 
 ---
 
@@ -96,6 +115,13 @@ Engineering memory usually answers "why was this built?" Rosetta answers "how sh
 rosetta scaffold
 ```
 
+**Scaffold with AI Analysis** — Use AI to auto-detect project context
+```bash
+rosetta scaffold --use-ai --provider anthropic
+# or
+rosetta scaffold --use-ai --provider openai
+```
+
 **Sync** — Verify IDE wrappers or regenerate them from templates
 ```bash
 rosetta sync --regenerate-wrappers
@@ -106,6 +132,29 @@ rosetta sync --regenerate-wrappers
 rosetta watch
 ```
 
+### IDE Management
+
+**Add IDE** — Add a new IDE to an existing Rosetta setup
+```bash
+rosetta add-ide codex
+# or
+rosetta add-ide kilo
+# or
+rosetta add-ide
+# (interactive prompt)
+```
+
+**Translate** — Convert a config file between IDE formats
+```bash
+rosetta translate .cursorrules --to claude --output CLAUDE.md
+```
+
+**Translate All** — Bulk migrate all IDE configs to a target format
+```bash
+rosetta translate-all --to claude --dry-run  # Preview first
+rosetta translate-all --to claude            # Execute
+```
+
 ### Skill Management
 
 **New Skill** — Create a new stateless skill folder
@@ -113,11 +162,12 @@ rosetta watch
 rosetta new-skill api-auth
 ```
 
-### Migration & Adoption (v1)
+### Migration & Adoption
 
 | Command | Description |
 |---------|-------------|
 | `migrate` | Interactive wizard for existing repos |
+| `migrate --source <path>` | Migrate from a custom folder (e.g. `agentic-corder/`) |
 | `migrate-from-cursor` | Convert `.cursorrules` to `.ai/` |
 | `migrate-from-claude` | Convert `CLAUDE.md` to `.ai/` |
 
@@ -129,14 +179,101 @@ rosetta new-skill api-auth
 |---------|-------------|
 | **3-Layer Memory** | Project decisions, heuristics, and daily logs |
 | **Multi-Source Skills** | Local, global (`~/.rosetta`), or git-sourced skills |
+| **Auto-Detection** | Automatically detects project type and tech stack |
+| **Format Translation** | Convert configs between any supported IDE format |
+| **AI Analysis (Optional)** | Use your own API tokens for smarter context detection |
 | **Config Driven** | Use `.rosetta.json` for non-interactive scaffolding |
 | **Post-Scaffold Hooks** | Run scripts automatically after setup |
 
 ---
 
+## Auto-Detection
+
+Rosetta automatically detects your project type and tech stack:
+
+**Supported Languages:**
+- Node.js / TypeScript
+- Python (Django, FastAPI, Flask)
+- Go
+- Rust
+- Ruby
+
+**Auto-Detected Information:**
+- Project type (Web app, API, CLI, Library, etc.)
+- Frontend framework (React, Next.js, Vue, etc.)
+- Backend framework (Express, NestJS, Django, etc.)
+- Database/ORM (Prisma, SQLAlchemy, TypeORM, etc.)
+
+---
+
+## AI Analysis (Optional)
+
+Enable AI-powered context analysis using your own API tokens:
+
+```bash
+# Using Anthropic
+export ANTHROPIC_API_KEY=your-key
+rosetta scaffold --use-ai --provider anthropic
+
+# Using OpenAI
+export OPENAI_API_KEY=your-key
+rosetta scaffold --use-ai --provider openai
+```
+
+**Security Note:** Rosetta never uses its own API tokens. All AI operations use only the tokens you provide.
+
+---
+
+## Skills System
+
+Rosetta implements a dual skills system to serve different purposes:
+
+### Claude Code Skills (`.claude/skills/`)
+
+Used **internally** for developing Rosetta CLI itself. These provide focused context loading for specific domains:
+
+| Skill | Purpose |
+|-------|---------|
+| `frontend-context` | Frontend docs, styles, patterns |
+| `backend-context` | Backend, API, domain logic |
+| `testing-context` | Test strategy, fixtures, CI/CD |
+
+Load via slash commands in Claude Code: `/frontend-context`, `/backend-context`, `/testing-context`
+
+### Rosetta CLI Skills (`templates/skills/`)
+
+Templates that Rosetta scaffolds into other projects:
+
+| Skill | Stack | Domain |
+|-------|-------|--------|
+| `node-express-postgres` | Node.js, Express, PostgreSQL | Backend APIs |
+| `frontend-react-next` | React, Next.js | Frontend apps |
+| `testing-full-pyramid` | Testing frameworks | Quality assurance |
+| `data-ml-project` | Data Science, ML | Analytics & ML |
+
+### Skill Commands
+
+```bash
+# List available skills
+rosetta skills
+
+# Load a specific skill
+rosetta skill frontend-context
+
+# Create a new skill
+rosetta new-skill api-auth
+
+# Create from template
+rosetta new-skill payment --template stripe-integration
+```
+
+**See [docs/SKILLS.md](docs/SKILLS.md)** for complete documentation on the skills system.
+
+---
+
 ## Health & Validation
 
-Check if the repository is "Rosetta-compliant" and compute a health score.
+Check if repository is "Rosetta-compliant" and compute a health score.
 
 ```bash
 rosetta health
@@ -158,13 +295,72 @@ Your repo is 100% Rosetta-ready!
 
 ---
 
-## Architecture & Roadmap
+## Profiles
 
-Deep dives into the system design are available in the `Features/` directory:
+Use profiles to bundle context, presets, and preferences:
 
-- [Plugin System Overview](file:///Users/jimmychavada/Documents/Rosetta/Features/1.md)
-- [Discovery & Resolution Rules](file:///Users/jimmychavada/Documents/Rosetta/Features/2.md)
-- [Roadmap & Priorities](file:///Users/jimmychavada/Documents/Rosetta/Features/9.md)
+```bash
+# Create or switch to a profile
+rosetta use-profile fintech
+
+# Define in ~/.rosetta/registry.json:
+{
+  "profiles": {
+    "fintech": {
+      "riskLevel": "High (Critical/Financial/Healthcare)",
+      "testingSetup": "Unit + integration + E2E",
+      "agentStyle": "More autonomous"
+    }
+  }
+}
+```
+
+---
+
+## Registry
+
+Browse and install presets and skills from the community registry:
+
+```bash
+# Search presets
+rosetta search presets --domain financial
+
+# Install a preset
+rosetta install-preset @acme/fintech-agentic
+
+# Install a skill
+rosetta install-skill @acme/k8s-manifests
+```
+
+---
+
+## Architecture
+
+Rosetta is now modular with a clean architecture:
+
+```
+lib/
+├── constants.js           # Configuration constants
+├── utils.js              # Utility functions
+├── config.js             # Config & profile management
+├── templates.js          # Template rendering
+├── ide-adapters.js       # IDE sync logic
+├── context.js            # Context gathering & auto-detection
+├── skills.js             # Skill management
+├── migration.js          # Migration tools
+├── validation.js         # Health & validation
+├── registry.js           # Registry management
+├── cli-helpers.js       # CLI flow helpers
+├── commands/
+│   ├── add-ide.js       # Add IDE command
+│   ├── translate.js      # Format translation
+│   └── translate-all.js  # Bulk translation
+├── translators/
+│   └── base.js         # Translation engine
+└── ai-analyzers/
+    ├── project.js       # AI project analysis
+    └── context.js      # AI context enhancement
+```
 
 ---
 
