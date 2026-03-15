@@ -6,7 +6,21 @@
       "Bash(node /Users/jimmychavada/Documents/Rosetta/cli.js --help)",
       "Bash(node:*)",
       "Bash(npm run:*)",
-      "Bash(npm test:*)"
+      "Bash(npm test:*)",
+      "Read(//tmp/ideate-test-project/.ai/**)",
+      "Read(//private/tmp/ideate-test-project/.ai/**)",
+      "Bash(rm -rf /tmp/ideate-final)",
+      "Bash(mkdir -p /tmp/ideate-final/src /tmp/ideate-final/test /tmp/ideate-final/config)",
+      "Read(//tmp/**)",
+      "Bash(rm:*)",
+      "Bash(rm -rf /tmp/manual-test)",
+      "Bash(mkdir -p /tmp/manual-test)",
+      "Read(//private/tmp/manual-test/**)",
+      "Bash(rm -rf /tmp/test-rosetta)",
+      "Bash(mkdir -p /tmp/test-rosetta)",
+      "Read(//private/tmp/test-rosetta/**)",
+      "Bash(mkdir src:*)",
+      "Bash(touch src/index.js)"
     ]
   },
   "outputStyle": "default"

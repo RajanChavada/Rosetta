@@ -122,6 +122,13 @@ rosetta scaffold --use-ai --provider anthropic
 rosetta scaffold --use-ai --provider openai
 ```
 
+**Scaffold with Auto-Ideate** — Scaffold and automatically generate skill ideation template
+```bash
+rosetta scaffold --auto-ideate
+```
+
+The `--auto-ideate` flag automatically generates `.ai/skill-ideation-template.md` after scaffolding completes. This template contains project context and instructions for your IDE agent to help design custom skills tailored to your project.
+
 **Sync** — Verify IDE wrappers or regenerate them from templates
 ```bash
 rosetta sync --regenerate-wrappers
@@ -254,20 +261,76 @@ Templates that Rosetta scaffolds into other projects:
 ### Skill Commands
 
 ```bash
+# Generate skill ideation template (scaffold-only, no AI calls)
+rosetta ideate
+
 # List available skills
 rosetta skills
-
-# Load a specific skill
-rosetta skill frontend-context
 
 # Create a new skill
 rosetta new-skill api-auth
 
 # Create from template
-rosetta new-skill payment --template stripe-integration
+rosetta new-skill payment --template node-express-postgres
 ```
 
 **See [docs/SKILLS.md](docs/SKILLS.md)** for complete documentation on the skills system.
+
+---
+
+## Ideation
+
+Generate a skill ideation template to use in your IDE agent:
+
+```bash
+rosetta ideate [project-path]
+```
+
+This command analyzes your project and creates `.ai/skill-ideation-template.md` with context about your codebase. You then paste this template into your IDE's AI agent (Claude Code, Cursor, etc.) and answer 3–5 clarifying questions to receive personalized skill proposals.
+
+**Key features:**
+
+- **No AI calls** from the CLI - pure scaffolding
+- **Project analysis** - detects languages, frameworks, tests, architecture
+- **IDE detection** - auto-detects configured IDEs and skills folder locations
+- **Team context** - prompts for team conventions and domain knowledge
+- **IDE-agnostic** - works with any AI agent in your editor
+- **Interactive** - AI agent asks questions and drafts skills live
+- **Controlled** - you review and approve each skill before implementation
+
+**Example workflow:**
+
+```bash
+# Generate template in current project
+rosetta ideate
+
+# Open the generated file and paste into your IDE agent
+# Answer the questions to get skill proposals
+# Approve and implement the skills you want
+```
+
+**Options:**
+
+- `--output <path>` - Save template to custom location (default: `.ai/skill-ideation-template.md`)
+- `--dry-run` - Preview analysis without writing files
+- `--json` - Output analysis results in JSON format
+- `--area <path>` - Analyze a specific directory (default: current)
+
+**Detected IDEs:**
+The command automatically detects IDE configurations:
+- **Claude Code** - `.claude/skills/` folder
+- **Cursor** - `.cursorrules` file
+- **GitHub Copilot** - `.github/copilot-instructions.md`
+- **Windsurf** - `.windsurf/` directory
+- **Codex CLI** - `.agent/` directory
+
+**Team Context:**
+When no IDEs are detected, the command prompts for:
+- Team domain or industry
+- Team conventions to follow
+- Existing skills to consider
+
+**Detailed guide:** See [docs/IDEATION.md](docs/IDEATION.md)
 
 ---
 
@@ -317,22 +380,6 @@ rosetta use-profile fintech
 
 ---
 
-## Registry
-
-Browse and install presets and skills from the community registry:
-
-```bash
-# Search presets
-rosetta search presets --domain financial
-
-# Install a preset
-rosetta install-preset @acme/fintech-agentic
-
-# Install a skill
-rosetta install-skill @acme/k8s-manifests
-```
-
----
 
 ## Architecture
 
@@ -349,12 +396,12 @@ lib/
 ├── skills.js             # Skill management
 ├── migration.js          # Migration tools
 ├── validation.js         # Health & validation
-├── registry.js           # Registry management
 ├── cli-helpers.js       # CLI flow helpers
 ├── commands/
 │   ├── add-ide.js       # Add IDE command
 │   ├── translate.js      # Format translation
-│   └── translate-all.js  # Bulk translation
+│   ├── translate-all.js  # Bulk translation
+│   └── ideate.js        # Skill ideation command
 ├── translators/
 │   └── base.js         # Translation engine
 └── ai-analyzers/
