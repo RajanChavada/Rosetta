@@ -10,6 +10,7 @@ yarn-error.log*
 .ai/task.md
 .ai/skill-ideation-template.md
 .ai 
+.claude/
 
 # Development files
 PLAN.md
@@ -17,10 +18,9 @@ TODO.md
 RESEARCH_NEXT_STEPS.md
 IDE_INTEGRATION_RESEARCH.md
 ROSETTA.md
-docs/
-docs/SKILL_GRAPH_ANCESTRY_GAMIFICATION.md
-
 # Test infrastructure
 test/
 test-runner.js
 jest.config.js
+
+.claude
