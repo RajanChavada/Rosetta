@@ -1,0 +1,18 @@
+# Development files
+PLAN.md
+TODO.md
+RESEARCH_NEXT_STEPS.md
+IDE_INTEGRATION_RESEARCH.md
+ROSETTA.md
+CLAUDE.md
+
+# Test infrastructure
+test/
+test-runner.js
+jest.config.js
+
+# Claude Code configuration (not for npm)
+.claude/
+
+# Runtime generated
+.ai/

@@ -5,6 +5,19 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# Rosetta Agent State
+# Rosetta Agent State (runtime generated)
 .ai/logs/
 .ai/task.md
+.ai/skill-ideation-template.md
+
+# Development files
+PLAN.md
+TODO.md
+RESEARCH_NEXT_STEPS.md
+IDE_INTEGRATION_RESEARCH.md
+ROSETTA.md
+
+# Test infrastructure
+test/
+test-runner.js
+jest.config.js
