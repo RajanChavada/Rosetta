@@ -169,6 +169,16 @@ rosetta translate-all --to claude            # Execute
 rosetta new-skill api-auth
 ```
 
+### Skill Commands
+
+| Command | Description |
+|---------|-------------|
+| `rosetta catalog` | Browse the skill catalog to discover available skills |
+| `rosetta search <query>` | Search skills by name, description, or tags (coming soon) |
+| `rosetta install <git-url>` | Install a skill from a git repository |
+| `rosetta skills` | List all installed skills |
+| `rosetta skill uninstall <name>` | Uninstall an installed skill (planned) |
+
 ### Migration & Adoption
 
 | Command | Description |
@@ -275,6 +285,62 @@ rosetta new-skill payment --template node-express-postgres
 ```
 
 **See [docs/SKILLS.md](docs/SKILLS.md)** for complete documentation on the skills system.
+
+---
+
+## Skill Catalog
+
+Rosetta provides a central **catalog** of curated skills that you can browse and install. The catalog is maintained in `catalog.json` and includes skills for various domains and tech stacks.
+
+Use `rosetta catalog` to view all available skills. You can filter by domain using `--domain` and output raw JSON with `--json`.
+
+```
+rosetta catalog
+rosetta catalog --domain backend
+rosetta catalog --json
+```
+
+Full-text search across the catalog will be available in a future release with `rosetta search <query>`.
+
+For more details, see [docs/CATALOG.md](docs/CATALOG.md).
+
+## Smart Installation
+
+Install skills directly from any Git repository with `rosetta install`. Rosetta validates the skill, records provenance, and tracks it in your manifest.
+
+```bash
+# Install a skill to the current project
+rosetta install https://github.com/org/api-auth
+
+# Install a skill globally (available in all projects)
+rosetta install https://github.com/community/ppt-gen --global
+```
+
+**Installation features:**
+- Validates the repository contains a `SKILL.md` file with required frontmatter (`name`, `description`)
+- Checks skill name validity (lowercase alphanumeric and hyphens)
+- Copies the skill to `.rosetta/skills/<name>` in your project (or `~/.rosetta/skills/` for global)
+- Preserves the `.git` directory and adds an `upstream` remote pointing to the source repository
+- Records installation details in `.rosetta/skills/manifest.json`, including source URL, commit hash, and install date
+- Supports `--force` to overwrite an existing installation
+- Supports `--dry-run` to preview changes
+
+This provenance tracking enables safe updates and auditability.
+
+## Skill Management
+
+Manage your installed skills with the following commands:
+
+- **List skills:** `rosetta skills` shows all installed skills with details (name, source, scope, install date, commit).
+  ```
+  rosetta skills
+  rosetta skills --format json   # Machine-readable output
+  rosetta skills --scope global  # Filter by scope
+  ```
+
+- **Uninstall a skill:** (coming soon) Use `rosetta skill uninstall <name>` to remove an installed skill and update the manifest.
+
+For more information on skill management, see [docs/SKILLS.md](docs/SKILLS.md).
 
 ---
 

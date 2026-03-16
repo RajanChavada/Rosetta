@@ -23,5 +23,6 @@ ROSETTA.md
 test/
 test-runner.js
 jest.config.js
+disabled-tests/
 
 .claude

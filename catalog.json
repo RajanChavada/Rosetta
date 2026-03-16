@@ -1,0 +1,40 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-03-15",
+  "skills": [
+    {
+      "name": "node-express-postgres",
+      "displayName": "Node.js Express PostgreSQL",
+      "description": "Full-stack Node.js skill with Express and PostgreSQL. Provides IDE integration, database management, and API development templates.",
+      "repoUrl": "https://github.com/rosetta-ai/node-express-postgres",
+      "domains": ["backend", "api"],
+      "tags": ["node", "express", "postgres", "api", "rest"],
+      "intentKeywords": ["api", "backend", "database", "sql"],
+      "author": "Rosetta Team",
+      "stars": 120,
+      "lastUpdated": "2026-03-15",
+      "provides": ["api-development", "database-integration"],
+      "requires": ["nodejs", "postgres"],
+      "enhances": [],
+      "icon": "🚀",
+      "color": "#339AF0"
+    },
+    {
+      "name": "react-redux-firebase",
+      "displayName": "React Redux Firebase",
+      "description": "React frontend with Redux state management and Firebase backend integration. Includes authentication, real-time updates, and deployment configs.",
+      "repoUrl": "https://github.com/rosetta-ai/react-redux-firebase",
+      "domains": ["frontend", "spa"],
+      "tags": ["react", "redux", "firebase", "spa"],
+      "intentKeywords": ["frontend", "spa", "realtime", "auth"],
+      "author": "Rosetta Team",
+      "stars": 85,
+      "lastUpdated": "2026-03-14",
+      "provides": ["frontend-ui", "state-management", "realtime-db"],
+      "requires": ["react", "firebase"],
+      "enhances": [],
+      "icon": "⚛️",
+      "color": "#61DAFB"
+    }
+  ]
+}

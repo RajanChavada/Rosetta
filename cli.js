@@ -20,6 +20,9 @@ import { addIde } from './lib/commands/add-ide.js';
 import { translate } from './lib/commands/translate.js';
 import { translateAll } from './lib/commands/translate-all.js';
 import { ideate } from './lib/commands/ideate.js';
+import { catalog } from './lib/commands/catalog.js';
+import { skills } from './lib/commands/skills.js';
+import { install } from './lib/commands/install.js';
 
 /**
  * Determine work area based on current directory.
@@ -174,6 +177,20 @@ Types:
       await translateAll(options);
     });
 
+  program
+    .command('install <git-url>')
+    .description('Install a skill from a git repository')
+    .option('-g, --global', 'Install globally to ~/.rosetta/skills instead of project local')
+    .option('--force', 'Overwrite existing installation')
+    .option('--dry-run', 'Show what would be done without making changes')
+    .action(async (gitUrl, options) => {
+      await install(gitUrl, {
+        global: options.global,
+        force: options.force,
+        dryRun: options.dryRun
+      });
+    });
+
   // --- Ideation Commands ---
 
   program
@@ -258,21 +275,14 @@ Types:
 
   program
     .command('skills')
-    .description('List all available skills')
-    .option('--category <name>', 'Filter by category (frontend, backend, testing)')
+    .description('List all installed skills')
+    .option('--format <type>', 'Output format: table or json', 'table')
+    .option('--scope <scope>', 'Filter by scope: global, project, or all', 'all')
     .action(async (options) => {
-      const skills = await loadSkillsFromSources(options);
-
-      if (skills.length > 0) {
-        console.log(chalk.blue.bold('\n📚 Available Skills\n'));
-        for (const skill of skills) {
-          console.log(chalk.cyan(`  ${skill.name}`));
-          // In Rosetta, skills have fullPath to markdown. We don't read content here for brevity.
-          console.log(chalk.gray(`    Source: ${skill.source}`));
-        }
-      } else {
-        console.log(chalk.yellow('No skills available.'));
-      }
+      await skills({
+        format: options.format,
+        scope: options.scope
+      });
     });
 
   // --- Profile Commands ---
@@ -285,6 +295,16 @@ Types:
     });
 
   // --- Registry / Market Commands ---
+
+  program
+    .command('catalog')
+    .description('List all skills in the catalog')
+    .option('--json', 'Output raw JSON instead of table')
+    .option('--domain <filter>', 'Show only skills in specific domain(s), comma-separated')
+    .option('--limit <n>', 'Limit number of results', parseInt)
+    .action(async (options) => {
+      await catalog(options);
+    });
 
   program.parse(process.argv);
 }
