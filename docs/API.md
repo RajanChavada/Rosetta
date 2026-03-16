@@ -1,15 +1,15 @@
 # Rosetta CLI API Reference
 
-Complete command reference for Rosetta v0.2.0.
+Complete command reference for Rosetta v0.3.0.
 
 ## Installation
 
 ```bash
 # NPM
-npm install -g rosetta-ai-blueprint
+npm install -g @rosetta/cli
 
 # NPX (no install)
-npx rosetta-ai-blueprint <command>
+npx @rosetta/cli <command>
 
 # Local dev
 node ./cli.js <command>
