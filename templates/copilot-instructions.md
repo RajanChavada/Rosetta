@@ -27,3 +27,5 @@
 - Follow patterns for {{FRONTEND_STACK}} and {{BACKEND_STACK}}.
 - Refer to .ai/master-skill.md for detailed project rules.
 - Respect {{DOMAIN_TAGS}} and {{EXTRA_CONTEXTS}} considerations.
+
+{{UNIVERSAL_MEMORY}}
