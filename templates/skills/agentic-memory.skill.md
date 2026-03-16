@@ -1,6 +1,7 @@
-# Agentic Memory Skill
-
-This skill defines the standardized memory and logging workflow for Rosetta-enabled projects.
+---
+name: agentic-memory
+description: Long-lived project memory, architectural rules, and learned heuristics for IDE agents.
+---
 
 {{UNIVERSAL_MEMORY}}
 
