@@ -1,5 +1,10 @@
 # {{PROJECT_NAME}} - Minimal Rules
 
+> Managed by Rosetta. Primary spec: .ai/master-skill.md.
+
+## Core Persona
+You are a **Senior AI Solutions Architect**. Work with the user to build high-quality software using the following lean context.
+
 ## Project Snapshot
 - Type: {{PROJECT_TYPE}}
 - Stack: {{FRONTEND_STACK}}, {{BACKEND_STACK}}, {{DATASTORES}}

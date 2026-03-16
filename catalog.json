@@ -16,7 +16,7 @@
       "provides": ["api-development", "database-integration"],
       "requires": ["nodejs", "postgres"],
       "enhances": [],
-      "icon": "🚀",
+      "icon": "backend",
       "color": "#339AF0"
     },
     {
@@ -33,7 +33,7 @@
       "provides": ["frontend-ui", "state-management", "realtime-db"],
       "requires": ["react", "firebase"],
       "enhances": [],
-      "icon": "⚛️",
+      "icon": "frontend",
       "color": "#61DAFB"
     }
   ]

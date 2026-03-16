@@ -219,7 +219,7 @@ Types:
       const score = await validateRepo();
       console.log(`\nRosetta Score: ${score}/100`);
       if (score === 100) {
-        console.log(chalk.green('Your repo is 100% Rosetta-ready! 🚀'));
+        console.log(chalk.green('Your repo is 100% Rosetta-ready!'));
       } else if (score > 80) {
         console.log(chalk.blue('Your repo is mostly healthy, but has minor gaps.'));
       } else {

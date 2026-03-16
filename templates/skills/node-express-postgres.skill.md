@@ -1,30 +1,34 @@
 ---
 name: node-express-postgres-api
 description: Help build and maintain Node/Express APIs backed by Postgres with safe CRUD patterns.
+domains:
+  - backend
+  - database
 ---
 
 # Node/Express/Postgres API Skill
 
 ## Intent
-Use this skill to design, implement, and refactor HTTP APIs backed by Postgres in this repository.
+Standardize the design, implementation, and refactoring of HTTP APIs backed by Postgres, ensuring performance, safety, and clear contracts.
 
-## When to Use
-- Creating or modifying Express route handlers.
-- Designing new tables or migrations.
-- Implementing transactional flows involving multiple tables.
+## Pre-Checks
+- Identify Express route entry points and database connection utilities.
+- Scan for existing migrations or SQL schemas.
+- Check for global middlewares (auth, validation, logging).
 
 ## Workflow
-1. Clarify the endpoint(s): method, path, status codes, and data contracts.
-2. Inspect existing Express routes, middlewares, and DB access utilities.
-3. Design SQL schema changes or queries with attention to indexes, constraints, and safety.
-4. Implement route handlers that:
-   - Validate input
-   - Use parameterized queries / query builder
-   - Handle errors and edge cases explicitly
-5. Add or update tests (unit + integration) for new behavior.
-6. Document the endpoint and any new tables.
+- **Contract First**: Define the method, path, status codes, and data schemas before writing code.
+- **Schema Design**: Draft SQL migrations with explicit constraints and appropriate indexes.
+- **Implementation**: Write route handlers using parameterized queries and structured error handling.
+- **Validation**: Ensure all inputs are validated against the defined contract.
+- **Testing**: Add integration tests that verify the DB state after API calls.
+
+## Guardrails
+- Never use raw template strings for SQL queries; always use parameterized input.
+- Do not bypass existing auth or validation middlewares.
+- Stop if the proposed change violates the "Risk Level" constraints in `AGENT.md`.
 
 ## Output
-- Updated routes/controller files
-- SQL or migration files
-- Updated tests and minimal docs
+- Refined route/controller files.
+- SQL migration files.
+- Updated integration tests and documentation.

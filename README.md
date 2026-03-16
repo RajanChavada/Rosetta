@@ -49,12 +49,12 @@ npx rosettablueprint scaffold
 
 **Scaffold Output:**
 ```text
-● Scaffolding atlas-pay...
-┣━ Context gathered ✓
-┣━ .ai/ brain created ✓
-┣━ 2 IDEs configured ✓
-┣━ 4 starter skills added ✓
-┗━ Memory initialized ✓
+* Scaffolding atlas-pay...
+┣━ Context gathered OK
+┣━ .ai/ brain created OK
+┣━ 2 IDEs configured OK
+┣━ 4 starter skills added OK
+┗━ Memory initialized OK
 
 New agentic structure created with preset: agentic-starter
 ```
@@ -388,13 +388,13 @@ rosetta health
 
 **Health Check Output:**
 ```text
-● Validating Rosetta structure...
-┣━ .ai/master-skill.md ✓
-┣━ .ai/AGENT.md ✓
-┣━ .ai/task.md ✓
-┣━ .ai/memory/PROJECT_MEMORY.md ✓
-┣━ .ai/memory/AUTO_MEMORY.md ✓
-┗━ .ai/logs/daily/ ✓
+Validating Rosetta structure...
+┣━ .ai/master-skill.md OK
+┣━ .ai/AGENT.md OK
+┣━ .ai/task.md OK
+┣━ .ai/memory/PROJECT_MEMORY.md OK
+┣━ .ai/memory/AUTO_MEMORY.md OK
+┗━ .ai/logs/daily/ OK
 
 Rosetta Score: 100/100
 Your repo is 100% Rosetta-ready!
