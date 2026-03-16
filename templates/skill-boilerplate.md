@@ -1,32 +1,32 @@
 ---
 name: {{name}}
-description: One-sentence punchy value prop for the {{name}} skill.
+description: One-sentence punchy value prop for the {{name}} skill (e.g., "Automate type-safe API migrations").
 domains:
   - devex
 ---
 
 # {{name}} Skill
 
-## Intent
-[What this skill aims to achieve, tied to specific repo pain points and risks.]
+## Detailed Intent
+[Provide a 2-3 paragraph explanation of the cognitive load this skill eliminates. Explain the specific problem it solves in the context of the {{PROJECT_TYPE}} architecture.]
 
-## Pre-Checks
-- [Files / directories to scan first]
-- [Signals to look for: TODOs, flaky tests, large diffs, etc.]
-- [What to skip or ignore]
+## Pre-Checks & Context Intake
+- [First, scan these directories: ...]
+- [Identify these signals: (e.g., TODOs, specific decorator patterns, or outdated libs)]
+- [Cross-reference with `.ai/memory/PROJECT_MEMORY.md` for existing decisions.]
+- [What to ignore: (e.g., node_modules, build artifacts, or specific config files)]
 
-## Workflow
-[Step-by-step SOP for the AI agent, written as imperative bullets.]
-- Analyze...
-- Cross-check...
-- Implement...
-- Run or update tests...
-- Summarize decisions made...
+## Expert Workflow (SOF)
+[Step-by-step imperative instructions for the agent.]
+1. **Analyze**: Use divergent thinking to explore the existing implementation.
+2. **Draft**: Propose a plan that respects the **{{RISK_LEVEL}}** constraints.
+3. **Execute**: Implement the code using patterns consistent with {{BACKEND_STACK}}/{{FRONTEND_STACK}}.
+4. **Verify**: run tests ({{TESTING_SETUP}}) and update the daily log.
 
-## Guardrails
-- [Behaviors that are explicitly forbidden]
-- [When to stop and ask the human for confirmation]
-- [How to handle ambiguity]
+## Strict Guardrails
+- **DO NOT**: [List specific forbidden actions or patterns.]
+- **STOP & ASK**: [Explicit conditions under which you must pause for user confirmation.]
+- **SAFETY**: [Security or data integrity rules specific to the **{{DOMAIN_TAGS}}**.]
 
-## Output
-[Exact artifacts expected: files changed, reports, log notes, or PR descriptions.]
+## Expected Output
+[Exact artifacts: filenames, report formats, or specific code blocks expected at the end of the workflow.]
