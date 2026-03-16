@@ -12,7 +12,7 @@
 **Single source of truth for AI agent rules and engineering memory.**
 
 <p align="center">
-  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.3.0-blue.svg" alt="Version"></a>
+  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.3.1-blue.svg" alt="Version"></a>
   <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
 </p>
@@ -23,16 +23,16 @@ Rosetta is a CLI tool designed to help engineering teams maintain a consistent *
 
 Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec without using symlinks, ensuring maximum compatibility.
 
-> **Status: v0.3.0** - Renamed to @rosetta/cli and enhanced with catalog system, skill ideation, and translation commands.
+> **Status: v0.3.1** - Renamed to rosettablueprint and enhanced with catalog system, skill ideation, and translation commands.
 
 ## Installation
 
 ```bash
 # Using npx (no installation required)
-npx @rosetta/cli scaffold
+npx rosettablueprint scaffold
 
 # Or install globally
-npm install -g @rosetta/cli
+npm install -g rosettablueprint
 rosetta scaffold
 ```
 
@@ -44,7 +44,7 @@ rosetta scaffold
 Run the following command in your project root to set up architecture:
 
 ```bash
-npx @rosetta/cli scaffold
+npx rosettablueprint scaffold
 ```
 
 **Scaffold Output:**
