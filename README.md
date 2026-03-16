@@ -12,7 +12,7 @@
 **Single source of truth for AI agent rules and engineering memory.**
 
 <p align="center">
-  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.3.1-blue.svg" alt="Version"></a>
+  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.1.1-blue.svg" alt="Version"></a>
   <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
 </p>
@@ -23,7 +23,7 @@ Rosetta is a CLI tool designed to help engineering teams maintain a consistent *
 
 Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec without using symlinks, ensuring maximum compatibility.
 
-> **Status: v0.3.1** - Renamed to rosettablueprint and enhanced with catalog system, skill ideation, and translation commands.
+> **Status: v0.1.1** - Renamed to rosettablueprint and enhanced with catalog system, skill ideation, and translation commands.
 
 ## Installation
 
@@ -50,11 +50,11 @@ npx rosettablueprint scaffold
 **Scaffold Output:**
 ```text
 * Scaffolding atlas-pay...
-┣━ Context gathered OK
-┣━ .ai/ brain created OK
-┣━ 2 IDEs configured OK
-┣━ 4 starter skills added OK
-┗━ Memory initialized OK
+|-- Context gathered OK
+|-- .ai/ brain created OK
+|-- 2 IDEs configured OK
+|-- 4 starter skills added OK
++-- Memory initialized OK
 
 New agentic structure created with preset: agentic-starter
 ```
@@ -389,12 +389,12 @@ rosetta health
 **Health Check Output:**
 ```text
 Validating Rosetta structure...
-┣━ .ai/master-skill.md OK
-┣━ .ai/AGENT.md OK
-┣━ .ai/task.md OK
-┣━ .ai/memory/PROJECT_MEMORY.md OK
-┣━ .ai/memory/AUTO_MEMORY.md OK
-┗━ .ai/logs/daily/ OK
+|-- .ai/master-skill.md OK
+|-- .ai/AGENT.md OK
+|-- .ai/task.md OK
+|-- .ai/memory/PROJECT_MEMORY.md OK
+|-- .ai/memory/AUTO_MEMORY.md OK
++-- .ai/logs/daily/ OK
 
 Rosetta Score: 100/100
 Your repo is 100% Rosetta-ready!
