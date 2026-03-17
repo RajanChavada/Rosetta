@@ -24,7 +24,6 @@ import { catalog } from './lib/commands/catalog.js';
 import { skills } from './lib/commands/skills.js';
 import { install } from './lib/commands/install.js';
 import { uninstall } from './lib/commands/uninstall.js';
-import { loadSkill } from './lib/commands/load-skill.js';
 import { docs } from './lib/commands/docs.js';
 
 /**
@@ -297,16 +296,12 @@ Types:
       });
     });
 
-  program
-    .command('skill <name>')
-    .description('Load a specific skill for focused context')
-    .action(async (name) => {
-      await loadSkill({ name });
-    });
+  // --- Skill Management Commands ---
 
   program
-    .command('skill uninstall <name>')
+    .command('skill uninstall')
     .description('Uninstall an installed skill')
+    .argument('<name>', 'Skill name')
     .option('--global', 'Uninstall from global skills directory')
     .option('--purge', 'Delete skill files after uninstall')
     .option('--dry-run', 'Preview uninstall without removing')

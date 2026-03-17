@@ -242,14 +242,12 @@ npm test -- test/commands/docs.integration.test.js
 **Data Flow:**
 
 1. `docsCommand(options)` receives CLI options
-2. Calls `generateVisualization(vizOptions)`
-3. Loads manifest and catalog
-4. Transforms skills into unified schema
-5. Detects current IDE (if filtering)
-6. Loads HTML template and CSS
-7. Renders placeholders with data and JSON
-8. Writes file
-9. Optionally opens browser
+2. Calls `gatherData()` to load and merge skills from manifest, catalog, and user directories
+3. Computes statistics and detects current IDE
+4. Loads HTML template and CSS via `readTemplate()`
+5. Renders placeholders with `renderHtml()` using gathered data
+6. Writes HTML file to output path
+7. Optionally opens browser with `openBrowser()`
 
 ## Future Enhancements
 
