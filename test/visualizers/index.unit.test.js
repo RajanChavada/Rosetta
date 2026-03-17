@@ -19,9 +19,21 @@ jest.unstable_mockModule(catalogModulePath, () => ({
   loadCatalog: jest.fn()
 }));
 
+// Mock for fs-extra - must be set before importing visualizers
+const fsMock = {
+  readFile: jest.fn(),
+  readdir: jest.fn(),
+  pathExists: jest.fn(),
+};
+jest.unstable_mockModule('fs-extra', () => ({
+  default: fsMock
+}));
+
 // Variables for imports
 let loadInstalledSkills;
 let loadCatalogSkills;
+let loadUserSkills;
+let parseSkillFile;
 let loadManifestMock;
 let loadCatalogMock;
 
@@ -33,14 +45,16 @@ beforeAll(async () => {
   const catalog = await import(catalogModulePath);
   loadCatalogMock = catalog.loadCatalog;
 
-  // Import the module under test
+  // Import the module under test (after all mocks are set)
   const visualizers = await import('../../lib/visualizers/index.js');
   loadInstalledSkills = visualizers.loadInstalledSkills;
   loadCatalogSkills = visualizers.loadCatalogSkills;
+  loadUserSkills = visualizers.loadUserSkills;
+  parseSkillFile = visualizers.parseSkillFile;
 });
 
 afterEach(() => {
-  jest.clearAllMocks();
+  jest.resetAllMocks();
 });
 
 describe('visualizers/index - loadInstalledSkills', () => {
@@ -555,5 +569,318 @@ describe('visualizers/index - loadCatalogSkills', () => {
     expect(skill.author).toBeUndefined();
     expect(skill.stars).toBe(0);
     expect(skill.lastUpdated).toBeUndefined();
+  });
+});
+
+describe('visualizers/index - loadUserSkills and parseSkillFile', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('parseSkillFile extracts JSON frontmatter correctly', async () => {
+    const content = `---
+{
+  "name": "My Skill",
+  "description": "A test skill",
+  "domains": ["backend", "api"],
+  "tags": ["node", "express"],
+  "provides": ["routes", "middleware"],
+  "requires": ["nodejs"],
+  "repoUrl": "https://github.com/example/skill"
+}
+---
+
+# My Skill
+
+This is the markdown content.
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const result = await parseSkillFile('/path/to/skill/SKILL.md');
+
+    expect(result).toEqual({
+      name: 'My Skill',
+      description: 'A test skill',
+      domains: ['backend', 'api'],
+      tags: ['node', 'express'],
+      provides: ['routes', 'middleware'],
+      requires: ['nodejs'],
+      repoUrl: 'https://github.com/example/skill'
+    });
+  });
+
+  test('parseSkillFile handles missing frontmatter', async () => {
+    const content = `# My Skill
+
+This is markdown content without frontmatter.
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const result = await parseSkillFile('/path/to/skill/SKILL.md');
+
+    expect(result).toEqual({
+      name: 'skill',
+      description: 'User-created skill'
+    });
+  });
+
+  test('parseSkillFile handles malformed frontmatter gracefully', async () => {
+    const content = `---
+name: "Bad Skill"
+description: "Invalid JSON"
+tags: ["vscode" - missing bracket
+---
+
+# My Skill
+
+Content here.
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const result = await parseSkillFile('/path/to/skill/SKILL.md');
+
+    expect(result).toEqual({
+      name: 'skill',
+      description: 'User-created skill'
+    });
+  });
+
+  test('parseSkillFile derives name from dirname when no frontmatter name', async () => {
+    const content = `---
+description: "A skill without name in frontmatter"
+---
+
+# Some Title
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const result = await parseSkillFile('/path/to/my-great-skill/SKILL.md');
+
+    expect(result.name).toBe('my-great-skill');
+  });
+
+  test('loadUserSkills loads skills from subdirectories with SKILL.md', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockResolvedValue([
+      { name: 'skill-one', isDirectory: () => true, isFile: () => false },
+      { name: 'skill-two', isDirectory: () => true, isFile: () => false },
+      { name: 'not-a-dir.txt', isDirectory: () => false, isFile: () => true }
+    ]);
+
+    const skillOneContent = `---
+{
+  "name": "Skill One",
+  "description": "First skill",
+  "tags": ["vscode"]
+}
+---
+`;
+    const skillTwoContent = `---
+{
+  "name": "Skill Two",
+  "description": "Second skill",
+  "tags": ["cursor"]
+}
+---
+`;
+
+    fsMock.readFile
+      .mockResolvedValueOnce(skillOneContent) // skill-one/SKILL.md
+      .mockResolvedValueOnce(skillTwoContent) // skill-two/SKILL.md
+      .mockResolvedValueOnce(skillOneContent) // second call for skill-one (pathExists check)
+      .mockResolvedValueOnce(skillTwoContent); // second call for skill-two
+
+    const skills = await loadUserSkills(['skills']);
+
+    expect(skills.length).toBe(2);
+    expect(skills[0]).toMatchObject({
+      name: 'Skill One',
+      description: 'First skill',
+      status: 'user-created',
+      source: 'user',
+      tags: ['vscode']
+    });
+    expect(skills[0].id).toBe('skill-one');
+    expect(skills[1]).toMatchObject({
+      name: 'Skill Two',
+      description: 'Second skill',
+      status: 'user-created',
+      source: 'user',
+      tags: ['cursor']
+    });
+    expect(skills[1].id).toBe('skill-two');
+  });
+
+  test('loadUserSkills handles skill.md (lowercase) filename', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockResolvedValue([
+      { name: 'my-skill', isDirectory: () => true, isFile: () => false }
+    ]);
+
+    const content = `---
+{
+  "name": "My Skill",
+  "description": "A skill with lowercase filename",
+  "tags": ["jetbrains"]
+}
+---
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const skills = await loadUserSkills(['skills']);
+
+    expect(skills.length).toBe(1);
+    expect(skills[0].name).toBe('My Skill');
+    expect(skills[0].tags).toContain('jetbrains');
+  });
+
+  test('loadUserSkills handles direct skill files in skills directory (*.skill.md)', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockResolvedValue([
+      { name: 'direct-skill.skill.md', isDirectory: () => false, isFile: () => true }
+    ]);
+
+    const content = `---
+{
+  "name": "Direct Skill",
+  "description": "A skill file directly in skills dir",
+  "tags": ["windsurf"]
+}
+---
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const skills = await loadUserSkills(['skills']);
+
+    expect(skills.length).toBe(1);
+    expect(skills[0].name).toBe('Direct Skill');
+    expect(skills[0].id).toBe('direct-skill');
+    expect(skills[0].tags).toContain('windsurf');
+  });
+
+  test('loadUserSkills handles SKILL.md file directly in skills directory', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockResolvedValue([
+      { name: 'SKILL.md', isDirectory: () => false, isFile: () => true }
+    ]);
+
+    const content = `---
+{
+  "name": "Global Skill",
+  "description": "A global skill file",
+  "tags": ["all"]
+}
+---
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const skills = await loadUserSkills(['skills']);
+
+    expect(skills.length).toBe(1);
+    expect(skills[0].name).toBe('Global Skill');
+    expect(skills[0].id).toBe('skill'); // SKILL.md -> 'skill' as id
+  });
+
+  test('loadUserSkills respects custom skillsDirs option', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockResolvedValue([
+      { name: 'custom-skill', isDirectory: () => true, isFile: () => false }
+    ]);
+
+    const content = `---
+{
+  "name": "Custom Skill",
+  "description": "From custom dir",
+  "tags": ["kilo-code"]
+}
+---
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const skills = await loadUserSkills(['company-skills']);
+
+    expect(skills.length).toBe(1);
+    expect(skills[0].name).toBe('Custom Skill');
+    expect(skills[0].tags).toContain('kilo-code');
+  });
+
+  test('loadUserSkills skips templates/skills path', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    // readdir should not be called for filtered directory
+    const skills = await loadUserSkills(['templates/skills']);
+    expect(skills.length).toBe(0);
+    expect(fsMock.readdir).not.toHaveBeenCalled();
+  });
+
+  test('loadUserSkills returns empty array when directory does not exist', async () => {
+    fsMock.pathExists.mockResolvedValue(false);
+
+    const skills = await loadUserSkills(['nonexistent-dir']);
+
+    expect(skills.length).toBe(0);
+  });
+
+  test('loadUserSkills handles permission errors gracefully', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockRejectedValue(new Error('Permission denied'));
+
+    const skills = await loadUserSkills(['skills']);
+
+    expect(skills.length).toBe(0);
+  });
+
+  test('loadUserSkills returns empty array when no skills found', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockResolvedValue([]); // Empty directory
+
+    const skills = await loadUserSkills(['skills']);
+
+    expect(skills.length).toBe(0);
+  });
+
+  test('loadUserSkills adds derived ideCompatibility from tags', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockResolvedValue([
+      { name: 'multi-ide-skill', isDirectory: () => true, isFile: () => false }
+    ]);
+
+    const content = `---
+{
+  "name": "Multi-IDE Skill",
+  "description": "Works with multiple IDEs",
+  "tags": ["vscode", "cursor", "jetbrains", "claude-code"]
+}
+---
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const skills = await loadUserSkills(['skills']);
+
+    expect(skills.length).toBe(1);
+    expect(skills[0].ideCompatibility).toContain('vscode');
+    expect(skills[0].ideCompatibility).toContain('cursor');
+    expect(skills[0].ideCompatibility).toContain('jetbrains');
+    expect(skills[0].ideCompatibility).toContain('claude-code');
+  });
+
+  test('loadUserSkills defaults ideCompatibility to all when no IDE tags', async () => {
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockResolvedValue([
+      { name: 'generic-skill', isDirectory: () => true, isFile: () => false }
+    ]);
+
+    const content = `---
+{
+  "name": "Generic Skill",
+  "description": "A generic skill",
+  "tags": ["node", "react"]
+}
+---
+`;
+    fsMock.readFile.mockResolvedValue(content);
+
+    const skills = await loadUserSkills(['skills']);
+
+    expect(skills[0].ideCompatibility).toEqual(['all']);
   });
 });
