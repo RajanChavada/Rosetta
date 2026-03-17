@@ -160,6 +160,19 @@ rosetta translate-all --to claude --dry-run  # Preview first
 rosetta translate-all --to claude            # Execute
 ```
 
+### Documentation
+
+**Docs** — Generate HTML documentation for installed skills with interactive visualization
+```bash
+rosetta docs                    # Generate docs (default: .rosetta/docs/skills.html)
+rosetta docs --open             # Generate and open in browser
+rosetta docs --ide vscode       # Filter by specific IDE
+rosetta docs --dry-run          # Preview without writing files
+rosetta docs --json             # Output data as JSON
+```
+
+For more details, see [docs/VISUALIZATION.md](docs/VISUALIZATION.md).
+
 ### Skill Management
 
 **New Skill** — Create a new stateless skill folder
