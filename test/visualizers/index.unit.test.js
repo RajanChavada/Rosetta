@@ -296,16 +296,16 @@ describe('visualizers/index - loadCatalogSkills', () => {
     expect(skills[0].ideCompatibility).toContain('claude-code');
   });
 
-  test('derives multiple IDE compatibilities from tags', async () => {
+  test('derives multiple IDE compatibilities from different families', async () => {
     const mockCatalog = {
       version: '1.0.0',
       skills: [
         {
           name: 'multi-ide-skill',
           displayName: 'Multi-IDE Skill',
-          description: 'Works with multiple IDEs',
+          description: 'Works with multiple IDE families',
           domains: ['editor'],
-          tags: ['vscode', 'cursor', 'windsurf'],
+          tags: ['vscode', 'jetbrains'],
           provides: [],
           requires: []
         }
@@ -316,8 +316,82 @@ describe('visualizers/index - loadCatalogSkills', () => {
     const skills = await loadCatalogSkills();
 
     expect(skills[0].ideCompatibility).toContain('vscode');
+    expect(skills[0].ideCompatibility).toContain('jetbrains');
+    expect(skills[0].ideCompatibility).not.toContain('cursor');
+    expect(skills[0].ideCompatibility).not.toContain('intellij');
+  });
+
+  test('derives separate IDE identifiers for VS Code ecosystem tags', async () => {
+    const mockCatalog = {
+      version: '1.0.0',
+      skills: [
+        {
+          name: 'vscode-ecosystem-skill',
+          displayName: 'VS Code Ecosystem Skill',
+          description: 'Works with VS Code and its variants',
+          domains: ['editor'],
+          tags: ['vscode', 'cursor', 'windsurf', 'codex'],
+          provides: [],
+          requires: []
+        }
+      ]
+    };
+    loadCatalogMock.mockResolvedValue(mockCatalog);
+
+    const skills = await loadCatalogSkills();
+
+    // Each tag maps to its own IDE identifier (no grouping)
+    expect(skills[0].ideCompatibility).toContain('vscode');
     expect(skills[0].ideCompatibility).toContain('cursor');
     expect(skills[0].ideCompatibility).toContain('windsurf');
+    expect(skills[0].ideCompatibility).toContain('codex');
+    expect(skills[0].ideCompatibility).toHaveLength(4);
+  });
+
+  test('groups JetBrains family tags under jetbrains', async () => {
+    const mockCatalog = {
+      version: '1.0.0',
+      skills: [
+        {
+          name: 'jetbrains-family-skill',
+          displayName: 'JetBrains Family Skill',
+          description: 'Works with JetBrains IDEs',
+          domains: ['editor'],
+          tags: ['jetbrains', 'intellij', 'pycharm'],
+          provides: [],
+          requires: []
+        }
+      ]
+    };
+    loadCatalogMock.mockResolvedValue(mockCatalog);
+
+    const skills = await loadCatalogSkills();
+
+    // All JetBrains family tags should map to 'jetbrains' only
+    expect(skills[0].ideCompatibility).toEqual(['jetbrains']);
+  });
+
+  test('groups Claude Code family tags under claude-code', async () => {
+    const mockCatalog = {
+      version: '1.0.0',
+      skills: [
+        {
+          name: 'claude-family-skill',
+          displayName: 'Claude Family Skill',
+          description: 'Works with Claude Code and Anthropic',
+          domains: ['ai'],
+          tags: ['claude-code', 'anthropic'],
+          provides: [],
+          requires: []
+        }
+      ]
+    };
+    loadCatalogMock.mockResolvedValue(mockCatalog);
+
+    const skills = await loadCatalogSkills();
+
+    // All Claude Code family tags should map to 'claude-code' only
+    expect(skills[0].ideCompatibility).toEqual(['claude-code']);
   });
 
   test('defaults to all IDE compatibility when no IDE tags found', async () => {
@@ -384,6 +458,7 @@ describe('visualizers/index - loadCatalogSkills', () => {
 
     expect(skills.length).toBe(1);
     expect(skills[0].name).toBe('custom-skill');
+    // 'codex' maps to 'codex' (distinct IDE)
     expect(skills[0].ideCompatibility).toContain('codex');
   });
 
