@@ -593,9 +593,10 @@ rosetta catalog [options]
 **Options:**
 | Option | Description |
 |---------|-------------|
-| `--domain <domain>` | Filter by domain (e.g., backend, frontend, testing) |
-| `--tag <tag>` | Filter by tag (e.g., node, react, postgres) |
+| `--domain <domain>` | Filter by domain(s), comma-separated (e.g., `backend,api`) |
+| `--limit <n>` | Limit number of results |
 | `--json` | Output as JSON |
+| `--dry-run` | Preview without writing (no effect for catalog) |
 
 **Example:**
 ```bash
@@ -605,45 +606,14 @@ rosetta catalog
 # Filter by domain
 rosetta catalog --domain backend
 
-# Filter by tag
-rosetta catalog --tag node
+# Filter by multiple domains
+rosetta catalog --domain "backend,api"
+
+# Limit results
+rosetta catalog --limit 10
 
 # JSON output
 rosetta catalog --json
-```
-
----
-
-### `rosetta search <query>`
-
-Search skills by name, description, or tags.
-
-**Usage:**
-```bash
-rosetta search <query> [options]
-```
-
-**Arguments:**
-| Argument | Description |
-|----------|-------------|
-| `<query>` | Search term to match against skill name, description, or tags |
-
-**Options:**
-| Option | Description |
-|---------|-------------|
-| `--type <type>` | Filter by type: `catalog`, `installed`, `all` (default: all) |
-| `--json` | Output as JSON |
-
-**Example:**
-```bash
-# Search all skills
-rosetta search "auth"
-
-# Search installed skills only
-rosetta search "database" --type installed
-
-# JSON output
-rosetta search "react" --json
 ```
 
 ---
