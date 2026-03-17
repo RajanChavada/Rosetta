@@ -23,6 +23,7 @@ import { ideate } from './lib/commands/ideate.js';
 import { catalog } from './lib/commands/catalog.js';
 import { skills } from './lib/commands/skills.js';
 import { install } from './lib/commands/install.js';
+import { docs } from './lib/commands/docs.js';
 
 /**
  * Determine work area based on current directory.
@@ -56,8 +57,8 @@ async function main() {
   }
 
   program
-    .version('0.3.1')
-    .description('Sync AI agent rule files across IDEs');
+    .version('0.4.0')
+    .description('AI agent configuration and skill management');
 
   // --- Core Commands ---
 
@@ -202,6 +203,21 @@ Types:
     .option('--max-skills <number>', 'Maximum number of suggestions to generate (default: 5)')
     .action(async (cmdObj) => {
       await ideate(cmdObj);
+    });
+
+  // --- Documentation Commands ---
+
+  program
+    .command('docs')
+    .description('Generate HTML documentation for installed skills with interactive visualization')
+    .option('-o, --output <path>', 'Output file path (default: .rosetta/docs/skills.html)')
+    .option('--ide <name>', 'Filter by specific IDE (auto-detected if omitted)')
+    .option('--open', 'Open in browser after generation')
+    .option('--quiet', 'Suppress output')
+    .option('--dry-run', 'Preview generation without writing files')
+    .option('--json', 'Output data as JSON instead of HTML')
+    .action(async (options) => {
+      await docs(options);
     });
 
   // --- Validation & Health ---

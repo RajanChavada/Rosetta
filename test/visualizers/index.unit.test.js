@@ -34,6 +34,7 @@ let loadInstalledSkills;
 let loadCatalogSkills;
 let loadUserSkills;
 let parseSkillFile;
+let renderScript;
 let loadManifestMock;
 let loadCatalogMock;
 
@@ -51,6 +52,7 @@ beforeAll(async () => {
   loadCatalogSkills = visualizers.loadCatalogSkills;
   loadUserSkills = visualizers.loadUserSkills;
   parseSkillFile = visualizers.parseSkillFile;
+  renderScript = visualizers.renderScript;
 });
 
 afterEach(() => {
@@ -882,5 +884,119 @@ description: "A skill without name in frontmatter"
     const skills = await loadUserSkills(['skills']);
 
     expect(skills[0].ideCompatibility).toEqual(['all']);
+  });
+});
+
+describe('visualizers/index - renderScript', () => {
+  test('returns a string containing JavaScript code', () => {
+    const script = renderScript();
+    expect(typeof script).toBe('string');
+    expect(script.length).toBeGreaterThan(0);
+  });
+
+  test('contains toggleCard function', () => {
+    const script = renderScript();
+    expect(script).toContain('function toggleCard(id)');
+  });
+
+  test('contains filterSkills function', () => {
+    const script = renderScript();
+    expect(script).toContain('function filterSkills()');
+  });
+
+  test('contains renderGrid function', () => {
+    const script = renderScript();
+    expect(script).toContain('function renderGrid()');
+  });
+
+  test('contains renderSkillCard function', () => {
+    const script = renderScript();
+    expect(script).toContain('function renderSkillCard(skill)');
+  });
+
+  test('contains getStatusBadge function', () => {
+    const script = renderScript();
+    expect(script).toContain('function getStatusBadge(status)');
+  });
+
+  test('contains escapeHtml function', () => {
+    const script = renderScript();
+    expect(script).toContain('function escapeHtml(str)');
+  });
+
+  test('contains truncate function', () => {
+    const script = renderScript();
+    expect(script).toContain('function truncate(str, len)');
+  });
+
+  test('contains renderDomainStats function', () => {
+    const script = renderScript();
+    expect(script).toContain('function renderDomainStats()');
+  });
+
+  test('contains renderIdeTabs function', () => {
+    const script = renderScript();
+    expect(script).toContain('function renderIdeTabs()');
+  });
+
+  test('sets up DOMContentLoaded event listener', () => {
+    const script = renderScript();
+    expect(script).toContain("document.addEventListener('DOMContentLoaded'");
+  });
+
+  test('initial renderGrid call inside DOMContentLoaded', () => {
+    const script = renderScript();
+    expect(script).toContain('renderGrid()');
+  });
+
+  test('includes search input event listener', () => {
+    const script = renderScript();
+    expect(script).toContain("searchInput.addEventListener('input'");
+  });
+
+  test('includes IDE tab click event delegation', () => {
+    const script = renderScript();
+    expect(script).toContain("tab.addEventListener('click'");
+  });
+
+  test('includes card click event delegation', () => {
+    const script = renderScript();
+    expect(script).toContain("grid.addEventListener('click'");
+    expect(script).toContain('closest(\'.skill-card\')');
+  });
+
+  test('includes escape key handler', () => {
+    const script = renderScript();
+    expect(script).toContain("e.key === 'Escape'");
+  });
+
+  test('uses event delegation for card clicks (inline onclick)', () => {
+    const script = renderScript();
+    expect(script).toContain('onclick="toggleCard');
+  });
+
+  test('includes skillsData placeholder reference', () => {
+    const script = renderScript();
+    expect(script).toContain('skillsData');
+  });
+
+  test('handles both expanded and collapsed card states', () => {
+    const script = renderScript();
+    expect(script).toContain('skill.expanded');
+    expect(script).toContain('expandedClass');
+  });
+
+  test('generates proper badge HTML for status', () => {
+    const script = renderScript();
+    expect(script).toContain('badge-');
+    expect(script).toContain("'installed'");
+    expect(script).toContain("'catalog'");
+    expect(script).toContain("'user-created'");
+  });
+
+  test('includes empty state handling', () => {
+    const script = renderScript();
+    expect(script).toContain('updateEmptyState');
+    expect(script).toContain('empty-state');
   });
 });
