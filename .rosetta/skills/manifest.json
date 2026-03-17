@@ -1,0 +1,14 @@
+{
+  "version": "1.0",
+  "installed": [
+    {
+      "name": "test-skill",
+      "source": "file:///tmp/test-skill-repo",
+      "commit": "b54afe4dbe079a004896497cd81567b86b759fbb",
+      "scope": "project",
+      "path": ".rosetta/skills/test-skill",
+      "instanceId": "834o4jbe9wz4a0su5b",
+      "installedAt": "2026-03-17T20:22:30.373Z"
+    }
+  ]
+}

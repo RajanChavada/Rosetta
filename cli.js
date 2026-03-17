@@ -23,6 +23,8 @@ import { ideate } from './lib/commands/ideate.js';
 import { catalog } from './lib/commands/catalog.js';
 import { skills } from './lib/commands/skills.js';
 import { install } from './lib/commands/install.js';
+import { uninstall } from './lib/commands/uninstall.js';
+import { loadSkill } from './lib/commands/load-skill.js';
 import { docs } from './lib/commands/docs.js';
 
 /**
@@ -292,6 +294,28 @@ Types:
       await skills({
         format: options.format,
         scope: options.scope
+      });
+    });
+
+  program
+    .command('skill <name>')
+    .description('Load a specific skill for focused context')
+    .action(async (name) => {
+      await loadSkill({ name });
+    });
+
+  program
+    .command('skill uninstall <name>')
+    .description('Uninstall an installed skill')
+    .option('--global', 'Uninstall from global skills directory')
+    .option('--purge', 'Delete skill files after uninstall')
+    .option('--dry-run', 'Preview uninstall without removing')
+    .action(async (name, options) => {
+      await uninstall({
+        name,
+        scope: options.global ? 'global' : 'project',
+        purge: options.purge || false,
+        dryRun: options.dryRun || false
       });
     });
 

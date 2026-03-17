@@ -41,20 +41,28 @@ rosetta scaffold [options]
 | `--skills-dir <path>` | Path to local skills directory |
 | `--skills-repo <url>` | URL to git repo with skills |
 | `--dry-run` | Show what would be created without writing files |
-| `--use-ai` | Use AI analysis to detect project type and stack |
-| `--provider <name>` | AI provider: `anthropic` or `openai` (default: anthropic) |
-| `--api-key <key>` | API key for AI analysis |
+| `--auto-ideate` | Automatically run skill ideation after scaffolding |
+| `--ideate-output <path>` | Custom output path for ideation template (requires `--auto-ideate`) |
+| `--use-ai` | Use AI analysis to detect project type and stack (deprecated) |
+| `--provider <name>` | AI provider: `anthropic` or `openai` (default: anthropic, deprecated) |
+| `--api-key <key>` | API key for AI analysis (deprecated) |
 
 **Example:**
 ```bash
 # Standard scaffold
 rosetta scaffold
 
-# With AI analysis
-rosetta scaffold --use-ai --provider anthropic
+# With auto-ideation (generate skill template)
+rosetta scaffold --auto-ideate
+
+# With custom output for ideation template
+rosetta scaffold --auto-ideate --ideate-output ./my-skill-template.md
 
 # With custom skills
 rosetta scaffold --skills-dir ./company-skills
+
+# Dry-run preview
+rosetta scaffold --dry-run
 ```
 
 ---
@@ -130,6 +138,61 @@ rosetta rescaffold memory
 # Re-scaffold all
 rosetta rescaffold all --dry-run
 ```
+
+---
+
+## Skill Ideation
+
+### `rosetta ideate`
+
+Generate a skill ideation template by analyzing your project structure. This command analyzes dependencies, code patterns, directory structure, and conventions to create a structured template that your IDE agent can use to design custom skills tailored to your project.
+
+**Usage:**
+```bash
+rosetta ideate [options]
+```
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `-a, --area <path>` | Directory to analyze (default: current directory) |
+| `-o, --output <path>` | Output file path (default: `.ai/skill-ideation-template.md`) |
+| `--dry-run` | Show analysis results without generating template |
+| `--json` | Output analysis as JSON instead of markdown template |
+| `--verbose` | Show detailed analysis logs |
+
+**Example:**
+```bash
+# Generate ideation template
+rosetta ideate
+
+# Analyze specific directory
+rosetta ideate --area ./my-project
+
+# Custom output location
+rosetta ideate --output ./ideation.md
+
+# Preview analysis as JSON
+rosetta ideate --dry-run --json
+
+# Verbose logging
+rosetta ideate --verbose
+```
+
+**Output:**
+The command creates a markdown template containing:
+- Project context (languages, frameworks, dependencies)
+- Detected architecture patterns
+- IDE-specific instructions
+- Team context questions (if interactive)
+- Recommendations for skill design
+
+**Workflow:**
+1. Run `rosetta ideate` to generate the template
+2. Fill in team-specific context in the template
+3. Paste the completed template into your IDE agent
+4. The agent proposes skill designs based on the context
+5. Review and refine the proposed skills
 
 ---
 
@@ -518,6 +581,199 @@ rosetta agents
 
 ## Skill Commands
 
+### `rosetta catalog`
+
+Browse the skill catalog to discover available skills.
+
+**Usage:**
+```bash
+rosetta catalog [options]
+```
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `--domain <domain>` | Filter by domain (e.g., backend, frontend, testing) |
+| `--tag <tag>` | Filter by tag (e.g., node, react, postgres) |
+| `--json` | Output as JSON |
+
+**Example:**
+```bash
+# List all catalog skills
+rosetta catalog
+
+# Filter by domain
+rosetta catalog --domain backend
+
+# Filter by tag
+rosetta catalog --tag node
+
+# JSON output
+rosetta catalog --json
+```
+
+---
+
+### `rosetta search <query>`
+
+Search skills by name, description, or tags.
+
+**Usage:**
+```bash
+rosetta search <query> [options]
+```
+
+**Arguments:**
+| Argument | Description |
+|----------|-------------|
+| `<query>` | Search term to match against skill name, description, or tags |
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `--type <type>` | Filter by type: `catalog`, `installed`, `all` (default: all) |
+| `--json` | Output as JSON |
+
+**Example:**
+```bash
+# Search all skills
+rosetta search "auth"
+
+# Search installed skills only
+rosetta search "database" --type installed
+
+# JSON output
+rosetta search "react" --json
+```
+
+---
+
+### `rosetta install <git-url>`
+
+Install a skill from a git repository.
+
+**Usage:**
+```bash
+rosetta install <git-url> [options]
+```
+
+**Arguments:**
+| Argument | Description |
+|----------|-------------|
+| `<git-url>` | Git repository URL (HTTPS or SSH) |
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `--name <name>` | Override skill name (default: derived from repo) |
+| `--branch <branch>` | Checkout specific branch (default: main) |
+| `--dry-run` | Preview installation without writing files |
+| `--global` | Install to global ~/.rosetta/skills instead of project |
+
+**Example:**
+```bash
+# Install from GitHub
+rosetta install https://github.com/rosetta-ai/node-express-postgres
+
+# Install with custom name
+rosetta install git@github.com:custom/auth-skill.git --name custom-auth
+
+# Dry-run preview
+rosetta install https://github.com/example/skill --dry-run
+```
+
+**Behavior:**
+- Clones the repository to `.rosetta/skills/` (or global location)
+- Adds entry to `~/.rosetta/skills-manifest.json`
+- Validates skill structure (SKILL.md present)
+- Supports any git repository with proper skill format
+
+---
+
+### `rosetta skills`
+
+List installed skills with status and details.
+
+**Usage:**
+```bash
+rosetta skills [options]
+```
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `--format <type>` | Output format: `table` or `json` (default: table) |
+| `--scope <scope>` | Filter by scope: `global`, `project`, or `all` (default: all) |
+
+**Example:**
+```bash
+# List all skills (default)
+rosetta skills
+
+# JSON output
+rosetta skills --format json
+
+# List global skills only
+rosetta skills --scope global
+
+# List project skills only
+rosetta skills --scope project
+```
+
+**Output:**
+```
+Installed Skills:
+  node-express-postgres (v1.2.0)
+    Status: installed
+    Path: .rosetta/skills/node-express-postgres
+    Domains: backend, api
+    IDE compatibility: vscode, cursor, claude-code
+
+  react-component-generator (v0.5.0)
+    Status: user-created
+    Path: skills/react-component-generator
+    Domains: frontend
+    IDE compatibility: vscode
+```
+
+---
+
+### `rosetta skill uninstall <name>`
+
+Uninstall an installed skill.
+
+**Usage:**
+```bash
+rosetta skill uninstall <name> [options]
+```
+
+**Arguments:**
+| Argument | Description |
+|----------|-------------|
+| `<name>` | Skill name to uninstall |
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `--global` | Uninstall from global skills directory |
+| `--purge` | Also delete skill files (default: keep files) |
+
+**Example:**
+```bash
+# Uninstall from project
+rosetta skill uninstall old-skill
+
+# Uninstall globally and delete files
+rosetta skill uninstall legacy-skill --global --purge
+```
+
+**Behavior:**
+- Removes entry from `skills-manifest.json`
+- By default, keeps skill files (use `--purge` to delete)
+- Cannot uninstall built-in template skills
+
+---
+
 ### `rosetta skill <name>`
 
 Load a specific skill for focused context.
@@ -537,31 +793,6 @@ rosetta skill <name>
 rosetta skill frontend-context
 rosetta skill backend-context
 rosetta skill testing-context
-```
-
----
-
-### `rosetta skills`
-
-List all available skills.
-
-**Usage:**
-```bash
-rosetta skills [options]
-```
-
-**Options:**
-| Option | Description |
-|---------|-------------|
-| `--category <name>` | Filter by category (frontend, backend, testing) |
-
-**Example:**
-```bash
-# List all skills
-rosetta skills
-
-# List frontend skills only
-rosetta skills --category frontend
 ```
 
 ---
@@ -595,6 +826,65 @@ rosetta new-skill api-auth
 # From template
 rosetta new-skill payment --template stripe-integration
 ```
+
+---
+
+## Documentation Commands
+
+### `rosetta docs`
+
+Generate HTML documentation for installed skills with interactive visualization.
+
+**Usage:**
+```bash
+rosetta docs [options]
+```
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `-o, --output <path>` | Output file path (default: `.rosetta/docs/skills.html`) |
+| `--ide <name>` | Filter by specific IDE (auto-detected if omitted) |
+| `--open` | Open in browser after generation |
+| `--quiet` | Suppress output |
+| `--dry-run` | Preview generation without writing files |
+| `--json` | Output data as JSON instead of HTML |
+
+**Example:**
+```bash
+# Generate HTML docs
+rosetta docs
+
+# Generate and open in browser
+rosetta docs --open
+
+# Generate with specific IDE filter
+rosetta docs --ide vscode
+
+# Custom output path
+rosetta docs --output ./my-docs.html
+
+# Preview without writing
+rosetta docs --dry-run
+
+# Get data as JSON
+rosetta docs --json
+```
+
+**Output:**
+Creates an interactive HTML file with:
+- Responsive card-based layout of all skills
+- Search and filter functionality
+- IDE compatibility filtering
+- Skill details (provides, requires, tags, repository link)
+- Statistics sidebar (total, installed, available, domains)
+- Click-to-expand cards for more information
+
+**Features:**
+- FastAPI-style design with clean typography
+- Client-side JavaScript for instant search/filter
+- Cross-platform browser support
+- Auto-detects current IDE from `.ai/master-skill.md`
 
 ---
 
@@ -825,12 +1115,30 @@ AI API keys (optional).
 
 ## Version History
 
-### v0.2.0 (Current)
+### v0.4.0 (Current)
+- HTML documentation visualization (`rosetta docs`)
+- FastAPI-style interactive HTML docs
+- Client-side search and filter
+- IDE context awareness
+- Expanded tech stack detection (in progress)
+- OpenClaw integration (planned)
+- Comprehensive migration system (planned)
+- Smart skill suggestions (planned)
+
+### v0.3.0
+- Skill catalog system (`rosetta catalog`, `rosetta search`)
+- Smart install from git (`rosetta install <git-url>`)
+- Skills management (`rosetta skills`, `rosetta skill uninstall`)
+- Skills manifest tracking (`~/.rosetta/skills-manifest.json`)
+- Git-based installation with auto-validation
+- 15+ starter skills in catalog
+
+### v0.2.0
 - Added Codex CLI, Kilo Code, Continue.dev support
-- New commands: add-ide, translate, translate-all
+- New commands: `add-ide`, `translate`, `translate-all`
 - Auto-detection of project type and tech stack
-- Optional AI analysis with user's API tokens
-- Modular architecture under lib/
+- Optional AI analysis with user's API tokens (deprecated)
+- Modular architecture under `lib/`
 
 ### v0.1.x
 - Initial release

@@ -43,7 +43,7 @@
 
 ## Current Plan
 
-Rosetta CLI is stable and feature-complete for v0.3.3.
+Rosetta CLI is stable and feature-complete for v0.4.0.
 
 **Recent Work:**
 - Modular architecture refactoring (cli.js: 1694 lines → 305 lines)
