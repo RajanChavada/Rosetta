@@ -1,4 +1,4 @@
-import { gatherData, mergeSkills, computeStats, detectCurrentIde } from '../../lib/visualizers/index.js';
+import { gatherData, mergeSkills, computeStats, detectCurrentIde, renderHtml } from '../../lib/visualizers/index.js';
 import { jest, describe, test, expect } from '@jest/globals';
 
 describe('visualizers/index - gatherData integration', () => {
@@ -246,5 +246,155 @@ describe('visualizers/index - gatherData integration', () => {
       detectCurrentIde: mockDetectCurrentIde2
     });
     expect(result.currentIde).toBe('auto-detected');
+  });
+});
+
+describe('visualizers/index - renderHtml integration', () => {
+  const testTemplate = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}}</title>
+  <style>{{STYLES}}</style>
+</head>
+<body>
+  <div class="container">
+    <aside class="sidebar">{{SIDEBAR_STATS}}</aside>
+    <div class="ide-tabs">{{IDE_TABS}}</div>
+    <p class="current-ide">{{CURRENT_IDE}}</p>
+    <div class="search-bar">{{SEARCH_BAR}}</div>
+    <div class="skill-grid" id="skill-grid">{{SKILL_GRID}}</div>
+    <div class="empty-state" id="empty-state" style="display:none;">No skills match your search.</div>
+    <script>const skillsData = {{SKILLS_JSON}};{{SCRIPT_CONTENT}}</script>
+  </div>
+</body>
+</html>`;
+
+  test('renders complete HTML with all sections replaced', () => {
+    const data = {
+      skills: [
+        {
+          id: 'skill1',
+          name: 'Skill One',
+          status: 'installed',
+          description: 'A test skill',
+          domains: ['backend'],
+          tags: ['nodejs'],
+          provides: ['API'],
+          requires: ['Node.js'],
+          ideCompatibility: ['vscode'],
+          repoUrl: ''
+        }
+      ],
+      stats: {
+        total: 1,
+        byStatus: { installed: 1 },
+        byDomain: { backend: 1 },
+        byIde: { vscode: 1 }
+      },
+      currentIde: 'vscode'
+    };
+    const template = testTemplate;
+    const styles = '/* test styles */';
+    const html = renderHtml(data, template, styles, 'vscode');
+
+    // Verify no remaining template placeholders (except literal {{SKILLS_JSON}} in script comment)
+    expect(html).not.toContain('{{TITLE}}');
+    expect(html).not.toContain('{{STYLES}}');
+    expect(html).not.toContain('{{SIDEBAR_STATS}}');
+    expect(html).not.toContain('{{IDE_TABS}}');
+    expect(html).not.toContain('{{CURRENT_IDE}}');
+    expect(html).not.toContain('{{SEARCH_BAR}}');
+    expect(html).not.toContain('{{SKILL_GRID}}');
+    expect(html).not.toContain('{{SCRIPT_CONTENT}}');
+
+    // Verify title
+    expect(html).toContain('<title>Rosetta Skills Documentation</title>');
+
+    // Verify styles are embedded and escaped
+    expect(html).toContain('<style>/* test styles */</style>');
+
+    // Verify sidebar stats rendered with numbers
+    expect(html).toContain('Total Skills');
+    expect(html).toContain('1');
+    expect(html).toContain('Installed');
+    expect(html).toContain('Available');
+    expect(html).toContain('Domains');
+
+    // Verify IDE tabs present with active class for vscode
+    expect(html).toContain('data-ide="vscode"');
+    expect(html).toContain('class="ide-tab active"'); // active tab
+    expect(html).toContain('VS Code'); // label for vscode
+
+    // Verify current IDE display
+    expect(html).toContain('>vscode<'); // The escaped value appears in HTML
+
+    // Verify search bar
+    expect(html).toContain('id="search-input"');
+    expect(html).toContain('Search skills');
+
+    // Verify skill grid placeholder
+    expect(html).toContain('id="skill-grid"');
+
+    // Verify skillsData JSON embedded
+    expect(html).toContain('const skillsData =');
+    expect(html).toContain('"count":1');
+    expect(html).toContain('"skills"');
+
+    // Verify script functions present
+    expect(html).toContain('function toggleCard');
+    expect(html).toContain('function filterSkills');
+    expect(html).toContain('function renderGrid');
+    expect(html).toContain('function updateEmptyState');
+  });
+
+  test('handles empty skills array correctly', () => {
+    const data = {
+      skills: [],
+      stats: {
+        total: 0,
+        byStatus: {},
+        byDomain: {},
+        byIde: {}
+      },
+      currentIde: 'all'
+    };
+    const html = renderHtml(data, testTemplate, '/* styles */', 'all');
+
+    // No template placeholders remain (except literal {{SKILLS_JSON}} in script comment)
+    expect(html).not.toContain('{{TITLE}}');
+    expect(html).not.toContain('{{STYLES}}');
+    expect(html).not.toContain('{{SIDEBAR_STATS}}');
+    expect(html).not.toContain('{{IDE_TABS}}');
+    expect(html).not.toContain('{{CURRENT_IDE}}');
+    expect(html).not.toContain('{{SEARCH_BAR}}');
+    expect(html).not.toContain('{{SKILL_GRID}}');
+    expect(html).not.toContain('{{SCRIPT_CONTENT}}');
+
+    // Basic structure intact
+    expect(html).toContain('<!DOCTYPE html>');
+    expect(html).toContain('<title>Rosetta Skills Documentation</title>');
+
+    // Stats show zero
+    expect(html).toContain('Total Skills');
+    expect(html).toContain('0');
+
+    // IDE tabs present, "All IDEs" should be active
+    expect(html).toContain('data-ide="all"');
+    expect(html).toContain('class="ide-tab active"');
+
+    // Current IDE display should be "Auto-detected"
+    expect(html).toContain('Auto-detected');
+
+    // Skill grid present
+    expect(html).toContain('id="skill-grid"');
+
+    // skillsData empty
+    expect(html).toContain('const skillsData = {"count":0,"skills":[]}');
+
+    // Empty state div present (hidden by default)
+    expect(html).toContain('id="empty-state"');
+    expect(html).toContain('No skills match your search');
   });
 });

@@ -67,4 +67,9 @@ describe('Template Placeholders', () => {
     expect(result).toContain('const skillsData = {{SKILLS_JSON}};');
     expect(result).toContain('</script>');
   });
+
+  test('should include viewport meta tag for responsive design', async () => {
+    const result = await getTemplateString();
+    expect(result).toContain('<meta name="viewport" content="width=device-width, initial-scale=1.0">');
+  });
 });
