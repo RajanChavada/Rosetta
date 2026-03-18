@@ -230,6 +230,9 @@ Rosetta automatically detects your project type and tech stack:
 - Frontend framework (React, Next.js, Vue, etc.)
 - Backend framework (Express, NestJS, Django, etc.)
 - Database/ORM (Prisma, SQLAlchemy, TypeORM, etc.)
+- **Cloud Infrastructure**: Docker, Kubernetes, Terraform, Serverless, Cloud SDKs (AWS, GCP, Azure)
+- **Mobile Development**: iOS, Android, Flutter, React Native
+- **DevOps & CI/CD**: GitHub Actions, GitLab CI, CircleCI, Jenkins, Make
 
 ---
 
@@ -456,11 +459,14 @@ lib/
 ├── migration.js          # Migration tools
 ├── validation.js         # Health & validation
 ├── cli-helpers.js       # CLI flow helpers
+├── analyzers/           # Specialized project analyzers (Cloud, Mobile, DevOps, etc.)
+├── visualizers/         # Documentation visualization logic & templates
 ├── commands/
 │   ├── add-ide.js       # Add IDE command
 │   ├── translate.js      # Format translation
 │   ├── translate-all.js  # Bulk translation
-│   └── ideate.js        # Skill ideation command
+│   ├── ideate.js        # Skill ideation command
+│   └── docs.js           # Documentation generation command
 ├── translators/
 │   └── base.js         # Translation engine
 ```

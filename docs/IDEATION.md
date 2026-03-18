@@ -280,6 +280,21 @@ The `analyzeProjectForIdeation()` function gathers:
   - Library/SDK
   - Unknown/other
 
+### Cloud Infrastructure
+- Detects Docker, Kubernetes, Terraform, Serverless Framework
+- Identifies Cloud SDKs (AWS, GCP, Azure) in Node.js, Python, and Go projects
+- Reports on providers, orchestration tools, and specific cloud services used
+
+### Mobile Development
+- Detects iOS (Swift/ObjC) and Android (Kotlin/Java) native structures
+- Identifies cross-platform frameworks: Flutter, React Native, Expo
+- Reports on platforms (iOS, Android) and build tools
+
+### DevOps & CI/CD
+- Detects CI systems: GitHub Actions, GitLab CI, CircleCI, Jenkins
+- Identifies automation tools: Terraform, Make, shell scripts
+- Analyzes `package.json` for build and automation scripts
+
 ## Design Rationale
 
 ### Why Scaffold-Only?
