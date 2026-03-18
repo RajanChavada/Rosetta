@@ -26,3 +26,5 @@ jest.config.js
 disabled-tests/
 
 .claude
+
+.creative_template_roadmap.md
