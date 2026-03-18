@@ -1,7 +1,15 @@
 import { gatherData, mergeSkills, computeStats, detectCurrentIde, renderHtml } from '../../lib/visualizers/index.js';
 import { jest, describe, test, expect } from '@jest/globals';
 
+// Mock for loadMasterSkills to prevent picking up real files during tests
+const mockLoadMasterSkills = jest.fn().mockResolvedValue([]);
+
 describe('visualizers/index - gatherData integration', () => {
+  beforeEach(() => {
+    mockLoadMasterSkills.mockClear();
+    mockLoadMasterSkills.mockResolvedValue([]);
+  });
+
   test('returns unified shape with skills, stats, currentIde', async () => {
     const mockLoadInstalled = jest.fn().mockResolvedValue([
       { name: 'SkillA', status: 'installed', domains: ['backend'], ideCompatibility: ['vscode'], source: 'installed' },
@@ -17,6 +25,7 @@ describe('visualizers/index - gatherData integration', () => {
       loadInstalledSkills: mockLoadInstalled,
       loadCatalogSkills: mockLoadCatalog,
       loadUserSkills: mockLoadUser,
+      loadMasterSkills: mockLoadMasterSkills,
       detectCurrentIde: mockDetectCurrentIde
     });
 
@@ -52,6 +61,7 @@ describe('visualizers/index - gatherData integration', () => {
       loadInstalledSkills: mockLoadInstalled,
       loadCatalogSkills: mockLoadCatalog,
       loadUserSkills: mockLoadUser,
+      loadMasterSkills: mockLoadMasterSkills,
       detectCurrentIde: mockDetectCurrentIde
     });
 
@@ -92,6 +102,7 @@ describe('visualizers/index - gatherData integration', () => {
       loadInstalledSkills: mockLoadInstalled,
       loadCatalogSkills: mockLoadCatalog,
       loadUserSkills: mockLoadUser,
+      loadMasterSkills: mockLoadMasterSkills,
       detectCurrentIde: mockDetectCurrentIde
     });
 
@@ -125,6 +136,7 @@ describe('visualizers/index - gatherData integration', () => {
       loadInstalledSkills: mockLoadInstalled,
       loadCatalogSkills: mockLoadCatalog,
       loadUserSkills: mockLoadUser,
+      loadMasterSkills: mockLoadMasterSkills,
       detectCurrentIde: mockDetectCurrentIde
     });
 
@@ -179,6 +191,7 @@ describe('visualizers/index - gatherData integration', () => {
       loadInstalledSkills: mockLoadInstalled,
       loadCatalogSkills: mockLoadCatalog,
       loadUserSkills: mockLoadUser,
+      loadMasterSkills: mockLoadMasterSkills,
       detectCurrentIde: mockDetectCurrentIde
     });
 
@@ -215,6 +228,7 @@ describe('visualizers/index - gatherData integration', () => {
       loadInstalledSkills: mockLoadInstalled,
       loadCatalogSkills: mockLoadCatalog,
       loadUserSkills: mockLoadUser,
+      loadMasterSkills: mockLoadMasterSkills,
       detectCurrentIde: mockDetectCurrentIde
     });
 
@@ -234,6 +248,7 @@ describe('visualizers/index - gatherData integration', () => {
       loadInstalledSkills: mockLoadInstalled,
       loadCatalogSkills: mockLoadCatalog,
       loadUserSkills: mockLoadUser,
+      loadMasterSkills: mockLoadMasterSkills,
       detectCurrentIde: mockDetectCurrentIde1
     });
     expect(result.currentIde).toBe('Cursor');
@@ -243,6 +258,7 @@ describe('visualizers/index - gatherData integration', () => {
       loadInstalledSkills: mockLoadInstalled,
       loadCatalogSkills: mockLoadCatalog,
       loadUserSkills: mockLoadUser,
+      loadMasterSkills: mockLoadMasterSkills,
       detectCurrentIde: mockDetectCurrentIde2
     });
     expect(result.currentIde).toBe('auto-detected');

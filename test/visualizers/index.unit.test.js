@@ -577,6 +577,9 @@ describe('visualizers/index - loadCatalogSkills', () => {
 describe('visualizers/index - loadUserSkills and parseSkillFile', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Set up default: all directories exist but may be empty
+    fsMock.pathExists.mockResolvedValue(true);
+    fsMock.readdir.mockResolvedValue([]);
   });
 
   test('parseSkillFile extracts JSON frontmatter correctly', async () => {
@@ -607,7 +610,8 @@ This is the markdown content.
       tags: ['node', 'express'],
       provides: ['routes', 'middleware'],
       requires: ['nodejs'],
-      repoUrl: 'https://github.com/example/skill'
+      repoUrl: 'https://github.com/example/skill',
+      rawYaml: expect.any(String) // the captured frontmatter JSON string
     });
   });
 
@@ -622,7 +626,8 @@ This is markdown content without frontmatter.
 
     expect(result).toEqual({
       name: 'skill',
-      description: 'User-created skill'
+      description: 'User-created skill',
+      rawYaml: null
     });
   });
 
@@ -643,7 +648,8 @@ Content here.
 
     expect(result).toEqual({
       name: 'skill',
-      description: 'User-created skill'
+      description: 'User-created skill (malformed metadata)',
+      rawYaml: 'name: "Bad Skill"\ndescription: "Invalid JSON"\ntags: ["vscode" - missing bracket'
     });
   });
 
@@ -662,12 +668,22 @@ description: "A skill without name in frontmatter"
   });
 
   test('loadUserSkills loads skills from subdirectories with SKILL.md', async () => {
-    fsMock.pathExists.mockResolvedValue(true);
-    fsMock.readdir.mockResolvedValue([
-      { name: 'skill-one', isDirectory: () => true, isFile: () => false },
-      { name: 'skill-two', isDirectory: () => true, isFile: () => false },
-      { name: 'not-a-dir.txt', isDirectory: () => false, isFile: () => true }
-    ]);
+    // Set up readdir to return entries for skills dir, then for each subdir
+    fsMock.readdir
+      // First: read the top-level skills directory
+      .mockResolvedValueOnce([
+        { name: 'skill-one', isDirectory: () => true, isFile: () => false },
+        { name: 'skill-two', isDirectory: () => true, isFile: () => false },
+        { name: 'not-a-dir.txt', isDirectory: () => false, isFile: () => true }
+      ])
+      // Second: read skill-one subdirectory
+      .mockResolvedValueOnce([
+        { name: 'SKILL.md', isDirectory: () => false, isFile: () => true }
+      ])
+      // Third: read skill-two subdirectory
+      .mockResolvedValueOnce([
+        { name: 'SKILL.md', isDirectory: () => false, isFile: () => true }
+      ]);
 
     const skillOneContent = `---
 {
@@ -688,9 +704,7 @@ description: "A skill without name in frontmatter"
 
     fsMock.readFile
       .mockResolvedValueOnce(skillOneContent) // skill-one/SKILL.md
-      .mockResolvedValueOnce(skillTwoContent) // skill-two/SKILL.md
-      .mockResolvedValueOnce(skillOneContent) // second call for skill-one (pathExists check)
-      .mockResolvedValueOnce(skillTwoContent); // second call for skill-two
+      .mockResolvedValueOnce(skillTwoContent); // skill-two/SKILL.md
 
     const skills = await loadUserSkills(['skills']);
 
@@ -714,10 +728,13 @@ description: "A skill without name in frontmatter"
   });
 
   test('loadUserSkills handles skill.md (lowercase) filename', async () => {
-    fsMock.pathExists.mockResolvedValue(true);
-    fsMock.readdir.mockResolvedValue([
-      { name: 'my-skill', isDirectory: () => true, isFile: () => false }
-    ]);
+    fsMock.readdir
+      .mockResolvedValueOnce([
+        { name: 'my-skill', isDirectory: () => true, isFile: () => false }
+      ])
+      .mockResolvedValueOnce([
+        { name: 'skill.md', isDirectory: () => false, isFile: () => true }
+      ]);
 
     const content = `---
 {
@@ -727,7 +744,7 @@ description: "A skill without name in frontmatter"
 }
 ---
 `;
-    fsMock.readFile.mockResolvedValue(content);
+    fsMock.readFile.mockResolvedValueOnce(content);
 
     const skills = await loadUserSkills(['skills']);
 
@@ -737,8 +754,7 @@ description: "A skill without name in frontmatter"
   });
 
   test('loadUserSkills handles direct skill files in skills directory (*.skill.md)', async () => {
-    fsMock.pathExists.mockResolvedValue(true);
-    fsMock.readdir.mockResolvedValue([
+    fsMock.readdir.mockResolvedValueOnce([
       { name: 'direct-skill.skill.md', isDirectory: () => false, isFile: () => true }
     ]);
 
@@ -750,7 +766,7 @@ description: "A skill without name in frontmatter"
 }
 ---
 `;
-    fsMock.readFile.mockResolvedValue(content);
+    fsMock.readFile.mockResolvedValueOnce(content);
 
     const skills = await loadUserSkills(['skills']);
 
@@ -761,8 +777,7 @@ description: "A skill without name in frontmatter"
   });
 
   test('loadUserSkills handles SKILL.md file directly in skills directory', async () => {
-    fsMock.pathExists.mockResolvedValue(true);
-    fsMock.readdir.mockResolvedValue([
+    fsMock.readdir.mockResolvedValueOnce([
       { name: 'SKILL.md', isDirectory: () => false, isFile: () => true }
     ]);
 
@@ -774,7 +789,7 @@ description: "A skill without name in frontmatter"
 }
 ---
 `;
-    fsMock.readFile.mockResolvedValue(content);
+    fsMock.readFile.mockResolvedValueOnce(content);
 
     const skills = await loadUserSkills(['skills']);
 
@@ -784,10 +799,13 @@ description: "A skill without name in frontmatter"
   });
 
   test('loadUserSkills respects custom skillsDirs option', async () => {
-    fsMock.pathExists.mockResolvedValue(true);
-    fsMock.readdir.mockResolvedValue([
-      { name: 'custom-skill', isDirectory: () => true, isFile: () => false }
-    ]);
+    fsMock.readdir
+      .mockResolvedValueOnce([
+        { name: 'custom-skill', isDirectory: () => true, isFile: () => false }
+      ])
+      .mockResolvedValueOnce([
+        { name: 'SKILL.md', isDirectory: () => false, isFile: () => true }
+      ]);
 
     const content = `---
 {
@@ -797,13 +815,14 @@ description: "A skill without name in frontmatter"
 }
 ---
 `;
-    fsMock.readFile.mockResolvedValue(content);
+    fsMock.readFile.mockResolvedValueOnce(content);
 
     const skills = await loadUserSkills(['company-skills']);
 
     expect(skills.length).toBe(1);
     expect(skills[0].name).toBe('Custom Skill');
     expect(skills[0].tags).toContain('kilo-code');
+    expect(skills[0].id).toBe('custom-skill');
   });
 
   test('loadUserSkills skips templates/skills path', async () => {
@@ -841,10 +860,13 @@ description: "A skill without name in frontmatter"
   });
 
   test('loadUserSkills adds derived ideCompatibility from tags', async () => {
-    fsMock.pathExists.mockResolvedValue(true);
-    fsMock.readdir.mockResolvedValue([
-      { name: 'multi-ide-skill', isDirectory: () => true, isFile: () => false }
-    ]);
+    fsMock.readdir
+      .mockResolvedValueOnce([
+        { name: 'multi-ide-skill', isDirectory: () => true, isFile: () => false }
+      ])
+      .mockResolvedValueOnce([
+        { name: 'SKILL.md', isDirectory: () => false, isFile: () => true }
+      ]);
 
     const content = `---
 {
@@ -854,7 +876,7 @@ description: "A skill without name in frontmatter"
 }
 ---
 `;
-    fsMock.readFile.mockResolvedValue(content);
+    fsMock.readFile.mockResolvedValueOnce(content);
 
     const skills = await loadUserSkills(['skills']);
 
@@ -866,10 +888,13 @@ description: "A skill without name in frontmatter"
   });
 
   test('loadUserSkills defaults ideCompatibility to all when no IDE tags', async () => {
-    fsMock.pathExists.mockResolvedValue(true);
-    fsMock.readdir.mockResolvedValue([
-      { name: 'generic-skill', isDirectory: () => true, isFile: () => false }
-    ]);
+    fsMock.readdir
+      .mockResolvedValueOnce([
+        { name: 'generic-skill', isDirectory: () => true, isFile: () => false }
+      ])
+      .mockResolvedValueOnce([
+        { name: 'SKILL.md', isDirectory: () => false, isFile: () => true }
+      ]);
 
     const content = `---
 {
@@ -879,7 +904,7 @@ description: "A skill without name in frontmatter"
 }
 ---
 `;
-    fsMock.readFile.mockResolvedValue(content);
+    fsMock.readFile.mockResolvedValueOnce(content);
 
     const skills = await loadUserSkills(['skills']);
 

@@ -467,3 +467,33 @@ a:focus-visible {
     page-break-inside: avoid;
   }
 }
+/* Raw YAML Section */
+.raw-yaml {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed #DEE2E6;
+}
+
+.raw-yaml h4 {
+  margin-bottom: 0.75rem;
+  color: #495057;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.raw-yaml pre {
+  margin: 0;
+  padding: 1rem;
+  background: #F8F9FA;
+  border: 1px solid #DEE2E6;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.raw-yaml code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 0.875rem;
+  color: #343A40;
+  line-height: 1.45;
+}
