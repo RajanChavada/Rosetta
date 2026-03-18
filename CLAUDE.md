@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-**Name:** rosetta-ai-blueprint
+**Name:** @rosetta/cli
 **Type:** CLI Tool for AI Agent Configuration
 **Tech Stack:** Node.js (ESM), Commander.js, fs-extra, inquirer, chalk
 **State Management:** File-based (.ai/, ~/.rosetta/)
@@ -34,6 +34,7 @@
 - **Async Functions:** All command handlers and file operations use `async/await`
 - **Error Handling:** Use try/catch with chalk-red error messages
 - **Dry-Run First:** All file operations check `options.dryRun` before writing
+- **No Emojis:** Strictly no emojis or special symbols (like ✓, ●, 🧠) in templates or CLI output.
 - **Consistent Logging:** Use `TreeLogger` for multi-step operations
 - **Path Handling:** Use `path.join()` for cross-platform paths
 
@@ -42,7 +43,7 @@
 
 ## Current Plan
 
-Rosetta CLI is stable and feature-complete for v0.2.0.
+Rosetta CLI is stable and feature-complete for v0.4.0.
 
 **Recent Work:**
 - Modular architecture refactoring (cli.js: 1694 lines → 305 lines)

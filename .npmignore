@@ -10,6 +10,7 @@ CLAUDE.md
 test/
 test-runner.js
 jest.config.js
+disabled-tests/
 
 # Claude Code configuration (not for npm)
 .claude/

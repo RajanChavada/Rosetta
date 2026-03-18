@@ -1140,7 +1140,7 @@ program
 ### Catalog Population Strategy
 
 - **Initial release**: 15 skills in catalog.json (existing templates + 5 new ones)
-- **Update mechanism**: PR process to `rosetta-ai-blueprint` repo - community submits new skills
+- **Update mechanism**: PR process to `@rosetta/cli` repo - community submits new skills
 - **Versioning**: catalog.json versioned with Rosetta release
 - **Offline cache**: Rosetta can run without catalog.json (graceful degradation)
 

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{TITLE}}</title>
+  <style>
+{{STYLES}}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Rosetta Skills</h1>
+      <p class="subtitle">Explore your AI agent skill library</p>
+    </header>
+
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="stats-section">
+          <h3>Statistics</h3>
+          {{SIDEBAR_STATS}}
+        </div>
+
+        <div class="ide-filters">
+          <h3>IDE Compatibility</h3>
+          <div class="ide-tabs">
+            {{IDE_TABS}}
+          </div>
+          <p class="tab-hint">Current IDE: <strong id="current-ide">{{CURRENT_IDE}}</strong></p>
+        </div>
+
+        <div class="domain-stats">
+          <h3>Domains</h3>
+          <div id="domain-list"></div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="content">
+        <div class="search-bar">
+          {{SEARCH_BAR}}
+        </div>
+
+        <div class="skill-grid" id="skill-grid">
+          {{SKILL_GRID}}
+        </div>
+
+        <div class="empty-state" id="empty-state" style="display: none;">
+          <p>No skills match your search.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Data injected as JSON
+    const skillsData = {{SKILLS_JSON}};
+
+    // Interactivity script
+    {{SCRIPT_CONTENT}}
+  </script>
+</body>
+</html>

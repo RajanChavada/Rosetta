@@ -397,9 +397,9 @@ $ rosetta ideate --json
 Ensure Rosetta CLI is installed:
 
 ```bash
-npm install -g rosetta-ai-blueprint
+npm install -g @rosetta/cli
 # or
-npx rosetta-ai-blueprint ideate
+npx @rosetta/cli ideate
 ```
 
 ### Template not generating

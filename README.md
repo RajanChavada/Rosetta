@@ -12,10 +12,12 @@
 **Single source of truth for AI agent rules and engineering memory.**
 
 <p align="center">
-  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.2.0-blue.svg" alt="Version"></a>
+  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.4.0-blue.svg" alt="Version"></a>
   <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
 </p>
+
+> **Single Source of Truth for AI Agents 🤖⚙️**
 
 </div>
 
@@ -23,14 +25,16 @@ Rosetta is a CLI tool designed to help engineering teams maintain a consistent *
 
 Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec without using symlinks, ensuring maximum compatibility.
 
-> **Status: v0.2.0** - Enhanced with new IDE support, translation commands, and AI-powered context detection.
+> **Status: v0.4.0** - Renamed to rosettablueprint and enhanced with catalog system, skill ideation, and translation commands.
+
+## Installation
 
 ```bash
 # Using npx (no installation required)
-npx rosetta-ai-blueprint scaffold
+npx rosettablueprint scaffold
 
 # Or install globally
-npm install -g rosetta-ai-blueprint
+npm install -g rosettablueprint
 rosetta scaffold
 ```
 
@@ -42,17 +46,17 @@ rosetta scaffold
 Run the following command in your project root to set up architecture:
 
 ```bash
-npx rosetta-ai-blueprint scaffold
+npx rosettablueprint scaffold
 ```
 
 **Scaffold Output:**
 ```text
-● Scaffolding atlas-pay...
-┣━ Context gathered ✓
-┣━ .ai/ brain created ✓
-┣━ 2 IDEs configured ✓
-┣━ 4 starter skills added ✓
-┗━ Memory initialized ✓
+* Scaffolding atlas-pay...
+┣━ Context gathered OK
+┣━ .ai/ brain created OK
+┣━ 2 IDEs configured OK
+┣━ 4 starter skills added OK
+┗━ Memory initialized OK
 
 New agentic structure created with preset: agentic-starter
 ```
@@ -115,12 +119,6 @@ Engineering memory usually answers "why was this built?" Rosetta answers "how sh
 rosetta scaffold
 ```
 
-**Scaffold with AI Analysis** — Use AI to auto-detect project context
-```bash
-rosetta scaffold --use-ai --provider anthropic
-# or
-rosetta scaffold --use-ai --provider openai
-```
 
 **Scaffold with Auto-Ideate** — Scaffold and automatically generate skill ideation template
 ```bash
@@ -162,6 +160,19 @@ rosetta translate-all --to claude --dry-run  # Preview first
 rosetta translate-all --to claude            # Execute
 ```
 
+### Documentation
+
+**Docs** — Generate HTML documentation for installed skills with interactive visualization
+```bash
+rosetta docs                    # Generate docs (default: .rosetta/docs/skills.html)
+rosetta docs --open             # Generate and open in browser
+rosetta docs --ide vscode       # Filter by specific IDE
+rosetta docs --dry-run          # Preview without writing files
+rosetta docs --json             # Output data as JSON
+```
+
+For more details, see [docs/VISUALIZATION.md](docs/VISUALIZATION.md).
+
 ### Skill Management
 
 **New Skill** — Create a new stateless skill folder
@@ -198,7 +209,6 @@ rosetta new-skill api-auth
 | **Multi-Source Skills** | Local, global (`~/.rosetta`), or git-sourced skills |
 | **Auto-Detection** | Automatically detects project type and tech stack |
 | **Format Translation** | Convert configs between any supported IDE format |
-| **AI Analysis (Optional)** | Use your own API tokens for smarter context detection |
 | **Config Driven** | Use `.rosetta.json` for non-interactive scaffolding |
 | **Post-Scaffold Hooks** | Run scripts automatically after setup |
 
@@ -223,23 +233,6 @@ Rosetta automatically detects your project type and tech stack:
 
 ---
 
-## AI Analysis (Optional)
-
-Enable AI-powered context analysis using your own API tokens:
-
-```bash
-# Using Anthropic
-export ANTHROPIC_API_KEY=your-key
-rosetta scaffold --use-ai --provider anthropic
-
-# Using OpenAI
-export OPENAI_API_KEY=your-key
-rosetta scaffold --use-ai --provider openai
-```
-
-**Security Note:** Rosetta never uses its own API tokens. All AI operations use only the tokens you provide.
-
----
 
 ## Skills System
 
@@ -410,13 +403,13 @@ rosetta health
 
 **Health Check Output:**
 ```text
-● Validating Rosetta structure...
-┣━ .ai/master-skill.md ✓
-┣━ .ai/AGENT.md ✓
-┣━ .ai/task.md ✓
-┣━ .ai/memory/PROJECT_MEMORY.md ✓
-┣━ .ai/memory/AUTO_MEMORY.md ✓
-┗━ .ai/logs/daily/ ✓
+Validating Rosetta structure...
+┣━ .ai/master-skill.md OK
+┣━ .ai/AGENT.md OK
+┣━ .ai/task.md OK
+┣━ .ai/memory/PROJECT_MEMORY.md OK
+┣━ .ai/memory/AUTO_MEMORY.md OK
+┗━ .ai/logs/daily/ OK
 
 Rosetta Score: 100/100
 Your repo is 100% Rosetta-ready!
@@ -470,9 +463,6 @@ lib/
 │   └── ideate.js        # Skill ideation command
 ├── translators/
 │   └── base.js         # Translation engine
-└── ai-analyzers/
-    ├── project.js       # AI project analysis
-    └── context.js      # AI context enhancement
 ```
 
 ---

@@ -23,6 +23,8 @@ import { ideate } from './lib/commands/ideate.js';
 import { catalog } from './lib/commands/catalog.js';
 import { skills } from './lib/commands/skills.js';
 import { install } from './lib/commands/install.js';
+import { uninstall } from './lib/commands/uninstall.js';
+import { docs } from './lib/commands/docs.js';
 
 /**
  * Determine work area based on current directory.
@@ -56,8 +58,8 @@ async function main() {
   }
 
   program
-    .version('0.2.0')
-    .description('Sync AI agent rule files across IDEs');
+    .version('0.4.0')
+    .description('AI agent configuration and skill management');
 
   // --- Core Commands ---
 
@@ -88,9 +90,6 @@ async function main() {
     .option('--skills-dir <path>', 'Path to local skills directory')
     .option('--skills-repo <url>', 'URL to git repo with skills')
     .option('--dry-run', 'Show what would be created without writing files')
-    .option('--use-ai', 'Use AI analysis to detect project type and stack (requires API key)')
-    .option('--provider <name>', 'AI provider: anthropic or openai (default: anthropic)')
-    .option('--api-key <key>', 'API key for AI analysis')
     .option('--auto-ideate', 'Automatically run skill ideation after scaffolding')
     .option('--ideate-output <path>', 'Custom output path for ideation template (requires --auto-ideate)')
     .addHelpText('after', `
@@ -197,9 +196,6 @@ Types:
     .command('ideate')
     .description('Generate skill ideation template for use in IDE')
     .option('-a, --area <path>', 'Directory path to analyze (relative or absolute)')
-    .option('--deep', 'Perform deep analysis (scans more files, slower)')
-    .option('--provider <name>', 'AI provider for suggestions: anthropic, openai, or local (default: local)')
-    .option('--api-key <key>', 'API key for cloud AI provider (skipped if in config)')
     .option('--output <path>', 'Save suggestions to file instead of displaying')
     .option('--json', 'Output suggestions in JSON format')
     .option('--interactive', 'Interactive mode with selection prompts (default)')
@@ -208,6 +204,21 @@ Types:
     .option('--max-skills <number>', 'Maximum number of suggestions to generate (default: 5)')
     .action(async (cmdObj) => {
       await ideate(cmdObj);
+    });
+
+  // --- Documentation Commands ---
+
+  program
+    .command('docs')
+    .description('Generate HTML documentation for installed skills with interactive visualization')
+    .option('-o, --output <path>', 'Output file path (default: .rosetta/docs/skills.html)')
+    .option('--ide <name>', 'Filter by specific IDE (auto-detected if omitted)')
+    .option('--open', 'Open in browser after generation')
+    .option('--quiet', 'Suppress output')
+    .option('--dry-run', 'Preview generation without writing files')
+    .option('--json', 'Output data as JSON instead of HTML')
+    .action(async (options) => {
+      await docs(options);
     });
 
   // --- Validation & Health ---
@@ -219,7 +230,7 @@ Types:
       const score = await validateRepo();
       console.log(`\nRosetta Score: ${score}/100`);
       if (score === 100) {
-        console.log(chalk.green('Your repo is 100% Rosetta-ready! 🚀'));
+        console.log(chalk.green('Your repo is 100% Rosetta-ready!'));
       } else if (score > 80) {
         console.log(chalk.blue('Your repo is mostly healthy, but has minor gaps.'));
       } else {
@@ -282,6 +293,24 @@ Types:
       await skills({
         format: options.format,
         scope: options.scope
+      });
+    });
+
+  // --- Skill Management Commands ---
+
+  program
+    .command('skill uninstall')
+    .description('Uninstall an installed skill')
+    .argument('<name>', 'Skill name')
+    .option('--global', 'Uninstall from global skills directory')
+    .option('--purge', 'Delete skill files after uninstall')
+    .option('--dry-run', 'Preview uninstall without removing')
+    .action(async (name, options) => {
+      await uninstall({
+        name,
+        scope: options.global ? 'global' : 'project',
+        purge: options.purge || false,
+        dryRun: options.dryRun || false
       });
     });
 

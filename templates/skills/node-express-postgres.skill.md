@@ -1,30 +1,36 @@
 ---
 name: node-express-postgres-api
-description: Help build and maintain Node/Express APIs backed by Postgres with safe CRUD patterns.
+description: Expert-level workflow for building and maintaining robust Node/Express APIs backed by Postgres.
+domains:
+  - backend
+  - database
 ---
 
 # Node/Express/Postgres API Skill
 
-## Intent
-Use this skill to design, implement, and refactor HTTP APIs backed by Postgres in this repository.
+## Expert Intent
+Standardize the engineering lifecycle of HTTP APIs. Focus on type safety (via JSDoc or TS), parameterized query security, and predictable error handling to ensure high performance and zero regression in **{{PROJECT_TYPE}}**.
 
-## When to Use
-- Creating or modifying Express route handlers.
-- Designing new tables or migrations.
-- Implementing transactional flows involving multiple tables.
+## Pre-Checks & Context Intake
+- **Entry Points**: Locate Express route definitions and the database initialization logic.
+- **Migration State**: Identify the source of truth for the schema (e.g., `migrations/` folder or `schema.sql`).
+- **Middlewares**: Scan for global auth, validation, and logging layers that must be respected.
+- **Memory Check**: Read `PROJECT_MEMORY.md` for existing DB connection pool or transaction patterns.
 
-## Workflow
-1. Clarify the endpoint(s): method, path, status codes, and data contracts.
-2. Inspect existing Express routes, middlewares, and DB access utilities.
-3. Design SQL schema changes or queries with attention to indexes, constraints, and safety.
-4. Implement route handlers that:
-   - Validate input
-   - Use parameterized queries / query builder
-   - Handle errors and edge cases explicitly
-5. Add or update tests (unit + integration) for new behavior.
-6. Document the endpoint and any new tables.
+## Expert Workflow (SOF)
+1. **Contract Design**: Define the "External Contract" first (Method, Path, Request Schema, Response Codes).
+2. **Schema Evolution**: Draft the SQL migration using idempotent `CREATE TABLE IF NOT EXISTS` or standard versioned migration tools.
+3. **Controller Logic**: Implement the handler using a "Service/Repository" pattern to separate business logic from SQL.
+4. **Validation**: Enforce the contract using a validation library (Zod, Joi) or robust manual checks.
+5. **Security**: Audit for raw template strings in SQL; enforce parameterized input for ALL queries.
+6. **Verification**: write and run integration tests that verify database side-effects.
 
-## Output
-- Updated routes/controller files
-- SQL or migration files
-- Updated tests and minimal docs
+## Strict Guardrails
+- **SQL SAFETY**: Raw `query()` calls with template literals are strictly forbidden. Use parameterized arguments.
+- **ERROR LEAKAGE**: Do not return raw DB errors to the client. Map them to safe, structured JSON responses.
+- **ARCHITECTURE**: Do not bypass existing service layers. Maintain the repo's established coupling rules.
+
+## Expected Output
+- Versioned SQL migration files.
+- Documented Express route handlers.
+- New or updated integration tests proving the fix/feature.

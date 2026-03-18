@@ -46,9 +46,9 @@ Your existing `.ai/` structure remains unchanged.
 ### 1. Update Rosetta
 
 ```bash
-npm update rosetta-ai-blueprint
+npm update @rosetta/cli
 # or
-npm install -g rosetta-ai-blueprint@latest
+npm install -g @rosetta/cli@latest
 ```
 
 ### 2. Verify Your Setup
