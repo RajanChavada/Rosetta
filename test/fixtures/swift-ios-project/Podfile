@@ -1,0 +1,14 @@
+# Podfile for iOS app
+platform :ios, '13.0'
+target 'MyApp' do
+  use_frameworks!
+  pod 'SwiftUI'
+  pod 'Combine'
+  pod 'Alamofire'
+end
+
+target 'MyAppTests' do
+  inherit! :search_paths
+  pod 'Quick'
+  pod 'Nimble'
+end
