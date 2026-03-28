@@ -245,6 +245,118 @@ rosetta migrate-from-claude
 
 ---
 
+## YAML-First Commands
+
+### `rosetta sync-yaml`
+
+Synchronize `rosetta.yaml` to IDE configuration files (CLAUDE.md, .cursorrules, etc.).
+
+**Usage:**
+```bash
+rosetta sync-yaml [options]
+```
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `--from <path>` | Custom path to rosetta.yaml (default: auto-discover) |
+| `--ides <list>` | Comma-separated IDE identifiers to sync (default: all supported) |
+| `--dry-run` | Preview what would be changed without writing files |
+| `--verbose` | Detailed output |
+
+**Supported IDEs:**
+- `claude` → CLAUDE.md
+- `cursor` → .cursorrules
+- `windsurf` → .windsurf/rules/rosetta-rules.md
+
+**Example:**
+```bash
+# Sync to all supported IDEs
+rosetta sync-yaml
+
+# Sync to specific IDEs only
+rosetta sync-yaml --ides claude,cursor
+
+# Use custom YAML file
+rosetta sync-yaml --from configs/production.yaml
+
+# Dry-run with verbose output
+rosetta sync-yaml --dry-run --verbose
+```
+
+---
+
+### `rosetta validate-config`
+
+Validate a `rosetta.yaml` file against the configuration schema.
+
+**Usage:**
+```bash
+rosetta validate-config [options]
+```
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `--file <path>` | Path to rosetta.yaml (default: auto-discover) |
+
+**Example:**
+```bash
+# Validate default rosetta.yaml
+rosetta validate-config
+
+# Validate custom file
+rosetta validate-config --file path/to/custom.yaml
+```
+
+**Output:**
+```
+✓ rosetta.yaml is valid
+  Project: my-project
+  Type: web_app
+  Language: TypeScript
+  Conventions: 3
+  Agents: 2
+  Notes: 4
+```
+
+---
+
+### `rosetta migrate-to-yaml`
+
+Convert existing `.ai/master-skill.md` to `rosetta.yaml` (best-effort migration).
+
+**Usage:**
+```bash
+rosetta migrate-to-yaml [options]
+```
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `--dry-run` | Show what would be created without writing files |
+| `--verbose` | Detailed output |
+
+**Example:**
+```bash
+# Migrate master-skill.md to rosetta.yaml
+rosetta migrate-to-yaml
+
+# Preview migration
+rosetta migrate-to-yaml --dry-run
+
+# Verbose migration with details
+rosetta migrate-to-yaml --verbose
+```
+
+**Migration Strategy:**
+- Extracts project metadata from existing master-skill.md using pattern matching
+- Creates `rosetta.yaml` with detected values and safe defaults
+- Backs up original files with timestamp
+- Manual review recommended after migration
+
+---
+
 ## New Commands
 
 ### `rosetta add-ide`
@@ -414,7 +526,7 @@ rosetta audit
 
 ### `rosetta sync-memory`
 
-Rotate old logs and summarize progress to AUTO_MEMORY.md.
+Rotate old logs (90-day retention), summarize patterns, and manage memory archives.
 
 **Usage:**
 ```bash
@@ -422,8 +534,20 @@ rosetta sync-memory
 ```
 
 **Behavior:**
-- Rotates logs older than 7 days to `.ai/logs/archive/`
-- Summarizes logs to `.ai/memory/AUTO_MEMORY.md`
+- Rotates logs older than 90 days to `.ai/archive/logs/YYYY/MM-Month.md`
+- Detects repeated patterns (errors, files, tasks) using rule-based heuristics
+- Summarizes findings to `.ai/memory/AUTO_MEMORY.md`
+- Creates monthly consolidated archives for long-term storage
+
+**Retention Policy:**
+- Daily logs: Active in `.ai/logs/daily/` for 90 days
+- After 90 days: Auto-rotate to `.ai/archive/logs/YYYY/MM-Month.md`
+- Tribal knowledge: Permanent, append-only in `.ai/archive/tribal-knowledge.md`
+
+**Pattern Detection:**
+- Repeated errors: Same error message >3 times
+- Repeated files: Same file modified >5 times
+- Similar tasks: Keyword matching for task patterns
 
 ---
 
@@ -1080,6 +1204,148 @@ AI API keys (optional).
 |------|-------------|
 | 0 | Success |
 | 1 | Error (invalid command, file not found, etc.) |
+
+---
+
+---
+
+## Memory Management System
+
+Rosetta includes a sophisticated memory management system defined by the `agentic-memory` skill. This system preserves tribal knowledge, maintains a clear memory hierarchy, and ensures important context never disappears.
+
+### Memory Hierarchy
+
+The memory system has 5 levels. Agents should read and update in this order:
+
+| Level | File | Purpose | Update Rule |
+|-------|------|---------|-------------|
+| 1 | `.ai/memory/PROJECT_MEMORY.md` | Architectural decisions, domain rules, "Why" | Propose to user before modifying |
+| 2 | `.ai/memory/AUTO_MEMORY.md` | Heuristics, patterns, gotchas, shortcuts | Append freely, promote to PROJECT_MEMORY.md when appropriate |
+| 3 | `.ai/logs/daily/YYYY-MM-DD.md` | Session activity, what was attempted | Auto-log for significant work |
+| 4 | `.ai/archive/tribal-knowledge.md` | Append-only tribal wisdom | User approval required, append-only |
+| 5 | `.ai/task.md` | Current active objective | Update as needed |
+
+### THE MEMORY CONTRACT
+
+The `agentic-memory` skill defines 5 core rules that all agents must follow:
+
+#### Rule 1: Tribal Knowledge Preservation (CRITICAL)
+- NEVER let important learnings disappear
+- When you encounter tribal knowledge, PROMPT THE USER with clear reasoning
+- AWAIT APPROVAL before archiving
+- Archive is APPEND-ONLY - never modify existing entries
+
+**Tribal knowledge indicators:**
+- "We always do it this way" (no documented reason)
+- Undocumented workarounds for known issues
+- Implicit architectural decisions
+- Team conventions not in code or docs
+- "Don't touch X without Y" warnings
+- Historical context from old issues/PRs
+
+#### Rule 2: Memory Hierarchy (STRICT ORDER)
+Always read and update memory files in the 5-level order shown above.
+
+#### Rule 3: Auto-Logging Triggers
+ALWAYS log to today's daily log when performing:
+1. Multi-step problem solving (>3 logical steps)
+2. Root cause discovery investigations
+3. Feature implementations (new code paths)
+4. Complex debugging (CI/CD logs, stack traces)
+5. Configuration changes (.env, configs, constants)
+6. Large schema changes (DB, API contracts)
+7. PRD creations or product decisions
+8. Performance optimizations
+9. Library/dependency changes
+10. Technical debt reduction work
+
+#### Rule 4: User Intent Respect
+- Suggest, NEVER assume
+- Promote archival with clear reasoning
+- AWAIT explicit approval before permanent actions
+
+#### Rule 5: Session Workflow
+1. **ONBOARDING**: Read skill, understand rules, check existing memory
+2. **ACTIVE MONITORING**: Watch for tribal knowledge, auto-log triggers
+3. **DAILY LOG**: Every 5-10 tool calls, summarize progress
+4. **SESSION END**: Promote valuable findings, suggest archival
+
+### Archive Structure
+
+```
+.ai/
+├── archive/
+│   ├── tribal-knowledge.md    # Append-only tribal wisdom
+│   ├── retired-patterns.md    # Deprecated but worth remembering
+│   └── logs/                  # Rotated daily logs >90 days
+│       └── 2026/
+│           ├── 03-March.md
+│           └── 02-February.md
+```
+
+### Retention Policy
+
+- **Daily logs**: Active in `.ai/logs/daily/` for 90 days
+- **After 90 days**: Rotate to `.ai/archive/logs/YYYY/MM-Month.md`
+- **Tribal knowledge**: Permanent, append-only
+- **Retired patterns**: Keep with deprecation date
+
+### Pattern Detection
+
+**Rule-based only** - No AI/LLM calls:
+
+- **Repeated Errors**: Same error message >3 times
+- **Repeated Files**: Same file modified >5 times
+- **Similar Tasks**: Keyword matching for task patterns
+
+Detected patterns trigger promotion suggestions:
+```
+Pattern detected: [X].
+Occurred [N] times.
+Promote to AUTO_MEMORY.md?
+```
+
+### API Functions
+
+The memory management system provides helper functions in `lib/validation.js`:
+
+```javascript
+// Archive operations
+await appendToArchive(entry, category, options)
+await readArchiveContents(category)
+await getArchiveStatus()
+
+// Memory hierarchy
+await readMemoryHierarchy()
+await validateMemoryIntegrity()
+
+// Pattern detection (rule-based)
+await detectPatternsHeuristic(logDir)
+await suggestPromotions(todayLog)
+
+// Log rotation
+await rotateLogsToArchive(daysThreshold, options)
+await syncMemory(options)
+```
+
+### Using the Agentic Memory Skill
+
+When the `agentic-memory` skill is loaded:
+
+1. **Onboarding** (First 5 minutes):
+   - Read memory files in order (1-5)
+   - Initialize today's log
+   - Acknowledge readiness
+
+2. **During Work**:
+   - Monitor for tribal knowledge signals
+   - Auto-log significant work
+   - Detect patterns for promotion
+
+3. **At Session End**:
+   - Review today's log entries
+   - Suggest promotions
+   - Update task.md if needed
 
 ---
 

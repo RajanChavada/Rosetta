@@ -25,6 +25,7 @@ import { skills } from './lib/commands/skills.js';
 import { install } from './lib/commands/install.js';
 import { uninstall } from './lib/commands/uninstall.js';
 import { docs } from './lib/commands/docs.js';
+import { syncYAMLCommand, validateConfigCommand } from './lib/commands/sync-yaml.js';
 
 /**
  * Determine work area based on current directory.
@@ -63,6 +64,8 @@ async function main() {
 
   // --- Core Commands ---
 
+  // --- Legacy Sync (master-skill.md) ---
+
   program
     .command('sync')
     .description('Verify IDE wrappers or regenerate them from templates')
@@ -74,6 +77,45 @@ async function main() {
         interactive: false,
         regenerateWrappers: cmdObj.regenerateWrappers,
         dryRun: cmdObj.dryRun
+      });
+    });
+
+  // --- YAML-First Commands ---
+
+  program
+    .command('sync-yaml')
+    .description('Sync rosetta.yaml to IDE configurations (YAML-first architecture)')
+    .option('--from <path>', 'Custom path to rosetta.yaml file')
+    .option('--ides <ide1,ide2>', 'Comma-separated list of IDEs to sync (default: all supported)')
+    .option('--dry-run', 'Show what would be changed without writing files')
+    .option('--verbose', 'Detailed output')
+    .addHelpText('after', `
+Supported IDEs: claude, cursor, windsurf
+(More IDEs will be added in future phases)
+
+Examples:
+  rosetta sync-yaml                       # Sync to all supported IDEs
+  rosetta sync-yaml --ides claude,cursor  # Sync to specific IDEs
+  rosetta sync-yaml --from custom.yaml    # Use a different YAML file
+  rosetta sync-yaml --dry-run --verbose   # Preview changes with details
+`)
+    .action(async (options) => {
+      const ides = options.ides ? options.ides.split(',').map(i => i.trim()) : null;
+      await syncYAMLCommand({
+        ides,
+        from: options.from,
+        dryRun: options.dryRun,
+        verbose: options.verbose
+      });
+    });
+
+  program
+    .command('validate-config')
+    .description('Validate rosetta.yaml schema and contents')
+    .option('--file <path>', 'Custom path to rosetta.yaml file (default: auto-discover)')
+    .action(async (options) => {
+      await validateConfigCommand({
+        file: options.file
       });
     });
 
@@ -145,6 +187,21 @@ Types:
       await migrateFromSource('CLAUDE.md');
     });
 
+  // --- YAML-First Migration ---
+
+  program
+    .command('migrate-to-yaml')
+    .description('Migrate .ai/master-skill.md to rosetta.yaml (YAML-first architecture)')
+    .option('--dry-run', 'Preview migration without creating files')
+    .option('--verbose', 'Detailed output')
+    .action(async (options) => {
+      const { migrateToYAMLCommand } = await import('./lib/commands/migrate-to-yaml.js');
+      await migrateToYAMLCommand({
+        dryRun: options.dryRun,
+        verbose: options.verbose
+      });
+    });
+
   // --- New Commands ---
 
   program
@@ -182,11 +239,15 @@ Types:
     .option('-g, --global', 'Install globally to ~/.rosetta/skills instead of project local')
     .option('--force', 'Overwrite existing installation')
     .option('--dry-run', 'Show what would be done without making changes')
+    .option('--ide <name>', 'Install directly to specific IDE skills directory (e.g., "Claude Code", "Cursor")')
+    .option('--multi-ide', 'Install to .rosetta/skills for multi-IDE support')
     .action(async (gitUrl, options) => {
       await install(gitUrl, {
         global: options.global,
         force: options.force,
-        dryRun: options.dryRun
+        dryRun: options.dryRun,
+        ide: options.ide,
+        multiIde: options.multiIde
       });
     });
 
@@ -289,10 +350,12 @@ Types:
     .description('List all installed skills')
     .option('--format <type>', 'Output format: table or json', 'table')
     .option('--scope <scope>', 'Filter by scope: global, project, or all', 'all')
+    .option('--ide <ide>', 'Filter by IDE (e.g., "Claude Code", "Cursor", or "multi-ide")', 'all')
     .action(async (options) => {
       await skills({
         format: options.format,
-        scope: options.scope
+        scope: options.scope,
+        ide: options.ide
       });
     });
 

@@ -1,0 +1,281 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://rosetta-cli.dev/schemas/rosetta-schema.json",
+  "title": "Rosetta Canonical Configuration Schema",
+  "description": "Canonical schema for rosetta.yaml - the universal AI coding configuration format",
+  "type": "object",
+  "required": ["schema_version", "project", "stack"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version for compatibility tracking"
+    },
+    "project": {
+      "type": "object",
+      "description": "Project metadata and classification",
+      "required": ["name", "description", "type"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Project name"
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 200,
+          "description": "One-sentence project description"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["web_app", "api_service", "cli_tool", "data_ml", "library_sdk", "internal_tooling"],
+          "description": "Project type classification"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high"],
+          "default": "medium",
+          "description": "Project risk level for agent behavior"
+        }
+      }
+    },
+    "stack": {
+      "type": "object",
+      "description": "Technology stack information",
+      "required": ["language"],
+      "properties": {
+        "language": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Primary programming language"
+        },
+        "frontend": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Frontend frameworks and libraries"
+        },
+        "backend": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Backend frameworks and libraries"
+        },
+        "datastores": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Databases and storage systems"
+        },
+        "testing": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Testing frameworks and tools"
+        }
+      }
+    },
+    "conventions": {
+      "type": "array",
+      "description": "Development conventions and coding standards",
+      "items": {
+        "type": "object",
+        "required": ["name", "rules"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Convention category name"
+          },
+          "rules": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["description", "enforced"],
+              "properties": {
+                "description": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Rule description"
+                },
+                "pattern": {
+                  "type": "string",
+                  "description": "Regex pattern for validation (optional)"
+                },
+                "enforced": {
+                  "type": "boolean",
+                  "description": "Whether this rule is enforced"
+                }
+              }
+            }
+          },
+          "examples": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "Code examples demonstrating the convention"
+          }
+        }
+      }
+    },
+    "commands": {
+      "type": "object",
+      "description": "Common commands organized by context",
+      "properties": {
+        "dev": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "command"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "command": { "type": "string", "minLength": 1 },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "test": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "command"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "command": { "type": "string", "minLength": 1 },
+              "description": { "type": "string" }
+            }
+          }
+        },
+        "build": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name", "command"],
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "command": { "type": "string", "minLength": 1 },
+              "description": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "agents": {
+      "type": "array",
+      "description": "Agent/persona configurations for different development roles",
+      "items": {
+        "type": "object",
+        "required": ["name", "role", "style", "scope"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Agent identifier name"
+          },
+          "role": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Agent role (e.g., 'Senior Architect', 'Code Reviewer')"
+          },
+          "style": {
+            "type": "string",
+            "enum": ["pair_programmer", "autonomous", "conservative"],
+            "description": "Agent interaction style"
+          },
+          "scope": {
+            "type": "string",
+            "enum": ["current_file", "module", "repo"],
+            "description": "Agent's scope of operation"
+          },
+          "system_prompt": {
+            "type": "string",
+            "description": "Custom system prompt override (optional)"
+          }
+        }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "description": "Additional context and project-specific notes",
+      "items": {
+        "type": "object",
+        "required": ["title", "category", "content"],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Note title"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["domain_rule", "gotcha", "optimization", "debugging"],
+            "description": "Note category"
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Note content"
+          },
+          "priority": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "default": 5,
+            "description": "Note priority (1-10)"
+          }
+        }
+      }
+    },
+    "ide_overrides": {
+      "type": "object",
+      "description": "IDE-specific configuration overrides",
+      "properties": {
+        "claude": {
+          "type": "object",
+          "properties": {
+            "persona": { "type": "string" },
+            "additional_context": { "type": "string" }
+          }
+        },
+        "cursor": {
+          "type": "object",
+          "properties": {
+            "reasoning_modes": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "windsurf": {
+          "type": "object",
+          "properties": {
+            "collaboration_mode": { "type": "string" }
+          }
+        },
+        "copilot": {
+          "type": "object",
+          "properties": {
+            "custom_instructions": { "type": "string" }
+          }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "Internal metadata (managed by Rosetta, not manually edited)",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "version": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string",
+          "description": "Source file this was migrated from (if any)"
+        }
+      }
+    }
+  }
+}

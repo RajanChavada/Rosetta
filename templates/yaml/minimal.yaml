@@ -1,0 +1,27 @@
+# Rosetta Configuration
+# This is the canonical source of truth for AI agent behavior.
+# IDE-specific configs (CLAUDE.md, .cursorrules, etc.) are generated from this file.
+
+schema_version: "1.0.0"
+
+project:
+  name: "my-project"
+  description: "A project description (1-2 sentences)"
+  type: "web_app"  # web_app, api_service, cli_tool, data_ml, library_sdk, internal_tooling
+  risk_level: "medium"  # low, medium, high
+
+stack:
+  language: "TypeScript"
+  frontend: []
+  backend: []
+  datastores: []
+  testing: []
+
+conventions: []
+commands:
+  dev: []
+  test: []
+  build: []
+agents: []
+notes: []
+ide_overrides: {}
