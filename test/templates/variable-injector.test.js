@@ -5,7 +5,7 @@ describe('injectVariables', () => {
     const template = 'Name: {{PROJECT_NAME}}, Type: {{PROJECT_TYPE}}';
     const context = {
       projectName: 'my-web-app',
-      type: 'web_app'
+      projectType: 'web_app'
     };
     const result = injectVariables(template, context);
     expect(result).toBe('Name: my-web-app, Type: web_app');
@@ -15,8 +15,8 @@ describe('injectVariables', () => {
     const template = 'Project: {{PROJECT_NAME}} - {{PROJECT_DESCRIPTION}} ({{PROJECT_TYPE}})';
     const context = {
       projectName: 'test-project',
-      description: 'A test application',
-      type: 'mobile_app'
+      projectDescription: 'A test application',
+      projectType: 'mobile_app'
     };
     const result = injectVariables(template, context);
     expect(result).toBe('Project: test-project - A test application (mobile_app)');
@@ -26,7 +26,7 @@ describe('injectVariables', () => {
     const template = '{{PROJECT_NAME}} is a {{PROJECT_TYPE}} project called {{PROJECT_NAME}}';
     const context = {
       projectName: 'my-app',
-      type: 'web_app'
+      projectType: 'web_app'
     };
     const result = injectVariables(template, context);
     expect(result).toBe('my-app is a web_app project called my-app');
@@ -66,7 +66,7 @@ describe('injectVariables', () => {
     const template = 'Name: {{PROJECT_NAME}}, Description: {{PROJECT_DESCRIPTION}}';
     const context = {
       projectName: '',
-      description: 'Some description'
+      projectDescription: 'Some description'
     };
     const result = injectVariables(template, context);
     expect(result).toBe('Name: , Description: Some description');
@@ -76,7 +76,7 @@ describe('injectVariables', () => {
     const template = 'Name: {{PROJECT_NAME}}, Description: {{PROJECT_DESCRIPTION}}';
     const context = {
       projectName: undefined,
-      description: 'Some description'
+      projectDescription: 'Some description'
     };
     const result = injectVariables(template, context);
     expect(result).toBe('Name: <!-- TODO: Add PROJECT_NAME -->, Description: Some description');
@@ -86,7 +86,7 @@ describe('injectVariables', () => {
     const template = 'Name: {{PROJECT_NAME}}, Description: {{PROJECT_DESCRIPTION}}';
     const context = {
       projectName: null,
-      description: 'Some description'
+      projectDescription: 'Some description'
     };
     const result = injectVariables(template, context);
     expect(result).toBe('Name: <!-- TODO: Add PROJECT_NAME -->, Description: Some description');

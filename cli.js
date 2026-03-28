@@ -27,6 +27,7 @@ import { uninstall } from './lib/commands/uninstall.js';
 import { docs } from './lib/commands/docs.js';
 import { syncYAMLCommand, validateConfigCommand } from './lib/commands/sync-yaml.js';
 import { init } from './lib/commands/init.js';
+import { doc } from './lib/commands/doc.js';
 
 /**
  * Determine work area based on current directory.
@@ -172,6 +173,27 @@ Types:
     .option('--dry-run', 'Show what would be generated without writing files')
     .action(async (options) => {
       await init(options);
+    });
+
+  program
+    .command('doc')
+    .description('Generate CLAUDE.md documentation draft from project inference')
+    .option('-o, --output <file>', 'Output file path (default: stdout)')
+    .option('--json', 'Output inferred configuration as JSON')
+    .option('--include-inferred', 'Show inferred configuration in output')
+    .addHelpText('after', `
+Examples:
+  rosetta doc                      # Generate CLAUDE.md to stdout
+  rosetta doc -o CLAUDE.md         # Write to CLAUDE.md file
+  rosetta doc --json               # Output JSON configuration
+  rosetta doc --include-inferred    # Show inferred config in output
+`)
+    .action(async (options) => {
+      await doc({
+        output: options.output,
+        json: options.json,
+        includeInferred: options.includeInferred
+      });
     });
 
   // --- Migration Commands ---
