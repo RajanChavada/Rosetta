@@ -26,6 +26,7 @@ import { install } from './lib/commands/install.js';
 import { uninstall } from './lib/commands/uninstall.js';
 import { docs } from './lib/commands/docs.js';
 import { syncYAMLCommand, validateConfigCommand } from './lib/commands/sync-yaml.js';
+import { init } from './lib/commands/init.js';
 
 /**
  * Determine work area based on current directory.
@@ -161,6 +162,16 @@ Types:
     .option('--dry-run', 'Show what would be changed without writing files')
     .action(async (type, options) => {
       await rescaffold(type, options);
+    });
+
+  program
+    .command('init')
+    .description('Initialize new project with Rosetta configuration')
+    .option('-y, --yes', 'Skip all prompts and use defaults')
+    .option('--ide <ides...>', 'Specific IDEs to generate configs for (e.g., --ide claude cursor)')
+    .option('--dry-run', 'Show what would be generated without writing files')
+    .action(async (options) => {
+      await init(options);
     });
 
   // --- Migration Commands ---
