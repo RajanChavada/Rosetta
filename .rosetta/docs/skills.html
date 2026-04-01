@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rosetta Skills Documentation</title>
+  <style>
+/* ==========================================================================
+   Rosetta Skills Documentation - FastAPI-inspired Styles
+   ========================================================================== */
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #212529;
+  background-color: #F8F9FA;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Container */
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* Header */
+.header {
+  padding: 2rem 0 1.5rem;
+  border-bottom: 1px solid #DEE2E6;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  margin: 0 0 0.5rem;
+  font-size: 2rem;
+  font-weight: 700;
+  color: #212529;
+  letter-spacing: -0.025em;
+}
+
+.subtitle {
+  margin: 0;
+  color: #6C757D;
+  font-size: 1.125rem;
+}
+
+/* Layout */
+.layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Sidebar */
+.sidebar {
+  position: sticky;
+  top: 2rem;
+  background: #FFFFFF;
+  border: 1px solid #DEE2E6;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.sidebar h3 {
+  margin: 0 0 1rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #495057;
+}
+
+.stats-section {
+  margin-bottom: 2rem;
+}
+
+.stat-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #F1F3F5;
+}
+
+.stat-item:last-child {
+  border-bottom: none;
+}
+
+.stat-label {
+  color: #868E96;
+  font-size: 0.875rem;
+}
+
+.stat-value {
+  font-weight: 600;
+  color: #212529;
+  font-variant-numeric: tabular-nums;
+}
+
+/* IDE Filters */
+.ide-filters {
+  margin-bottom: 2rem;
+}
+
+.ide-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.ide-tab {
+  flex: 1 0 auto;
+  min-width: 80px;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #495057;
+  background: #F8F9FA;
+  border: 1px solid #DEE2E6;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.ide-tab:hover {
+  background: #E9ECEF;
+  border-color: #CED4DA;
+}
+
+.ide-tab.active {
+  background: #339AF0;
+  color: #FFFFFF;
+  border-color: #339AF0;
+}
+
+.tab-hint {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #6C757D;
+}
+
+.tab-hint strong {
+  color: #212529;
+  font-weight: 600;
+}
+
+/* Domain Stats */
+.domain-stats {
+  margin-bottom: 1rem;
+}
+
+#domain-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.domain-tag {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #495057;
+  background: #E9ECEF;
+  border-radius: 999px;
+}
+
+/* Main Content */
+.content {
+  min-width: 0; /* Prevent grid blowout */
+}
+
+/* Search Bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  background: #FFFFFF;
+  border: 1px solid #DEE2E6;
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.search-bar input[type="text"] {
+  flex: 1;
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-family: inherit;
+  color: #212529;
+  background: transparent;
+  min-width: 0;
+}
+
+.search-bar input[type="text"]::placeholder {
+  color: #ADB5BD;
+}
+
+.search-count {
+  font-size: 0.875rem;
+  color: #6C757D;
+  white-space: nowrap;
+}
+
+/* Skill Grid */
+.skill-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+/* Skill Card */
+.skill-card {
+  background: #FFFFFF;
+  border: 1px solid #DEE2E6;
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  display: flex;
+  flex-direction: column;
+}
+
+.skill-card:hover {
+  border-color: #339AF0;
+  box-shadow: 0 4px 12px rgba(51, 154, 240, 0.1);
+  transform: translateY(-2px);
+}
+
+.skill-card.expanded {
+  grid-column: 1 / -1;
+  cursor: default;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #212529;
+  line-height: 1.3;
+}
+
+.skill-card.expanded .card-header h3 {
+  font-size: 1.375rem;
+}
+
+.description {
+  margin: 0 0 1rem;
+  color: #495057;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  flex: 1;
+}
+
+.skill-card.expanded .description {
+  margin-bottom: 1.5rem;
+}
+
+.metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 0.25rem 0.625rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.badge-installed {
+  background: #D3F9D8;
+  color: #2B8A3E;
+}
+
+.badge-user-created {
+  background: #D0EBFF;
+  color: #1971C2;
+}
+
+.badge-catalog {
+  background: #F1F3F5;
+  color: #495057;
+}
+
+.ide-badge {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: #495057;
+  background: #E9ECEF;
+  border: 1px solid #DEE2E6;
+  border-radius: 4px;
+}
+
+/* Card Body (Expanded) */
+.card-body {
+  border-top: 1px solid #F1F3F5;
+  padding-top: 1.25rem;
+  margin-top: 0.5rem;
+}
+
+.card-body section {
+  margin-bottom: 1.25rem;
+}
+
+.card-body h4 {
+  margin: 0 0 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #495057;
+  text-transform: uppercase;
+  letter-spacing: 0.025em;
+}
+
+.card-body ul {
+  margin: 0;
+  padding-left: 1.25rem;
+  color: #495057;
+}
+
+.card-body li {
+  margin-bottom: 0.25rem;
+  font-size: 0.9375rem;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #495057;
+  background: #F1F3F5;
+  border-radius: 4px;
+}
+
+.repo-link {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: #339AF0;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 0.9375rem;
+}
+
+.repo-link:hover {
+  text-decoration: underline;
+}
+
+.collapse-btn {
+  align-self: flex-start;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #495057;
+  background: #F8F9FA;
+  border: 1px solid #DEE2E6;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.collapse-btn:hover {
+  background: #E9ECEF;
+  border-color: #CED4DA;
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  color: #6C757D;
+  background: #FFFFFF;
+  border: 1px dashed #DEE2E6;
+  border-radius: 8px;
+}
+
+.empty-state p {
+  margin: 0;
+  font-size: 1.125rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    position: static;
+    margin-bottom: 1.5rem;
+  }
+
+  .skill-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .subtitle {
+    font-size: 1rem;
+  }
+}
+
+/* Focus States for Accessibility */
+button:focus-visible,
+input:focus-visible,
+a:focus-visible {
+  outline: 2px solid #339AF0;
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  .sidebar {
+    display: none;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .skill-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
+/* Raw YAML Section */
+.raw-yaml {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px dashed #DEE2E6;
+}
+
+.raw-yaml h4 {
+  margin-bottom: 0.75rem;
+  color: #495057;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.raw-yaml pre {
+  margin: 0;
+  padding: 1rem;
+  background: #F8F9FA;
+  border: 1px solid #DEE2E6;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.raw-yaml code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 0.875rem;
+  color: #343A40;
+  line-height: 1.45;
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>Rosetta Skills</h1>
+      <p class="subtitle">Explore your AI agent skill library</p>
+    </header>
+
+    <div class="layout">
+      <!-- Sidebar -->
+      <aside class="sidebar">
+        <div class="stats-section">
+          <h3>Statistics</h3>
+          
+    <div class="stat-item">
+      <span class="stat-label">Total Skills</span>
+      <span class="stat-value">8</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Installed</span>
+      <span class="stat-value">6</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Available</span>
+      <span class="stat-value">2</span>
+    </div>
+    <div class="stat-item">
+      <span class="stat-label">Domains</span>
+      <span class="stat-value">4</span>
+    </div>
+  
+        </div>
+
+        <div class="ide-filters">
+          <h3>IDE Compatibility</h3>
+          <div class="ide-tabs">
+            <button class="ide-tab " data-ide="all">All IDEs</button><button class="ide-tab " data-ide="claude-code">Claude Code</button><button class="ide-tab " data-ide="vscode">VS Code</button><button class="ide-tab " data-ide="jetbrains">JetBrains</button><button class="ide-tab " data-ide="cursor">Cursor</button><button class="ide-tab " data-ide="codex">Codex CLI</button><button class="ide-tab " data-ide="kilo-code">Kilo Code</button><button class="ide-tab " data-ide="continue">Continue</button><button class="ide-tab " data-ide="windsurf">Windsurf</button><button class="ide-tab " data-ide="openclaw">OpenClaw</button>
+          </div>
+          <p class="tab-hint">Current IDE: <strong id="current-ide">Claude Code</strong></p>
+        </div>
+
+        <div class="domain-stats">
+          <h3>Domains</h3>
+          <div id="domain-list"></div>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="content">
+        <div class="search-bar">
+          
+    <input type="text" id="search-input" placeholder="Search skills by name, description, or tags..." />
+    <span class="search-count" id="search-count">Loading...</span>
+  
+        </div>
+
+        <div class="skill-grid" id="skill-grid">
+          <!-- Skills will be rendered by JavaScript -->
+        </div>
+
+        <div class="empty-state" id="empty-state" style="display: none;">
+          <p>No skills match your search.</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    // Data injected as JSON
+    const skillsData = {"count":8,"skills":[{"id":"node-express-postgres","name":"node-express-postgres","displayName":"Node.js Express PostgreSQL","description":"Full-stack Node.js skill with Express and PostgreSQL. Provides IDE integration, database management, and API development templates.","status":"catalog","ideCompatibility":["all"],"domains":["backend","api"],"tags":["node","express","postgres","api","rest"],"repoUrl":"https://github.com/rosetta-ai/node-express-postgres","provides":["api-development","database-integration"],"requires":["nodejs","postgres"],"author":"Rosetta Team","stars":120,"lastUpdated":"2026-03-15","expanded":false,"source":"catalog"},{"id":"react-redux-firebase","name":"react-redux-firebase","displayName":"React Redux Firebase","description":"React frontend with Redux state management and Firebase backend integration. Includes authentication, real-time updates, and deployment configs.","status":"catalog","ideCompatibility":["all"],"domains":["frontend","spa"],"tags":["react","redux","firebase","spa"],"repoUrl":"https://github.com/rosetta-ai/react-redux-firebase","provides":["frontend-ui","state-management","realtime-db"],"requires":["react","firebase"],"author":"Rosetta Team","stars":85,"lastUpdated":"2026-03-14","expanded":false,"source":"catalog"},{"name":"agentic-memory","description":"User-created skill (malformed metadata)","rawYaml":"name: agentic-memory\ndescription: Long-lived project memory, architectural rules, and learned heuristics for IDE agents.","status":"user-created","id":"agentic-memory","source":"user","path":".claude/skills/agentic-memory","ideCompatibility":["all"]},{"name":"plan_mode","description":"User-created skill (malformed metadata)","rawYaml":"name: better-plan-mode\ndescription: \"Enhanced planning mode that presents decision points as rich HTML documents with visual previews, comparison tables, and recommendations. Tracks all decisions in a browsable history with a landing page. Use for planning new projects or major features.\"\nargument-hint: \"[describe what you want to build or the feature you're planning]\"","status":"user-created","id":"plan_mode","source":"user","path":".claude/skills/plan_mode","ideCompatibility":["all"]},{"name":"data-ml-project","description":"User-created skill (malformed metadata)","rawYaml":"name: data-ml-project\ndescription: Expert-level workflow for managing data pipelines, model training sessions, and analytical infrastructure.\ndomains:\n  - data-science\n  - ml-ops","status":"user-created","id":"data-ml-project","source":"user","path":".windsurf/skills/data-ml-project","ideCompatibility":["all"]},{"name":"frontend-react-next","description":"User-created skill (malformed metadata)","rawYaml":"name: frontend-react-next\ndescription: Expert-level workflow for building and maintaining modern React/Next.js user interfaces with a focus on performance and DX.\ndomains:\n  - frontend\n  - user-experience","status":"user-created","id":"frontend-react-next","source":"user","path":".windsurf/skills/frontend-react-next","ideCompatibility":["all"]},{"name":"Rosetta","description":"User-created skill","rawYaml":null,"status":"installed","id":"master-cursorrules","displayName":"Master: .cursorrules","source":"master-file","ideCompatibility":["all"]},{"name":".ai","description":"User-created skill","rawYaml":null,"status":"installed","id":"master-master-skill","displayName":"Master: .ai/master-skill.md","source":"master-file","ideCompatibility":["all"]}]};
+
+    // Interactivity script
+    
+    (function() {
+      let currentIdeFilter = 'all';
+      let searchQuery = '';
+      let skills = typeof skillsData !== 'undefined' ? skillsData.skills : [];
+
+      // Toggle card expansion
+      function toggleCard(id) {
+        const skill = skills.find(s => s.id === id);
+        if (skill) {
+          skill.expanded = !skill.expanded;
+          renderGrid();
+        }
+      }
+
+      // Filter skills based on IDE and search query
+      function filterSkills() {
+        return skills.filter(skill => {
+          const ideMatch = currentIdeFilter === 'all' ||
+                           (skill.ideCompatibility && skill.ideCompatibility.includes(currentIdeFilter));
+          const searchMatch = searchQuery === '' ||
+                              (skill.name && skill.name.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                              (skill.description && skill.description.toLowerCase().includes(searchQuery.toLowerCase())) ||
+                              (skill.tags && skill.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase())));
+          return ideMatch && searchMatch;
+        });
+      }
+
+      // Render the skill grid
+      function renderGrid() {
+        const filtered = filterSkills();
+        const grid = document.getElementById('skill-grid');
+        if (grid) {
+          grid.innerHTML = filtered.map(skill => renderSkillCard(skill)).join('');
+        }
+        updateCounts(filtered.length);
+        updateEmptyState(filtered.length);
+      }
+
+      // Render a single skill card
+      function renderSkillCard(skill) {
+        const expandedClass = skill.expanded ? 'expanded' : '';
+        const statusBadge = getStatusBadge(skill.status);
+        const ideBadges = (skill.ideCompatibility || []).map(ide => `<span class="ide-badge">${escapeHtml(ide)}</span>`).join('');
+
+        if (!skill.expanded) {
+          return `
+            <div class="skill-card ${expandedClass}" data-id="${skill.id}">
+              <div class="card-header">
+                <h3>${escapeHtml(skill.displayName || skill.name)}</h3>
+                ${statusBadge}
+              </div>
+              <p class="description">${escapeHtml(truncate(skill.description || '', 120))}</p>
+              <div class="metadata">
+                ${ideBadges}
+              </div>
+            </div>
+          `;
+        }
+
+        // Expanded view
+        return `
+          <div class="skill-card ${expandedClass}" data-id="${skill.id}">
+            <div class="card-header">
+              <h3>${escapeHtml(skill.displayName || skill.name)}</h3>
+              ${statusBadge}
+            </div>
+            <div class="card-body">
+              <p class="description">${escapeHtml(skill.description || '')}</p>
+
+              <section class="provides">
+                <h4>Provides</h4>
+                <ul>${(skill.provides || []).map(p => `<li>${escapeHtml(p)}</li>`).join('')}</ul>
+              </section>
+
+              <section class="requires">
+                <h4>Requires</h4>
+                <ul>${(skill.requires || []).map(r => `<li>${escapeHtml(r)}</li>`).join('')}</ul>
+              </section>
+
+              <div class="tags">
+                ${(skill.tags || []).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join('')}
+              </div>
+
+              ${skill.repoUrl ? `<a href="${escapeHtml(skill.repoUrl)}" target="_blank" class="repo-link">View Repository →</a>` : ''}
+
+              ${skill.rawYaml ? `
+                <section class="raw-yaml">
+                  <h4>Source Metadata</h4>
+                  <pre><code>${escapeHtml(skill.rawYaml)}</code></pre>
+                </section>
+              ` : ''}
+
+              <button class="collapse-btn" onclick="toggleCard('${skill.id}')">Show less</button>
+            </div>
+          </div>
+        `;
+      }
+
+      // Generate status badge HTML
+      function getStatusBadge(status) {
+        const labels = {
+          'installed': 'Installed',
+          'user-created': 'Custom',
+          'catalog': 'Available'
+        };
+        const label = labels[status] || status;
+        return `<span class="badge badge-${status}">${escapeHtml(label)}</span>`;
+      }
+
+      // Update the search count display
+      function updateCounts(visibleCount) {
+        const countEl = document.getElementById('search-count');
+        if (countEl) {
+          countEl.textContent = `${visibleCount} skill${visibleCount !== 1 ? 's' : ''}`;
+        }
+      }
+
+      // Show/hide empty state
+      function updateEmptyState(hasResults) {
+        const emptyState = document.getElementById('empty-state');
+        if (emptyState) {
+          emptyState.style.display = hasResults ? 'none' : 'block';
+        }
+      }
+
+      // HTML escape utility
+      function escapeHtml(str) {
+        if (str == null) return '';
+        return String(str)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;')
+          .replace(/'/g, '&#039;');
+      }
+
+      // Truncate utility
+      function truncate(str, len) {
+        if (!str) return '';
+        return str.length > len ? str.substring(0, len) + '...' : str;
+      }
+
+      // Render domain statistics
+      function renderDomainStats() {
+        const domainCounts = {};
+        skills.forEach(skill => {
+          (skill.domains || []).forEach(domain => {
+            domainCounts[domain] = (domainCounts[domain] || 0) + 1;
+          });
+        });
+        const domainList = document.getElementById('domain-list');
+        if (domainList) {
+          domainList.innerHTML = Object.entries(domainCounts)
+            .sort((a, b) => b[1] - a[1])
+            .map(([domain, count]) => `<span class="domain-tag">${escapeHtml(domain)} (${count})</span>`).join('');
+        }
+      }
+
+      // Update IDE tabs active state
+      function renderIdeTabs() {
+        const tabs = document.querySelectorAll('.ide-tab');
+        tabs.forEach(tab => {
+          tab.classList.toggle('active', tab.dataset.ide === currentIdeFilter);
+        });
+        const currentIdeEl = document.getElementById('current-ide');
+        if (currentIdeEl) {
+          currentIdeEl.textContent = getCurrentIdeLabel();
+        }
+      }
+
+      // Get human-readable IDE label
+      function getCurrentIdeLabel() {
+        if (currentIdeFilter === 'all') return 'auto-detected';
+        const labels = {
+          'vscode': 'VS Code',
+          'jetbrains': 'JetBrains',
+          'claude-code': 'Claude Code',
+          'cursor': 'Cursor',
+          'codex': 'Codex CLI',
+          'kilo-code': 'Kilo Code',
+          'continue': 'Continue',
+          'windsurf': 'Windsurf',
+          'openclaw': 'OpenClaw'
+        };
+        return labels[currentIdeFilter] || currentIdeFilter;
+      }
+
+      // Initialize on DOM load
+      document.addEventListener('DOMContentLoaded', () => {
+        renderGrid();
+        renderDomainStats();
+        renderIdeTabs();
+
+        // Search input handler
+        const searchInput = document.getElementById('search-input');
+        if (searchInput) {
+          searchInput.addEventListener('input', (e) => {
+            searchQuery = e.target.value;
+            renderGrid();
+          });
+        }
+
+        // IDE tab click handlers
+        const ideTabs = document.querySelectorAll('.ide-tab');
+        ideTabs.forEach(tab => {
+          tab.addEventListener('click', () => {
+            currentIdeFilter = tab.dataset.ide;
+            renderIdeTabs();
+            renderGrid();
+          });
+        });
+
+        // Card click delegation
+        const grid = document.getElementById('skill-grid');
+        if (grid) {
+          grid.addEventListener('click', (e) => {
+            const card = e.target.closest('.skill-card');
+            if (card) {
+              const id = card.dataset.id;
+              toggleCard(id);
+            }
+          });
+        }
+
+        // Escape key to collapse all
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'Escape') {
+            skills.forEach(s => s.expanded = false);
+            renderGrid();
+          }
+        });
+      });
+    })();
+  
+  </script>
+</body>
+</html>

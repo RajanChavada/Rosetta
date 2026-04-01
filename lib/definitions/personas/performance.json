@@ -1,0 +1,14 @@
+{
+  "type": "performance",
+  "description": "Performance-optimized development mode",
+  "conventions": [
+    "Profile code before optimizing",
+    "Identify bottlenecks first",
+    "Use appropriate data structures",
+    "Cache repeated calculations",
+    "Minimize DOM operations",
+    "Lazy load non-critical features",
+    "Optimize database queries",
+    "Monitor and track metrics"
+  ]
+}

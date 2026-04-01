@@ -1,0 +1,14 @@
+{
+  "type": "tdd",
+  "description": "Test-Driven Development mode",
+  "conventions": [
+    "Write tests before implementation",
+    "Follow red-green-refactor cycle",
+    "Keep tests simple and focused",
+    "Test behavior, not implementation",
+    "Use descriptive test names",
+    "Test edge cases and error conditions",
+    "Maintain high test coverage",
+    "Refactor only when tests pass"
+  ]
+}

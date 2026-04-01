@@ -12,12 +12,12 @@
 **Single source of truth for AI agent rules and engineering memory.**
 
 <p align="center">
-  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.4.0-blue.svg" alt="Version"></a>
+  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.4.1-blue.svg" alt="Version"></a>
   <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
   <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
 </p>
 
-> **Single Source of Truth for AI Agents 🤖⚙️**
+> **Single Source of Truth for AI Agents**
 
 </div>
 
@@ -25,7 +25,7 @@ Rosetta is a CLI tool designed to help engineering teams maintain a consistent *
 
 Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec without using symlinks, ensuring maximum compatibility.
 
-> **Status: v0.4.0** - Renamed to rosettablueprint and enhanced with catalog system, skill ideation, and translation commands.
+> **Status: v0.4.1** - Introduced interactive Agent scaffolding, Personas, Workflow chains, and fully structured YAML-first configuration with expanded framework support (FastAPI, Swift iOS, Next.js, etc.).
 
 ## Installation
 
@@ -160,6 +160,27 @@ rosetta translate-all --to claude --dry-run  # Preview first
 rosetta translate-all --to claude            # Execute
 ```
 
+### Agent & Persona Systems
+
+**Agent** — Scaffold and add a sub-agent definition interactively
+```bash
+rosetta agent architect
+rosetta agent reviewer --ide cursor
+rosetta agent  # Interactive selection
+```
+
+**Persona** — Inject preset conventions into project and agents
+```bash
+rosetta persona standard
+rosetta persona senior
+rosetta persona frontend
+```
+
+**Workflow** — Define multi-step agentic task chains
+```bash
+rosetta workflow refactor-auth
+```
+
 ### Documentation
 
 **Docs** — Generate HTML documentation for installed skills with interactive visualization
@@ -185,10 +206,49 @@ rosetta new-skill api-auth
 | Command | Description |
 |---------|-------------|
 | `rosetta catalog` | Browse the skill catalog to discover available skills |
-| `rosetta search <query>` | Search skills by name, description, or tags (coming soon) |
+| `rosetta search <query>` | Search skills by name, description, or tags |
 | `rosetta install <git-url>` | Install a skill from a git repository |
 | `rosetta skills` | List all installed skills |
-| `rosetta skill uninstall <name>` | Uninstall an installed skill (planned) |
+| `rosetta skill uninstall <name>` | Uninstall an installed skill |
+
+### Catalog and Installation
+
+**Catalog** — Browse available skills in the catalog
+```bash
+rosetta catalog
+# Filter by category
+rosetta catalog --category development
+# Filter by tag
+rosetta catalog --tag testing
+```
+
+**Search** — Find skills in the catalog
+```bash
+rosetta search "react"      # Search by name
+rosetta search "api"        # Search in description
+rosetta search "testing"    # Search by tag
+```
+
+**Install** — Install a skill from a git repository
+```bash
+rosetta install https://github.com/example/react-skill.git
+rosetta install ./local-skill-repo  # Install from local path
+rosetta install https://github.com/example/skill.git --dry-run  # Preview installation
+```
+
+**Skills** — List installed skills
+```bash
+rosetta skills                    # List all skills
+rosetta skills --global          # List global skills only
+rosetta skills --project         # List project skills only
+rosetta skills --category frontend  # Filter by category
+```
+
+**Uninstall** — Remove an installed skill
+```bash
+rosetta skill uninstall react-skill
+rosetta skill uninstall api-server --confirm  # Skip confirmation
+```
 
 ### Migration & Adoption
 
@@ -206,10 +266,12 @@ rosetta new-skill api-auth
 | Feature | Description |
 |---------|-------------|
 | **3-Layer Memory** | Project decisions, heuristics, and daily logs |
+| **Skill Catalog** | Browse, search, and install pre-built skills from the catalog |
 | **Multi-Source Skills** | Local, global (`~/.rosetta`), or git-sourced skills |
 | **Auto-Detection** | Automatically detects project type and tech stack |
 | **Format Translation** | Convert configs between any supported IDE format |
-| **Config Driven** | Use `.rosetta.json` for non-interactive scaffolding |
+| **YAML-First Config** | Strongly typed, schema-validated `.rosetta` configuration |
+| **Agent / Persona** | Scaffolding tools for interactive sub-agents and conventions |
 | **Post-Scaffold Hooks** | Run scripts automatically after setup |
 
 ---
@@ -227,11 +289,11 @@ Rosetta automatically detects your project type and tech stack:
 
 **Auto-Detected Information:**
 - Project type (Web app, API, CLI, Library, etc.)
-- Frontend framework (React, Next.js, Vue, etc.)
-- Backend framework (Express, NestJS, Django, etc.)
+- Frontend framework (React, Next.js, Vue, React Vite)
+- Backend framework (Express, NestJS, Django, FastAPI, Flask, Node API)
 - Database/ORM (Prisma, SQLAlchemy, TypeORM, etc.)
 - **Cloud Infrastructure**: Docker, Kubernetes, Terraform, Serverless, Cloud SDKs (AWS, GCP, Azure)
-- **Mobile Development**: iOS, Android, Flutter, React Native
+- **Mobile Development**: iOS (Swift), Android, Flutter, React Native
 - **DevOps & CI/CD**: GitHub Actions, GitLab CI, CircleCI, Jenkins, Make
 
 ---
@@ -398,10 +460,11 @@ When no IDEs are detected, the command prompts for:
 
 ## Health & Validation
 
-Check if repository is "Rosetta-compliant" and compute a health score.
+Check if repository is "Rosetta-compliant" and compute a health score, or use `audit` to verify quality.
 
 ```bash
 rosetta health
+rosetta audit --template react-vite
 ```
 
 **Health Check Output:**

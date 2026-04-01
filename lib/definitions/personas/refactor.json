@@ -1,0 +1,14 @@
+{
+  "type": "refactor",
+  "description": "Refactoring-focused development mode",
+  "conventions": [
+    "Identify code smells and technical debt",
+    "Extract duplicated code into reusable components",
+    "Improve method and class organization",
+    "Rename variables for clarity",
+    "Remove unnecessary code comments",
+    "Apply consistent formatting",
+    "Improve error handling patterns",
+    "Optimize performance bottlenecks"
+  ]
+}

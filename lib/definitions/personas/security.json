@@ -1,0 +1,14 @@
+{
+  "type": "security",
+  "description": "Security-focused development mode",
+  "conventions": [
+    "Validate all user inputs",
+    "Prevent SQL injection and XSS attacks",
+    "Use HTTPS for all external requests",
+    "Sanitize data before storage",
+    "Implement proper authentication",
+    "Follow principle of least privilege",
+    "Encrypt sensitive data",
+    "Regular security audits"
+  ]
+}

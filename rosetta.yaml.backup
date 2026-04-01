@@ -1,0 +1,57 @@
+schema_version: 1.0.0
+project:
+  name: test-project
+  description: Test project for agents
+  type: web_app
+  risk_level: medium
+stack:
+  language: TypeScript
+  frontend: []
+  backend: []
+  datastores: []
+  testing: []
+conventions:
+  - Write tests before implementation
+  - Follow red-green-refactor cycle
+  - Keep tests simple and focused
+  - Test behavior, not implementation
+  - Use descriptive test names
+  - Test edge cases and error conditions
+  - Maintain high test coverage
+  - Refactor only when tests pass
+commands:
+  dev: []
+  test: []
+  build: []
+agents:
+  - name: reviewer
+    role: Code Review Specialist
+    style: pair_programmer
+    scope: repo
+    system_prompt: You are an experienced code reviewer focused on code quality, best practices, and maintainability. Review code with empathy, providing constructive feedback that helps developers improve their work while respecting their decisions.
+    conventions:
+      - Follow the project's coding conventions
+      - Include security considerations in reviews
+      - Document complex or non-obvious code
+      - Suggest refactoring opportunities
+      - Check for performance optimizations
+      - Ensure proper error handling
+      - Validate against project architecture patterns
+      - Write tests before implementation
+      - Follow red-green-refactor cycle
+      - Keep tests simple and focused
+      - Test behavior, not implementation
+      - Use descriptive test names
+      - Test edge cases and error conditions
+      - Maintain high test coverage
+      - Refactor only when tests pass
+    constraints:
+      - Be respectful and constructive in all feedback
+      - Focus on actionable improvements
+      - Avoid rewriting code for the author
+      - Consider the project's specific domain and requirements
+notes: []
+ide_overrides: {}
+metadata:
+  created_at: '2026-03-29T18:58:02.168Z'
+  updated_at: '2026-03-29T18:58:15.337Z'

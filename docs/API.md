@@ -1038,6 +1038,53 @@ rosetta search skills --domain financial
 
 ---
 
+### `rosetta search`
+
+Search the skill catalog by name, description, tags, or intent keywords.
+
+**Usage:**
+```bash
+rosetta search <query> [options]
+```
+
+**Arguments:**
+| Argument | Description |
+|----------|-------------|
+| `<query>` | Search text to match against catalog entries |
+
+**Options:**
+| Option | Description |
+|---------|-------------|
+| `--domain <domain>` | Filter by domain(s), comma-separated (e.g., `backend,api`) |
+| `--limit <n>` | Limit number of results |
+| `--json` | Output as JSON |
+
+**Example:**
+```bash
+# Simple text search
+rosetta search react
+
+# Search with domain filter
+rosetta search database --domain backend
+
+# JSON output
+rosetta search api --json --limit 5
+```
+
+**Behavior:**
+- Searches across skill names, descriptions, tags, and intent keywords
+- Case-insensitive matching
+- Returns most relevant results first
+- Integrates with catalog.json metadata
+
+---
+
+### `rosetta search` (Registry)
+
+Search for presets or skills in the registry.
+
+---
+
 ### `rosetta install-preset`
 
 Install a preset from the registry into `.ai/master-skill.md`.
@@ -1368,6 +1415,10 @@ When the `agentic-memory` skill is loaded:
 - Skills manifest tracking (`~/.rosetta/skills-manifest.json`)
 - Git-based installation with auto-validation
 - 15+ starter skills in catalog
+- Skill ideation system (`rosetta ideate`) with scaffold-only approach
+- Auto-ideation integration with scaffold command (`--auto-ideate`)
+- Project analysis with dependency, code-pattern, structure, and convention analyzers
+- IDE detection and team context prompting for ideation templates
 
 ### v0.2.0
 - Added Codex CLI, Kilo Code, Continue.dev support

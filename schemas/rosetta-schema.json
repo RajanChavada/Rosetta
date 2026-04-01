@@ -175,7 +175,7 @@
           },
           "style": {
             "type": "string",
-            "enum": ["pair_programmer", "autonomous", "conservative"],
+            "enum": ["pair_programmer", "autonomous", "conservative", "consultant"],
             "description": "Agent interaction style"
           },
           "scope": {
@@ -274,6 +274,68 @@
         "source": {
           "type": "string",
           "description": "Source file this was migrated from (if any)"
+        }
+      }
+    },
+    "workflows": {
+      "type": "array",
+      "description": "Multi-step agentic task chains",
+      "items": {
+        "type": "object",
+        "required": ["name", "description"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Workflow identifier name"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Workflow description"
+          },
+          "steps": {
+            "type": "array",
+            "description": "Workflow steps",
+            "items": {
+              "type": "object",
+              "required": ["id", "phase", "description"],
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Step identifier"
+                },
+                "phase": {
+                  "type": "string",
+                  "description": "Phase of development"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Step description"
+                },
+                "depends_on": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Step dependencies"
+                },
+                "parallel": {
+                  "type": "boolean",
+                  "description": "Can run in parallel with dependencies"
+                },
+                "condition": {
+                  "type": "string",
+                  "description": "Condition for running this step"
+                }
+              }
+            }
+          },
+          "variables": {
+            "type": "object",
+            "description": "Workflow variables",
+            "additionalProperties": true
+          }
         }
       }
     }

@@ -20,14 +20,15 @@ import { addIde } from './lib/commands/add-ide.js';
 import { translate } from './lib/commands/translate.js';
 import { translateAll } from './lib/commands/translate-all.js';
 import { ideate } from './lib/commands/ideate.js';
-import { catalog } from './lib/commands/catalog.js';
-import { skills } from './lib/commands/skills.js';
-import { install } from './lib/commands/install.js';
 import { uninstall } from './lib/commands/uninstall.js';
 import { docs } from './lib/commands/docs.js';
 import { syncYAMLCommand, validateConfigCommand } from './lib/commands/sync-yaml.js';
 import { init } from './lib/commands/init.js';
 import { doc } from './lib/commands/doc.js';
+import { audit } from './lib/commands/audit.js';
+import { agent } from './lib/commands/agent.js';
+import { persona } from './lib/commands/persona.js';
+import { workflow } from './lib/commands/workflow.js';
 
 /**
  * Determine work area based on current directory.
@@ -54,9 +55,10 @@ async function getWorkArea() {
  * Main entry point.
  */
 async function main() {
-  // Suppress banner for ideate --json output
-  const isIdeateJson = process.argv.includes('ideate') && process.argv.includes('--json');
-  if (!isIdeateJson) {
+  // Suppress banner for JSON output
+  const isJson = process.argv.includes('--json') || 
+                process.argv.includes('--format') && process.argv[process.argv.indexOf('--format') + 1] === 'json';
+  if (!isJson) {
     showBanner();
   }
 
@@ -65,8 +67,6 @@ async function main() {
     .description('AI agent configuration and skill management');
 
   // --- Core Commands ---
-
-  // --- Legacy Sync (master-skill.md) ---
 
   program
     .command('sync')
@@ -81,8 +81,6 @@ async function main() {
         dryRun: cmdObj.dryRun
       });
     });
-
-  // --- YAML-First Commands ---
 
   program
     .command('sync-yaml')
@@ -181,6 +179,7 @@ Types:
     .option('-o, --output <file>', 'Output file path (default: stdout)')
     .option('--json', 'Output inferred configuration as JSON')
     .option('--include-inferred', 'Show inferred configuration in output')
+    .option('--verbose', 'Detailed output')
     .addHelpText('after', `
 Examples:
   rosetta doc                      # Generate CLAUDE.md to stdout
@@ -192,11 +191,10 @@ Examples:
       await doc({
         output: options.output,
         json: options.json,
-        includeInferred: options.includeInferred
+        includeInferred: options.includeInferred,
+        verbose: options.verbose
       });
     });
-
-  // --- Migration Commands ---
 
   program
     .command('migrate')
@@ -220,8 +218,6 @@ Examples:
       await migrateFromSource('CLAUDE.md');
     });
 
-  // --- YAML-First Migration ---
-
   program
     .command('migrate-to-yaml')
     .description('Migrate .ai/master-skill.md to rosetta.yaml (YAML-first architecture)')
@@ -234,8 +230,6 @@ Examples:
         verbose: options.verbose
       });
     });
-
-  // --- New Commands ---
 
   program
     .command('add-ide [name]')
@@ -267,26 +261,6 @@ Examples:
     });
 
   program
-    .command('install <git-url>')
-    .description('Install a skill from a git repository')
-    .option('-g, --global', 'Install globally to ~/.rosetta/skills instead of project local')
-    .option('--force', 'Overwrite existing installation')
-    .option('--dry-run', 'Show what would be done without making changes')
-    .option('--ide <name>', 'Install directly to specific IDE skills directory (e.g., "Claude Code", "Cursor")')
-    .option('--multi-ide', 'Install to .rosetta/skills for multi-IDE support')
-    .action(async (gitUrl, options) => {
-      await install(gitUrl, {
-        global: options.global,
-        force: options.force,
-        dryRun: options.dryRun,
-        ide: options.ide,
-        multiIde: options.multiIde
-      });
-    });
-
-  // --- Ideation Commands ---
-
-  program
     .command('ideate')
     .description('Generate skill ideation template for use in IDE')
     .option('-a, --area <path>', 'Directory path to analyze (relative or absolute)')
@@ -300,8 +274,6 @@ Examples:
       await ideate(cmdObj);
     });
 
-  // --- Documentation Commands ---
-
   program
     .command('docs')
     .description('Generate HTML documentation for installed skills with interactive visualization')
@@ -310,27 +282,17 @@ Examples:
     .option('--open', 'Open in browser after generation')
     .option('--quiet', 'Suppress output')
     .option('--dry-run', 'Preview generation without writing files')
+    .option('--verbose', 'Detailed output')
     .option('--json', 'Output data as JSON instead of HTML')
     .action(async (options) => {
       await docs(options);
     });
 
-  // --- Validation & Health ---
-
   program
     .command('validate')
     .description('Check .ai/ structure for completeness')
     .action(async () => {
-      const score = await validateRepo();
-      console.log(`\nRosetta Score: ${score}/100`);
-      if (score === 100) {
-        console.log(chalk.green('Your repo is 100% Rosetta-ready!'));
-      } else if (score > 80) {
-        console.log(chalk.blue('Your repo is mostly healthy, but has minor gaps.'));
-      } else {
-        console.log(chalk.yellow('Your repo needs some attention to be fully Rosetta-compliant.'));
-        console.log(chalk.gray('Run "rosetta scaffold" or "rosetta rescaffold all" to fix.'));
-      }
+      await validateRepo();
     });
 
   program
@@ -342,9 +304,13 @@ Examples:
 
   program
     .command('audit')
-    .description('Alias for health')
-    .action(async () => {
-      await reportHealth();
+    .description('Audit templates for quality and completeness')
+    .option('-t, --template <template>', 'Specific template to audit')
+    .option('-i, --ide <ide>', 'IDE (claude, cursor, windsurf)')
+    .option('-s, --stack <stack>', 'Stack (next.js, react-vite, etc.)')
+    .option('--json', 'Output JSON format')
+    .action(async (options) => {
+      await audit(options);
     });
 
   program
@@ -353,8 +319,6 @@ Examples:
     .action(async () => {
       await syncMemory();
     });
-
-  // --- Skill Commands ---
 
   program
     .command('new-skill <name>')
@@ -379,23 +343,66 @@ Examples:
     });
 
   program
-    .command('skills')
-    .description('List all installed skills')
-    .option('--format <type>', 'Output format: table or json', 'table')
-    .option('--scope <scope>', 'Filter by scope: global, project, or all', 'all')
-    .option('--ide <ide>', 'Filter by IDE (e.g., "Claude Code", "Cursor", or "multi-ide")', 'all')
-    .action(async (options) => {
-      await skills({
-        format: options.format,
-        scope: options.scope,
-        ide: options.ide
-      });
+    .command('use-profile <name>')
+    .description('Switch to a specific Rosetta profile (bundles context, presets, and preferences)')
+    .action(async (name) => {
+      await useProfile(name);
     });
 
-  // --- Skill Management Commands ---
+  program
+    .command('catalog')
+    .description('List all skills in the catalog')
+    .option('--json', 'Output raw JSON instead of table')
+    .option('--domain <filter>', 'Show only skills in specific domain(s), comma-separated')
+    .option('--limit <n>', 'Limit number of results', parseInt)
+    .action(async (options) => {
+      const { catalog: catalogCmd } = await import('./lib/commands/catalog.js');
+      await catalogCmd(options);
+    });
 
   program
-    .command('skill uninstall')
+    .command('search [query]')
+    .description('Search for skills in the catalog')
+    .option('--json', 'Output raw JSON instead of table')
+    .option('--domain <filter>', 'Filter by domain(s)')
+    .option('--limit <n>', 'Limit results', parseInt)
+    .action(async (query, options) => {
+      const { searchCatalog } = await import('./lib/catalog.js');
+      const results = await searchCatalog(query, options);
+      if (options.json) {
+        process.stdout.write(JSON.stringify(results, null, 2) + '\n');
+      } else {
+        console.log(chalk.blue(`Found ${results.length} matching skill(s)`));
+        results.forEach(s => console.log(`- ${chalk.bold(s.name)}: ${s.description}`));
+      }
+    });
+
+  program
+    .command('skills')
+    .description('List all installed skills')
+    .option('--format <format>', 'Output format (table, json)', 'table')
+    .option('--score <scope>', 'Filter by scope (all, global, project)', 'all')
+    .option('--ide <ide>', 'Filter by IDE', 'all')
+    .action(async (options) => {
+      const { skills: skillsCmd } = await import('./lib/commands/skills.js');
+      await skillsCmd(options);
+    });
+
+  program
+    .command('install [url]')
+    .description('Install a skill from a Git URL or the catalog')
+    .option('--multi-ide', 'Install for all supported IDEs')
+    .option('--ide <ide>', 'Install for a specific IDE')
+    .option('--global', 'Install globally', true)
+    .option('--project', 'Install into the current project')
+    .option('--dry-run', 'Show what would be installed without writing files')
+    .action(async (url, options) => {
+      const { install: installCmd } = await import('./lib/commands/install.js');
+      await installCmd(url, options);
+    });
+
+  program
+    .command('uninstall')
     .description('Uninstall an installed skill')
     .argument('<name>', 'Skill name')
     .option('--global', 'Uninstall from global skills directory')
@@ -410,25 +417,53 @@ Examples:
       });
     });
 
-  // --- Profile Commands ---
-
+  // --- Agents and Personas Commands ---
   program
-    .command('use-profile <name>')
-    .description('Switch to a specific Rosetta profile (bundles context, presets, and preferences)')
-    .action(async (name) => {
-      await useProfile(name);
+    .command('agent [name]')
+    .description('Scaffold and add a sub-agent definition')
+    .option('-i, --ide <ide>', 'Target specific IDE for sync')
+    .option('--dry-run', 'Show what would be added without writing files')
+    .addHelpText('after', `
+Available Agents:
+  architect   - High-level design and structure
+  debugger    - Bug hunting and resolution
+  reviewer    - Code quality and convention enforcement
+
+Examples:
+  rosetta agent architect
+  rosetta agent reviewer --ide cursor
+  rosetta agent (interactive selection)
+`)
+    .action(async (name, cmdObj) => {
+      const { agent } = await import('./lib/commands/agent.js');
+      await agent(name, cmdObj);
     });
 
-  // --- Registry / Market Commands ---
+  program
+    .command('persona <type>')
+    .description('Inject preset conventions into project and agents')
+    .option('-i, --ide <ide>', 'Target specific IDE for sync')
+    .option('--dry-run', 'Show what would be added without writing files')
+    .addHelpText('after', `
+Types:
+  standard    - General clean code conventions
+  senior      - High-quality, scalable architecture patterns
+  frontend    - UI/UX and accessibility focus
+  backend     - Performance and security focus
+`)
+    .action(async (type, cmdObj) => {
+      const { persona } = await import('./lib/commands/persona.js');
+      await persona(type, cmdObj);
+    });
 
   program
-    .command('catalog')
-    .description('List all skills in the catalog')
-    .option('--json', 'Output raw JSON instead of table')
-    .option('--domain <filter>', 'Show only skills in specific domain(s), comma-separated')
-    .option('--limit <n>', 'Limit number of results', parseInt)
-    .action(async (options) => {
-      await catalog(options);
+    .command('workflow <name>')
+    .description('Define multi-step agentic task chains')
+    .option('-i, --ide <ide>', 'Target specific IDE for sync')
+    .option('--dry-run', 'Show what would be added without writing files')
+    .action(async (name, cmdObj) => {
+      const { workflow } = await import('./lib/commands/workflow.js');
+      await workflow(name, cmdObj);
     });
 
   program.parse(process.argv);

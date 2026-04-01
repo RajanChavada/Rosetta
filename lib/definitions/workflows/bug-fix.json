@@ -1,0 +1,59 @@
+{
+  "name": "bug-fix",
+  "description": "Workflow for identifying and fixing bugs systematically",
+  "steps": [
+    {
+      "id": "reproduce",
+      "phase": "investigation",
+      "description": "Reproduce the bug and document reproduction steps",
+      "depends_on": [],
+      "parallel": false,
+      "condition": ""
+    },
+    {
+      "id": "analyze",
+      "phase": "analysis",
+      "description": "Identify root cause of the bug",
+      "depends_on": ["reproduce"],
+      "parallel": false,
+      "condition": ""
+    },
+    {
+      "id": "design",
+      "phase": "design",
+      "description": "Design fix strategy and prevention measures",
+      "depends_on": ["analyze"],
+      "parallel": false,
+      "condition": ""
+    },
+    {
+      "id": "implement",
+      "phase": "implementation",
+      "description": "Implement the bug fix",
+      "depends_on": ["design"],
+      "parallel": false,
+      "condition": ""
+    },
+    {
+      "id": "test",
+      "phase": "testing",
+      "description": "Test the fix and ensure no regressions",
+      "depends_on": ["implement"],
+      "parallel": false,
+      "condition": ""
+    },
+    {
+      "id": "deploy",
+      "phase": "deployment",
+      "description": "Deploy the fix to production",
+      "depends_on": ["test"],
+      "parallel": false,
+      "condition": ""
+    }
+  ],
+  "variables": {
+    "bug_severity": "medium",
+    "rollback_plan": null,
+    "requires_regression_tests": true
+  }
+}

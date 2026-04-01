@@ -1,0 +1,59 @@
+{
+  "name": "feature-development",
+  "description": "Multi-step workflow for developing new features",
+  "steps": [
+    {
+      "id": "plan",
+      "phase": "plan",
+      "description": "Plan the feature implementation and requirements",
+      "depends_on": [],
+      "parallel": false,
+      "condition": ""
+    },
+    {
+      "id": "design",
+      "phase": "design",
+      "description": "Design the architecture and implementation approach",
+      "depends_on": ["plan"],
+      "parallel": false,
+      "condition": ""
+    },
+    {
+      "id": "implement",
+      "phase": "implement",
+      "description": "Implement the feature code",
+      "depends_on": ["design"],
+      "parallel": false,
+      "condition": ""
+    },
+    {
+      "id": "test",
+      "phase": "test",
+      "description": "Write tests for the feature",
+      "depends_on": ["implement"],
+      "parallel": true,
+      "condition": ""
+    },
+    {
+      "id": "review",
+      "phase": "review",
+      "description": "Review the implementation",
+      "depends_on": ["implement", "test"],
+      "parallel": false,
+      "condition": ""
+    },
+    {
+      "id": "deploy",
+      "phase": "deploy",
+      "description": "Deploy the feature to production",
+      "depends_on": ["review"],
+      "parallel": false,
+      "condition": "feature passes all tests"
+    }
+  ],
+  "variables": {
+    "priority": "medium",
+    "team_lead_approval": false,
+    "testing_required": true
+  }
+}

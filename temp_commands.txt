@@ -1,0 +1,27 @@
+program
+  .command('agent <name>')
+  .description('Scaffold and add a sub-agent definition')
+  .option('-i, --ide <ide>', 'Target specific IDE for sync')
+  .option('--dry-run', 'Show what would be added without writing files')
+  .action(async (name, cmdObj) => {
+    await agent(name, cmdObj);
+  });
+
+  program
+  .command('persona <type>')
+  .description('Inject preset conventions into project and agents')
+  .option('-i, --ide <ide>', 'Target specific IDE for sync')
+  .option('--dry-run', 'Show what would be added without writing files')
+  .action(async (type, cmdObj) => {
+    await persona(type, cmdObj);
+  });
+
+  program
+  .command('workflow <name>')
+  .description('Define multi-step agentic task chains')
+  .option('-i, --ide <ide>', 'Target specific IDE for sync')
+  .option('--dry-run', 'Show what would be added without writing files')
+  .action(async (name, cmdObj) => {
+    await workflow(name, cmdObj);
+  });
+

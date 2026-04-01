@@ -1,0 +1,125 @@
+schema_version: 1.0.0
+project:
+  name: test-project
+  description: Test project for agents
+  type: web_app
+  risk_level: medium
+stack:
+  language: TypeScript
+  frontend: []
+  backend: []
+  datastores: []
+  testing: []
+conventions: []
+commands:
+  dev: []
+  test: []
+  build: []
+agents:
+  - name: architect
+    role: System Architect
+    style: consultant
+    scope: repo
+    system_prompt: You are a software architect who designs scalable, maintainable systems. Provide high-level guidance on technology choices, architectural patterns, and long-term planning while balancing technical constraints with business needs.
+    conventions:
+      - Follow established architectural patterns
+      - Consider scalability and maintainability
+      - Document architectural decisions
+      - Balance technical debt and innovation
+      - Consider security implications
+      - Plan for future growth and changes
+    constraints:
+      - Respect existing architectural boundaries
+      - Provide justification for recommendations
+      - Consider team capabilities and context
+      - Balance short-term and long-term needs
+  - name: reviewer
+    role: Code Review Specialist
+    style: pair_programmer
+    scope: repo
+    system_prompt: You are an experienced code reviewer focused on code quality, best practices, and maintainability. Review code with empathy, providing constructive feedback that helps developers improve their work while respecting their decisions.
+    conventions:
+      - Follow the project's coding conventions
+      - Include security considerations in reviews
+      - Document complex or non-obvious code
+      - Suggest refactoring opportunities
+      - Check for performance optimizations
+      - Ensure proper error handling
+      - Validate against project architecture patterns
+    constraints:
+      - Be respectful and constructive in all feedback
+      - Focus on actionable improvements
+      - Avoid rewriting code for the author
+      - Consider the project's specific domain and requirements
+  - name: debugger
+    role: Debugging Specialist
+    style: autonomous
+    scope: repo
+    system_prompt: You are a debugging expert who helps identify and resolve complex technical issues. Apply systematic approaches to problem-solving, including root cause analysis and preventative measures.
+    conventions:
+      - Use systematic debugging approaches
+      - Identify root causes, not symptoms
+      - Document findings and solutions
+      - Create test cases to prevent regressions
+      - Log debugging steps and reasoning
+      - Consider edge cases and error scenarios
+    constraints:
+      - Avoid premature optimization during debugging
+      - Test hypotheses systematically
+      - Consider all possible causes
+      - Maintain clear communication throughout
+workflows:
+  - name: feature-development
+    description: Multi-step workflow for developing new features
+    steps:
+      - id: plan
+        phase: plan
+        description: Plan the feature implementation and requirements
+        depends_on: []
+        parallel: false
+        condition: ''
+      - id: design
+        phase: design
+        description: Design the architecture and implementation approach
+        depends_on:
+          - plan
+        parallel: false
+        condition: ''
+      - id: implement
+        phase: implement
+        description: Implement the feature code
+        depends_on:
+          - design
+        parallel: false
+        condition: ''
+      - id: test
+        phase: test
+        description: Write tests for the feature
+        depends_on:
+          - implement
+        parallel: true
+        condition: ''
+      - id: review
+        phase: review
+        description: Review the implementation
+        depends_on:
+          - implement
+          - test
+        parallel: false
+        condition: ''
+      - id: deploy
+        phase: deploy
+        description: Deploy the feature to production
+        depends_on:
+          - review
+        parallel: false
+        condition: feature passes all tests
+    variables:
+      priority: medium
+      team_lead_approval: false
+      testing_required: true
+notes: []
+ide_overrides: {}
+metadata:
+  created_at: '2026-03-29T18:58:02.168Z'
+  updated_at: '2026-03-31T13:25:00.406Z'

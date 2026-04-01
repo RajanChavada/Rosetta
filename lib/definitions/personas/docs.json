@@ -1,0 +1,13 @@
+{
+  "type": "docs",
+  "description": "Documentation-focused development mode",
+  "conventions": [
+    "Write comprehensive docstrings",
+    "Update README with new features",
+    "Include code examples in comments",
+    "Document API endpoints and contracts",
+    "Create user guides when applicable",
+    "Keep changelog up to date",
+    "Add inline comments for complex logic"
+  ]
+}
