@@ -1,5 +1,3 @@
-<div align="center">
-
 ```text
  ██████╗  ██████╗ ███████╗███████╗████████╗████████╗ █████╗
  ██╔══██╗██╔═══██╗██╔════╝██╔════╝╚══██╔══╝╚══██╔══╝██╔══██╗
@@ -11,15 +9,11 @@
 
 **Single source of truth for AI agent rules and engineering memory.**
 
-<p align="center">
-  <a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.4.1-blue.svg" alt="Version"></a>
-  <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
-  <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
-</p>
+<a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.4.1-blue.svg" alt="Version"></a>
+<a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
+<a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
 
 > **Single Source of Truth for AI Agents**
-
-</div>
 
 Rosetta is a CLI tool designed to help engineering teams maintain a consistent **Global Brain** for their AI agents (GitHub Copilot, Cursor, Windsurf, Claude Code, Codex CLI, Kilo Code, Continue.dev) across an entire repository.
 
@@ -163,6 +157,7 @@ rosetta translate-all --to claude            # Execute
 ### Agent & Persona Systems
 
 **Agent** — Scaffold and add a sub-agent definition interactively
+
 ```bash
 rosetta agent architect
 rosetta agent reviewer --ide cursor
@@ -170,6 +165,7 @@ rosetta agent  # Interactive selection
 ```
 
 **Persona** — Inject preset conventions into project and agents
+
 ```bash
 rosetta persona standard
 rosetta persona senior
@@ -177,6 +173,7 @@ rosetta persona frontend
 ```
 
 **Workflow** — Define multi-step agentic task chains
+
 ```bash
 rosetta workflow refactor-auth
 ```
