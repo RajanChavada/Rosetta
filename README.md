@@ -9,7 +9,7 @@
 
 **Single source of truth for AI agent rules and engineering memory.**
 
-<a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.4.5-blue.svg" alt="Version"></a>
+<a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.4.6-blue.svg" alt="Version"></a>
 <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
 <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
 
@@ -19,7 +19,7 @@ Rosetta is a CLI tool designed to help engineering teams maintain a consistent *
 
 Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec without using symlinks, ensuring maximum compatibility.
 
-> **Status: v0.4.5** - `rosetta init` works from any directory, supports `--stack`, and can generate configs for VSCode / Claude Code, Cursor, Windsurf, GitHub Copilot, Antigravity, and Replit.
+> **Status: v0.4.6** - `rosetta init` works from any directory, supports `--stack`, and can generate configs for VSCode / Claude Code, Cursor, Windsurf, GitHub Copilot, Antigravity, and Replit.
 
 ## Installation
 

@@ -1,6 +1,6 @@
 {
   "name": "rosettablueprint",
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "CLI to scaffold and sync AI agent rule/skill files across IDEs from a single master spec. Supports 9+ IDEs with auto-detection and format translation.",
   "bin": {
     "rosetta": "cli.js"
