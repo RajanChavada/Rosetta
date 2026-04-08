@@ -114,6 +114,20 @@ rosetta scaffold
 ```
 
 
+The `init` command detects your project stack (Next.js, React Vite, FastAPI, etc.) and generates appropriate IDE configuration files (`CLAUDE.md`, `.cursorrules`, etc.).
+
+**Options:**
+- `--yes` - Skip all interactive prompts, use defaults (for CI/CD automation)
+- `--ide <name>` - Specify IDE(s) to generate (can be used multiple times: `--ide claude --ide cursor`)
+- `--dry-run` - Preview what would be generated without writing files
+
+**Examples:**
+```bash
+rosetta init                    # Interactive: detect stack, select IDEs, confirm
+rosetta init --yes              # Non-interactive: use detected stack, defaults
+rosetta init --ide claude --ide windsurf  # Generate for specific IDEs
+rosetta init --dry-run          # Preview without writing
+```
 **Scaffold with Auto-Ideate** — Scaffold and automatically generate skill ideation template
 ```bash
 rosetta scaffold --auto-ideate
