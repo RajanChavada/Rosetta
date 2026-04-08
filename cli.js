@@ -56,14 +56,14 @@ async function getWorkArea() {
  */
 async function main() {
   // Suppress banner for JSON output
-  const isJson = process.argv.includes('--json') || 
+  const isJson = process.argv.includes('--json') ||
                 process.argv.includes('--format') && process.argv[process.argv.indexOf('--format') + 1] === 'json';
   if (!isJson) {
     showBanner();
   }
 
   program
-    .version('0.4.0')
+    .version('0.4.5')
     .description('AI agent configuration and skill management');
 
   // --- Core Commands ---
@@ -168,6 +168,7 @@ Types:
     .description('Initialize new project with Rosetta configuration')
     .option('-y, --yes', 'Skip all prompts and use defaults')
     .option('--ide <ides...>', 'Specific IDEs to generate configs for (e.g., --ide claude cursor)')
+    .option('--stack <stack>', 'Override detected stack (e.g., next.js, react-vite, node-api)')
     .option('--dry-run', 'Show what would be generated without writing files')
     .action(async (options) => {
       await init(options);

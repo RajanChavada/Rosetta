@@ -19,7 +19,7 @@ Rosetta is a CLI tool designed to help engineering teams maintain a consistent *
 
 Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec without using symlinks, ensuring maximum compatibility.
 
-> **Status: v0.4.5** - Fixed `rosetta init` to work from any directory and properly format choice objects for inquirer prompts.
+> **Status: v0.4.5** - `rosetta init` works from any directory, supports `--stack`, and can generate configs for VSCode / Claude Code, Cursor, Windsurf, GitHub Copilot, Antigravity, and Replit.
 
 ## Installation
 
@@ -74,13 +74,14 @@ Once scaffolded, your project will have a structured context layer:
 
 ## Supported IDEs
 
-Rosetta supports 9 IDEs out of the box:
+Rosetta supports 10 IDEs out of the box:
 
 | IDE | Config File |
 |-----|-------------|
 | VSCode / Claude Code | `CLAUDE.md` |
 | Cursor | `.cursorrules` |
 | GitHub Copilot | `.github/copilot-instructions.md` |
+| Replit | `replit.md` |
 | Windsurf | `.windsurf/rules/rosetta-rules.md` |
 | Antigravity | `.agent/skills/project-skill.md` |
 | GSD/generic | `skills/gsd-skill.md` |
@@ -118,7 +119,8 @@ The `init` command detects your project stack (Next.js, React Vite, FastAPI, etc
 
 **Options:**
 - `--yes` - Skip all interactive prompts, use defaults (for CI/CD automation)
-- `--ide <name>` - Specify IDE(s) to generate (can be used multiple times: `--ide claude --ide cursor`)
+- `--ide <name>` - Specify IDE(s) to generate (for example: `claude`, `vscode`, `cursor`, `windsurf`, `copilot`, `antigravity`, `replit`)
+- `--stack <stack>` - Override detected stack (for example: `next.js`, `react-vite`, `node-api`)
 - `--dry-run` - Preview what would be generated without writing files
 
 **Examples:**
@@ -126,6 +128,7 @@ The `init` command detects your project stack (Next.js, React Vite, FastAPI, etc
 rosetta init                    # Interactive: detect stack, select IDEs, confirm
 rosetta init --yes              # Non-interactive: use detected stack, defaults
 rosetta init --ide claude --ide windsurf  # Generate for specific IDEs
+rosetta init --stack node-api --ide vscode --ide copilot
 rosetta init --dry-run          # Preview without writing
 ```
 **Scaffold with Auto-Ideate** — Scaffold and automatically generate skill ideation template
