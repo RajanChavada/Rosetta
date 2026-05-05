@@ -63,7 +63,7 @@ async function main() {
   }
 
   program
-    .version('0.5.0')
+    .version('0.5.1')
     .description('AI agent configuration and skill management');
 
   // --- Core Commands ---

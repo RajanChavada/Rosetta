@@ -15,7 +15,7 @@ Rosetta is a CLI tool that builds a **Global Brain** for your project. It automa
 
 > **The Rosetta Story:** You shouldn't have to learn how `.cursorrules` or `CLAUDE.md` work. Run `rosetta scaffold` and your AI agent instantly becomes a senior engineer on your specific codebase.
 
-<a href="https://github.com/RajanChavada/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.5.0-blue.svg" alt="Version"></a>
+<a href="https://github.com/RajanChavada/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.5.1-blue.svg" alt="Version"></a>
 <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
 <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
 
