@@ -63,7 +63,7 @@ async function main() {
   }
 
   program
-    .version('0.4.6')
+    .version('0.5.0')
     .description('AI agent configuration and skill management');
 
   // --- Core Commands ---
@@ -164,11 +164,25 @@ Types:
     });
 
   program
-    .command('init')
-    .description('Initialize new project with Rosetta configuration')
+    .command('scaffold')
+    .alias('init')
+    .description('Full zero-config setup: .ai/ brain, memory layout, IDE configs, and starter skills')
     .option('-y, --yes', 'Skip all prompts and use defaults')
-    .option('--ide <ides...>', 'Specific IDEs to generate configs for (e.g., --ide claude cursor)')
-    .option('--stack <stack>', 'Override detected stack (e.g., next.js, react-vite, node-api)')
+    .option('--ide <ides...>', 'Specific IDEs to generate configs for')
+    .option('--stack <stack>', 'Override detected stack')
+    .option('--auto-ideate', 'Automatically generate skill ideation template after scaffold')
+    .option('--no-clipboard', 'Skip clipboard copy during auto-ideate')
+    .option('--dry-run', 'Show what would be generated without writing files')
+    .action(async (options) => {
+      await scaffoldNew(options);
+    });
+
+  program
+    .command('init-ide')
+    .description('Legacy: Generate only IDE configuration files (CLAUDE.md, .cursorrules, etc.)')
+    .option('-y, --yes', 'Skip all prompts and use defaults')
+    .option('--ide <ides...>', 'Specific IDEs to generate configs for')
+    .option('--stack <stack>', 'Override detected stack')
     .option('--dry-run', 'Show what would be generated without writing files')
     .action(async (options) => {
       await init(options);
@@ -269,6 +283,7 @@ Examples:
     .option('--json', 'Output suggestions in JSON format')
     .option('--interactive', 'Interactive mode with selection prompts (default)')
     .option('--non-interactive', 'Skip all prompts, output all suggestions')
+    .option('--no-clipboard', 'Skip clipboard copy')
     .option('--dry-run', 'Show analysis results without generating skills')
     .option('--max-skills <number>', 'Maximum number of suggestions to generate (default: 5)')
     .action(async (cmdObj) => {

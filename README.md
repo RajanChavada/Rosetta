@@ -1,99 +1,58 @@
-```text
- ██████╗  ██████╗ ███████╗███████╗████████╗████████╗ █████╗
- ██╔══██╗██╔═══██╗██╔════╝██╔════╝╚══██╔══╝╚══██╔══╝██╔══██╗
- ██████╔╝██║   ██║███████╗█████╗     ██║      ██║   ███████║
- ██╔══██╗██║   ██║╚════██║██╔══╝     ██║      ██║   ██╔══██║
- ██║  ██║╚██████╔╝███████║███████╗    ██║      ██║   ██║  ██║
- ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝    ╚═╝      ╚═╝   ╚═╝  ╚═╝
-```
+# Rosetta: Zero-Config AI Agent Memory
 
-**Single source of truth for AI agent rules and engineering memory.**
+**One command → Rules injected → Start chatting.**
 
-<a href="https://github.com/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.4.6-blue.svg" alt="Version"></a>
+Rosetta is a CLI tool that builds a **Global Brain** for your project. It automatically detects your stack, initializes a 3-layer memory system, and translates your conventions into native rules for any IDE (Claude Code, Cursor, Windsurf, Copilot, and more).
+
+> **The Rosetta Story:** You shouldn't have to learn how `.cursorrules` or `CLAUDE.md` work. Run `rosetta scaffold` and your AI agent instantly becomes a senior engineer on your specific codebase.
+
+<a href="https://github.com/RajanChavada/RajanChavada/Rosetta/actions"><img src="https://img.shields.io/badge/version-0.5.0-blue.svg" alt="Version"></a>
 <a href="https://github.com/RajanChavada/Rosetta/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License"></a>
 <a href="https://github.com/RajanChavada/Rosetta"><img src="https://img.shields.io/badge/status-stable-green.svg" alt="Status"></a>
 
-> **Single Source of Truth for AI Agents**
-
-Rosetta is a CLI tool designed to help engineering teams maintain a consistent **Global Brain** for their AI agents (GitHub Copilot, Cursor, Windsurf, Claude Code, Codex CLI, Kilo Code, Continue.dev) across an entire repository.
-
-Instead of duplicating instructions in every IDE-specific hidden file, you define your project's soul in `.ai/master-skill.md`. Rosetta then generates independent IDE wrappers that reference your project spec without using symlinks, ensuring maximum compatibility.
-
-> **Status: v0.4.6** - `rosetta init` works from any directory, supports `--stack`, and can generate configs for VSCode / Claude Code, Cursor, Windsurf, GitHub Copilot, Antigravity, and Replit.
-
-## Installation
-
-```bash
-# Using npx (no installation required)
-npx rosettablueprint scaffold
-
-# Or install globally
-npm install -g rosettablueprint
-rosetta scaffold
-```
-
 ---
 
-## Quick Start
+## 60-Second Quick Start
 
-### 1. Initialize Rosetta
-Run the following command in your project root to set up architecture:
+Get your project AI-ready in one step:
 
 ```bash
-npx rosettablueprint scaffold
+npx rosettablueprint scaffold --auto-ideate
 ```
 
-**Scaffold Output:**
-```text
-* Scaffolding atlas-pay...
-┣━ Context gathered OK
-┣━ .ai/ brain created OK
-┣━ 2 IDEs configured OK
-┣━ 4 starter skills added OK
-┗━ Memory initialized OK
-
-New agentic structure created with preset: agentic-starter
-```
-
-### 2. Verify Your Brain
-Once scaffolded, your project will have a structured context layer:
-
-```text
-.ai/
-├── master-skill.md       <-- The Source of Truth
-├── AGENT.md              <-- Agent-specific identity
-├── task.md               <-- Current task tracking
-├── memory/
-│   ├── PROJECT_MEMORY.md <-- Long-lived architecture notes
-│   └── AUTO_MEMORY.md    <-- Learned heuristics
-└── logs/
-    └── daily/            <-- Chronological logbook
-```
+**What happens next:**
+1. **Detection:** Rosetta identifies your frameworks, languages, and test setup.
+2. **Brain Creation:** A structured `.ai/` directory is created (Memory, Logs, Master Spec).
+3. **IDE Sync:** Native rules are written to your editor (e.g., `.cursor/rules/` or `CLAUDE.md`).
+4. **Ideation:** A framed prompt is **copied to your clipboard**.
+5. **Chat:** Paste into your AI chat, answer 3 questions, and get custom skills implemented.
 
 ---
 
 ## Supported IDEs
 
-Rosetta supports 10 IDEs out of the box:
+Rosetta supports 10 IDEs out of the box with **Automated Translation**:
 
-| IDE | Config File |
-|-----|-------------|
-| VSCode / Claude Code | `CLAUDE.md` |
-| Cursor | `.cursorrules` |
-| GitHub Copilot | `.github/copilot-instructions.md` |
-| Replit | `replit.md` |
-| Windsurf | `.windsurf/rules/rosetta-rules.md` |
-| Antigravity | `.agent/skills/project-skill.md` |
-| GSD/generic | `skills/gsd-skill.md` |
-| Codex CLI | `.codex/rules.md` |
-| Kilo Code | `.kilo/rules.md` |
-| Continue.dev | `.continue/config.md` |
+| IDE | Config File | Skill Path | Invocation |
+|-----|-------------|------------|------------|
+| VSCode / Claude Code | `CLAUDE.md` | `.claude/skills/{name}/SKILL.md` | `/skill-name` |
+| Cursor | `.cursor/rules/*.mdc` | `.cursor/rules/{name}.mdc` | `@skill-name` |
+| GitHub Copilot | `.github/copilot-instructions.md` | `.github/skills/{name}.md` | — |
+| Replit | `replit.md` | — | — |
+| Windsurf | `.windsurf/rules/rosetta-rules.md` | `.windsurf/rules/{name}.md` | `@skill-name` |
+| Antigravity | `.agent/skills/project-skill.md` | `.agent/skills/{name}/SKILL.md` | — |
+| GSD/generic | `skills/gsd-skill.md` | `skills/` | — |
+| Codex CLI | `.codex/rules.md` | `.agents/skills/{name}/SKILL.md` | auto-detected |
+| Kilo Code | `.kilo/rules.md` | `.kilo/rules/{name}.md` | — |
+| Continue.dev | `.continue/config.md` | `.continue/rules/{name}.md` | — |
+
+> **Note:** `.cursorrules` is still supported as a legacy fallback but `.cursor/rules/*.mdc` is the modern convention.
 
 ---
 
 ## Why Rosetta?
 
-Engineering memory usually answers "why was this built?" Rosetta answers "how should the agent help me built it right now?"
+Engineering memory usually answers "why was this built?" Rosetta answers "how should the agent help me build it right now?"
 
 | Problem | Rosetta's Answer |
 |---------|----------------|
@@ -115,7 +74,7 @@ rosetta scaffold
 ```
 
 
-The `init` command detects your project stack (Next.js, React Vite, FastAPI, etc.) and generates appropriate IDE configuration files (`CLAUDE.md`, `.cursorrules`, etc.).
+The `scaffold` command detects your project stack (Next.js, React Vite, FastAPI, etc.) and generates appropriate IDE configuration files (`CLAUDE.md`, `.cursor/rules/*.mdc`, etc.).
 
 **Options:**
 - `--yes` - Skip all interactive prompts, use defaults (for CI/CD automation)
@@ -131,22 +90,41 @@ rosetta init --ide claude --ide windsurf  # Generate for specific IDEs
 rosetta init --stack node-api --ide vscode --ide copilot
 rosetta init --dry-run          # Preview without writing
 ```
-**Scaffold with Auto-Ideate** — Scaffold and automatically generate skill ideation template
+**Scaffold with Auto-Ideate** (Recommended)
 ```bash
 rosetta scaffold --auto-ideate
 ```
 
-The `--auto-ideate` flag automatically generates `.ai/skill-ideation-template.md` after scaffolding completes. This template contains project context and instructions for your IDE agent to help design custom skills tailored to your project.
+The `--auto-ideate` flag analyzes your project and automatically **copies a framing prompt to your clipboard**. Paste this into your AI agent to start a guided workshop that implements custom skills for your codebase.
+
+## Core Commands
+
+### Setup & Core Flow
+
+**Scaffold** — Full zero-config setup (Brain + Memory + IDE Configs)
+```bash
+rosetta scaffold
+```
+The `scaffold` command detects your stack, initializes the `.ai/` directory, creates your 3-layer memory system, and generates native IDE rules (CLAUDE.md, .cursor/rules/, etc.).
+*Note: `rosetta init` is an alias for `scaffold`.*
+
+**Options:**
+- `--yes` - Skip all prompts, use defaults
+- `--auto-ideate` - Generate ideation template and copy to clipboard (Recommended)
+- `--ide <name>` - Specify IDE(s) to generate (e.g. `claude`, `cursor`, `windsurf`)
+- `--stack <stack>` - Override detected stack (e.g. `next.js`, `react-vite`, `node-api`)
 
 **Sync** — Verify IDE wrappers or regenerate them from templates
 ```bash
 rosetta sync --regenerate-wrappers
 ```
+Regenerates IDE configuration files from `.ai/master-skill.md`. Use this if your wrappers get out of sync or if you manually edit the master spec.
 
-**Watch** — Monitor `.ai/master-skill.md` for changes
+**Watch** — Monitor `.ai/master-skill.md` and auto-regenerate all IDE wrappers on change
 ```bash
 rosetta watch
 ```
+On each save, Rosetta regenerates IDE configuration files with a 300ms debounce. On startup, it reports the status of each IDE wrapper file.
 
 ### IDE Management
 
@@ -223,7 +201,7 @@ rosetta new-skill api-auth
 | `rosetta search <query>` | Search skills by name, description, or tags |
 | `rosetta install <git-url>` | Install a skill from a git repository |
 | `rosetta skills` | List all installed skills |
-| `rosetta skill uninstall <name>` | Uninstall an installed skill |
+| `rosetta uninstall <name>` | Uninstall an installed skill |
 
 ### Catalog and Installation
 
@@ -260,8 +238,9 @@ rosetta skills --category frontend  # Filter by category
 
 **Uninstall** — Remove an installed skill
 ```bash
-rosetta skill uninstall react-skill
-rosetta skill uninstall api-server --confirm  # Skip confirmation
+rosetta uninstall react-skill
+rosetta uninstall react-skill --purge    # Also delete all skill files (including translated IDE copies)
+rosetta uninstall api-server --confirm    # Skip confirmation
 ```
 
 ### Migration & Adoption
@@ -331,7 +310,7 @@ Load via slash commands in Claude Code: `/frontend-context`, `/backend-context`,
 
 ### Rosetta CLI Skills (`templates/skills/`)
 
-Templates that Rosetta scaffolds into other projects:
+Templates that Rosetta scaffolds into other projects. When installed or created on a multi-IDE project, skills are automatically **translated** into each IDE's native format:
 
 | Skill | Stack | Domain |
 |-------|-------|--------|
@@ -340,23 +319,18 @@ Templates that Rosetta scaffolds into other projects:
 | `testing-full-pyramid` | Testing frameworks | Quality assurance |
 | `data-ml-project` | Data Science, ML | Analytics & ML |
 
-### Skill Commands
+### Invocation Translation
 
-```bash
-# Generate skill ideation template (scaffold-only, no AI calls)
-rosetta ideate
+When you run `rosetta new-skill` or `rosetta install`, Rosetta translates each skill into the native format for every detected IDE:
 
-# List available skills
-rosetta skills
+| IDE | File Extension | Frontmatter | Invocation |
+|-----|---------------|-------------|------------|
+| Claude Code | `.md` (SKILL.md in directory) | `name`, `description` | `/skill-name` |
+| Cursor | `.mdc` | `description`, `globs`, `alwaysApply` | `@skill-name` |
+| Windsurf | `.md` | `trigger`, `description` | `@skill-name` |
+| Codex CLI | `.md` (SKILL.md in directory) | `name`, `description` | auto-detected |
 
-# Create a new skill
-rosetta new-skill api-auth
-
-# Create from template
-rosetta new-skill payment --template node-express-postgres
-```
-
-**See [docs/SKILLS.md](docs/SKILLS.md)** for complete documentation on the skills system.
+This eliminates the need to manually maintain separate skill files per IDE.
 
 ---
 
@@ -372,7 +346,7 @@ rosetta catalog --domain backend
 rosetta catalog --json
 ```
 
-Full-text search across the catalog will be available in a future release with `rosetta search <query>`.
+Search across the catalog by name, description, or tags with `rosetta search <query>`.
 
 For more details, see [docs/CATALOG.md](docs/CATALOG.md).
 
@@ -391,13 +365,21 @@ rosetta install https://github.com/community/ppt-gen --global
 **Installation features:**
 - Validates the repository contains a `SKILL.md` file with required frontmatter (`name`, `description`)
 - Checks skill name validity (lowercase alphanumeric and hyphens)
+- **Automatically translates** skills into each detected IDE's native format (frontmatter, path, file extension)
 - Copies the skill to `.rosetta/skills/<name>` in your project (or `~/.rosetta/skills/` for global)
 - Preserves the `.git` directory and adds an `upstream` remote pointing to the source repository
-- Records installation details in `.rosetta/skills/manifest.json`, including source URL, commit hash, and install date
+- Records installation details in `.rosetta/skills/manifest.json`, including source URL, commit hash, install date, and all translated paths
 - Supports `--force` to overwrite an existing installation
+- Supports `--ide <name>` to install for a single specific IDE
 - Supports `--dry-run` to preview changes
 
-This provenance tracking enables safe updates and auditability.
+**Multi-IDE output example:**
+```
+✓ Installed skill: api-auth
+  Claude Code  → .claude/skills/api-auth/SKILL.md    (invoke: /api-auth)
+  Cursor       → .cursor/rules/api-auth.mdc           (invoke: @api-auth)
+  Windsurf     → .windsurf/rules/api-auth.md          (invoke: @api-auth)
+```
 
 ## Skill Management
 
@@ -410,7 +392,7 @@ Manage your installed skills with the following commands:
   rosetta skills --scope global  # Filter by scope
   ```
 
-- **Uninstall a skill:** (coming soon) Use `rosetta skill uninstall <name>` to remove an installed skill and update the manifest.
+- **Uninstall a skill:** Use `rosetta uninstall <name>` to remove an installed skill and update the manifest.
 
 For more information on skill management, see [docs/SKILLS.md](docs/SKILLS.md).
 
@@ -418,49 +400,48 @@ For more information on skill management, see [docs/SKILLS.md](docs/SKILLS.md).
 
 ## Ideation
 
-Generate a skill ideation template to use in your IDE agent:
+Generate a skill ideation template and copy it to your clipboard, ready to paste into your AI agent:
 
 ```bash
 rosetta ideate [project-path]
 ```
 
-This command analyzes your project and creates `.ai/skill-ideation-template.md` with context about your codebase. You then paste this template into your IDE's AI agent (Claude Code, Cursor, etc.) and answer 3–5 clarifying questions to receive personalized skill proposals.
+This command analyzes your project, generates `.ai/skill-ideation-template.md`, wraps it in a framing prompt, and copies it to your clipboard. Paste it directly into Claude Code, Cursor, or any AI agent to start a guided skill design workshop.
 
 **Key features:**
 
-- **No AI calls** from the CLI - pure scaffolding
-- **Project analysis** - detects languages, frameworks, tests, architecture
-- **IDE detection** - auto-detects configured IDEs and skills folder locations
-- **Team context** - prompts for team conventions and domain knowledge
-- **IDE-agnostic** - works with any AI agent in your editor
-- **Interactive** - AI agent asks questions and drafts skills live
-- **Controlled** - you review and approve each skill before implementation
+- **Clipboard auto-copy** — framing prompt + template copied automatically
+- **Project analysis** — detects languages, frameworks, tests, architecture
+- **IDE detection** — auto-detects configured IDEs and skills folder locations
+- **Framing prompt** — AI agent receives proper context and asks 3-5 clarifying questions
+- **IDE-agnostic** — works with any AI agent in your editor
 
 **Example workflow:**
 
 ```bash
-# Generate template in current project
+# Generate template and copy to clipboard
 rosetta ideate
 
-# Open the generated file and paste into your IDE agent
-# Answer the questions to get skill proposals
-# Approve and implement the skills you want
+# Paste into your AI agent (Cmd+V / Ctrl+V)
+# Answer the clarifying questions
+# Approve and implement the skills
 ```
 
 **Options:**
 
-- `--output <path>` - Save template to custom location (default: `.ai/skill-ideation-template.md`)
-- `--dry-run` - Preview analysis without writing files
-- `--json` - Output analysis results in JSON format
-- `--area <path>` - Analyze a specific directory (default: current)
+- `--output <path>` — Save template to custom location (default: `.ai/skill-ideation-template.md`)
+- `--no-clipboard` — Skip clipboard copy (for CI/scripting)
+- `--dry-run` — Preview analysis without writing files
+- `--json` — Output analysis results in JSON format
+- `--area <path>` — Analyze a specific directory (default: current)
 
 **Detected IDEs:**
 The command automatically detects IDE configurations:
-- **Claude Code** - `.claude/skills/` folder
-- **Cursor** - `.cursorrules` file
-- **GitHub Copilot** - `.github/copilot-instructions.md`
-- **Windsurf** - `.windsurf/` directory
-- **Codex CLI** - `.agent/` directory
+- **Claude Code** — `.claude/` directory
+- **Cursor** — `.cursor/` directory or `.cursorrules` file
+- **GitHub Copilot** — `.github/copilot-instructions.md`
+- **Windsurf** — `.windsurf/` directory
+- **Codex CLI** — `.agents/` or `.codex/` directory
 
 **Team Context:**
 When no IDEs are detected, the command prompts for:
@@ -526,23 +507,27 @@ Rosetta is now modular with a clean architecture:
 
 ```
 lib/
-├── constants.js           # Configuration constants
+├── constants.js           # Configuration constants & SKILL_WRAPPERS registry
 ├── utils.js              # Utility functions
 ├── config.js             # Config & profile management
 ├── templates.js          # Template rendering
 ├── ide-adapters.js       # IDE sync logic
-├── context.js            # Context gathering & auto-detection
-├── skills.js             # Skill management
+├── context.js            # Context gathering, auto-detection & IDE detection
+├── skills.js             # Skill management (with multi-IDE translation)
+├── skill-translator.js   # Skill invocation translation engine
+├── skills-manifest.js    # Manifest tracking (incl. translatedPaths)
 ├── migration.js          # Migration tools
-├── validation.js         # Health & validation
+├── validation.js         # Health, validation & watch mode
 ├── cli-helpers.js       # CLI flow helpers
 ├── analyzers/           # Specialized project analyzers (Cloud, Mobile, DevOps, etc.)
 ├── visualizers/         # Documentation visualization logic & templates
 ├── commands/
 │   ├── add-ide.js       # Add IDE command
+│   ├── install.js       # Skill installation (with multi-IDE translation)
+│   ├── uninstall.js     # Skill uninstallation (with translatedPaths cleanup)
 │   ├── translate.js      # Format translation
 │   ├── translate-all.js  # Bulk translation
-│   ├── ideate.js        # Skill ideation command
+│   ├── ideate.js        # Skill ideation command (with clipboard)
 │   └── docs.js           # Documentation generation command
 ├── translators/
 │   └── base.js         # Translation engine
