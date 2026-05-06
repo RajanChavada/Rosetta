@@ -128,17 +128,23 @@ Examples:
 
   program
     .command('scaffold')
-    .description('Scaffold new agentic coding setup')
+    .alias('init')
+    .description('Full zero-config setup: .ai/ brain, memory layout, IDE configs, and starter skills')
+    .option('-y, --yes', 'Skip all prompts and use defaults')
+    .option('--ide <ides...>', 'Specific IDEs to generate configs for')
+    .option('--stack <stack>', 'Override detected stack')
     .option('--skills-dir <path>', 'Path to local skills directory')
     .option('--skills-repo <url>', 'URL to git repo with skills')
-    .option('--dry-run', 'Show what would be created without writing files')
-    .option('--auto-ideate', 'Automatically run skill ideation after scaffolding')
+    .option('--auto-ideate', 'Automatically generate skill ideation template after scaffold')
+    .option('--no-clipboard', 'Skip clipboard copy during auto-ideate')
     .option('--ideate-output <path>', 'Custom output path for ideation template (requires --auto-ideate)')
+    .option('--dry-run', 'Show what would be generated without writing files')
     .addHelpText('after', `
 Examples:
   rosetta scaffold                    Interactive mode with prompts
-  rosetta scaffold --auto-ideate       Scaffold + generate ideation template
-  rosetta scaffold --dry-run            Preview what would be created
+  rosetta scaffold -y                 Skip all prompts and use defaults
+  rosetta scaffold --auto-ideate      Scaffold + generate ideation template
+  rosetta scaffold --dry-run          Preview what would be created
   rosetta scaffold --skills-dir ./skills Use local skills directory
 
 The --auto-ideate flag automatically generates .ai/skill-ideation-template.md
@@ -161,20 +167,6 @@ Types:
     .option('--dry-run', 'Show what would be changed without writing files')
     .action(async (type, options) => {
       await rescaffold(type, options);
-    });
-
-  program
-    .command('scaffold')
-    .alias('init')
-    .description('Full zero-config setup: .ai/ brain, memory layout, IDE configs, and starter skills')
-    .option('-y, --yes', 'Skip all prompts and use defaults')
-    .option('--ide <ides...>', 'Specific IDEs to generate configs for')
-    .option('--stack <stack>', 'Override detected stack')
-    .option('--auto-ideate', 'Automatically generate skill ideation template after scaffold')
-    .option('--no-clipboard', 'Skip clipboard copy during auto-ideate')
-    .option('--dry-run', 'Show what would be generated without writing files')
-    .action(async (options) => {
-      await scaffoldNew(options);
     });
 
   program
