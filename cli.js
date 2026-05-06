@@ -8,7 +8,7 @@
 import { program } from 'commander';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
-import { showBanner } from './lib/utils.js';
+import { showBanner, ROSETTA_VERSION } from './lib/utils.js';
 import { performSync } from './lib/ide-adapters.js';
 import { watchMode, validateRepo, reportHealth, syncMemory } from './lib/validation.js';
 import { scaffoldNew, rescaffold } from './lib/cli-helpers.js';
@@ -63,7 +63,7 @@ async function main() {
   }
 
   program
-    .version('0.5.1')
+    .version(ROSETTA_VERSION)
     .description('AI agent configuration and skill management');
 
   // --- Core Commands ---
