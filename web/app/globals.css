@@ -1,0 +1,140 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: oklch(0.16 0.012 245);
+  --color-bg-elev: oklch(0.19 0.015 245);
+  --color-bg-inline: oklch(0.22 0.018 245);
+  --color-fg: oklch(0.96 0.005 245);
+  --color-fg-muted: oklch(0.72 0.012 245);
+  --color-fg-faint: oklch(0.56 0.014 245);
+  --color-border: oklch(0.28 0.020 245);
+  --color-border-strong: oklch(0.38 0.024 245);
+  --color-accent: oklch(0.78 0.110 195);
+  --color-accent-fg: oklch(0.18 0.020 195);
+  --color-success: oklch(0.78 0.110 155);
+  --color-warn: oklch(0.82 0.130 75);
+  --color-danger: oklch(0.70 0.140 25);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  --ease-standard: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+  }
+
+  body {
+    background: var(--color-bg);
+    color: var(--color-fg);
+    font-family: var(--font-sans), system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-feature-settings: "ss01", "cv11";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.005em;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-fg);
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-border-strong);
+  }
+
+  *:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+@layer utilities {
+  .prose-rosetta {
+    max-width: 70ch;
+    color: var(--color-fg-muted);
+    line-height: 1.65;
+  }
+
+  .prose-rosetta > * + * {
+    margin-top: 1em;
+  }
+
+  .prose-rosetta h1,
+  .prose-rosetta h2,
+  .prose-rosetta h3,
+  .prose-rosetta h4 {
+    color: var(--color-fg);
+    letter-spacing: -0.02em;
+    font-weight: 600;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    scroll-margin-top: 5rem;
+  }
+
+  .prose-rosetta h1 { font-size: 2.25rem; line-height: 1.15; margin-top: 0; }
+  .prose-rosetta h2 { font-size: 1.5rem; line-height: 1.25; }
+  .prose-rosetta h3 { font-size: 1.25rem; line-height: 1.3; }
+  .prose-rosetta h4 { font-size: 1.05rem; line-height: 1.4; }
+
+  .prose-rosetta a {
+    color: var(--color-accent);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in oklch, var(--color-accent) 30%, transparent);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 150ms;
+  }
+
+  .prose-rosetta a:hover {
+    text-decoration-color: var(--color-accent);
+  }
+
+  .prose-rosetta code:not(pre code) {
+    font-family: var(--font-mono), ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.9em;
+    background: var(--color-bg-inline);
+    border: 1px solid var(--color-border);
+    padding: 0.1em 0.35em;
+    border-radius: 4px;
+    color: var(--color-fg);
+  }
+
+  .prose-rosetta ul,
+  .prose-rosetta ol {
+    padding-left: 1.5em;
+  }
+
+  .prose-rosetta ul { list-style: disc; }
+  .prose-rosetta ol { list-style: decimal; }
+
+  .prose-rosetta li::marker {
+    color: var(--color-fg-faint);
+  }
+
+  .prose-rosetta strong {
+    color: var(--color-fg);
+    font-weight: 600;
+  }
+
+  .prose-rosetta hr {
+    border-color: var(--color-border);
+    margin: 2em 0;
+  }
+}
