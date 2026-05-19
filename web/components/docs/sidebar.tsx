@@ -23,7 +23,7 @@ export function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
                     href={link.href}
                     onClick={onNavigate}
                     className={cn(
-                      'block rounded-md px-2 py-1 text-sm transition-colors',
+                      'block rounded-md px-2 py-2 text-sm transition-colors lg:py-1',
                       active
                         ? 'bg-[var(--color-bg-elev)] text-[var(--color-fg)]'
                         : 'text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] hover:bg-[var(--color-bg-elev)]/50',

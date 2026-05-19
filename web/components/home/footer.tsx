@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export function Footer() {
   return (
-    <footer className="border-t border-[var(--color-border)] py-12 px-6 mt-12">
+    <footer className="mt-12 border-t border-[var(--color-border)] px-4 py-12 sm:px-6">
       <div className="mx-auto max-w-5xl flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div>
           <p className="font-mono text-sm font-semibold text-[var(--color-fg)]">rosetta</p>
@@ -10,7 +10,7 @@ export function Footer() {
             One source of truth for AI agents.
           </p>
         </div>
-        <nav className="grid grid-cols-3 gap-x-10 gap-y-2 text-sm">
+        <nav className="grid grid-cols-2 gap-x-8 gap-y-3 text-sm min-[420px]:grid-cols-3 min-[420px]:gap-x-10">
           <Link
             className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] transition-colors"
             href="/docs/getting-started"

@@ -6,7 +6,7 @@ import { MobileDrawer } from './mobile-drawer';
 export function TopNav() {
   return (
     <header className="sticky top-0 z-40 border-b border-[var(--color-border)] bg-[var(--color-bg)]/80 backdrop-blur-md">
-      <div className="mx-auto max-w-7xl px-6 h-14 flex items-center justify-between">
+      <div className="mx-auto flex h-14 max-w-7xl items-center justify-between px-4 sm:px-6">
         <div className="flex items-center gap-8">
           <Link
             href="/"
@@ -41,13 +41,13 @@ export function TopNav() {
             </Link>
           </nav>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 sm:gap-3">
           <a
             href="https://github.com/RajanChavada/Rosetta"
             target="_blank"
             rel="noreferrer"
             aria-label="GitHub"
-            className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] transition-colors"
+            className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-md text-[var(--color-fg-muted)] transition-colors hover:text-[var(--color-fg)]"
           >
             <Github size={18} />
           </a>

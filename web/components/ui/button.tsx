@@ -32,7 +32,7 @@ export function Button({
   ...rest
 }: Props) {
   const cls = cn(
-    'inline-flex items-center justify-center gap-2 rounded-md px-4 py-2',
+    'inline-flex min-h-10 items-center justify-center gap-2 rounded-md px-4 py-2',
     'text-sm font-medium whitespace-nowrap',
     'transition-all duration-150',
     variants[variant],

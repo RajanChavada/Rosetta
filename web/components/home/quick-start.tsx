@@ -24,7 +24,7 @@ const steps = [
 
 export function QuickStart() {
   return (
-    <section className="py-24 px-6 border-t border-[var(--color-border)]">
+    <section className="border-t border-[var(--color-border)] px-4 py-16 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-5xl">
         <FadeIn>
           <p className="text-xs font-mono uppercase tracking-wider text-[var(--color-fg-faint)] mb-3">
@@ -34,10 +34,10 @@ export function QuickStart() {
             From zero to synced in under a minute.
           </h2>
         </FadeIn>
-        <div className="mt-12 space-y-12">
+        <div className="mt-10 space-y-10 sm:mt-12 sm:space-y-12">
           {steps.map((s, i) => (
             <FadeIn key={s.n} delay={i * 0.08}>
-              <div className="grid md:grid-cols-[60px_1fr_auto] gap-6 items-start">
+              <div className="grid items-start gap-4 md:grid-cols-[60px_1fr_minmax(320px,360px)] md:gap-6">
                 <div className="font-mono text-2xl text-[var(--color-fg-faint)]">0{s.n}</div>
                 <div>
                   <h3 className="text-lg font-medium text-[var(--color-fg)]">{s.title}</h3>

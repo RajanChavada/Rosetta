@@ -18,7 +18,7 @@ const features = [
 
 export function FeatureStrip() {
   return (
-    <section className="py-24 px-6 border-t border-[var(--color-border)]">
+    <section className="border-t border-[var(--color-border)] px-4 py-16 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-5xl">
         <FadeIn>
           <p className="text-xs font-mono uppercase tracking-wider text-[var(--color-fg-faint)] mb-3">
@@ -28,7 +28,7 @@ export function FeatureStrip() {
             Three primitives. Ten IDEs. One workflow.
           </h2>
         </FadeIn>
-        <Stagger className="mt-12 grid md:grid-cols-3 gap-8">
+        <Stagger className="mt-10 grid gap-8 md:mt-12 md:grid-cols-3">
           {features.map((f) => (
             <StaggerItem key={f.title}>
               <div className="border-t border-[var(--color-border-strong)] pt-5">

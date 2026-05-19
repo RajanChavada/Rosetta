@@ -5,8 +5,10 @@ import type { CommandSpec } from '@/lib/content/commands';
 export async function CommandRef({ spec }: { spec: CommandSpec }) {
   return (
     <section id={spec.id} className="scroll-mt-24 mt-14 first:mt-0">
-      <h2 className="text-2xl font-semibold text-[var(--color-fg)] tracking-tight mb-1">
-        <code className="font-mono text-[var(--color-fg)]">rosetta {spec.name}</code>
+      <h2 className="mb-1 text-2xl font-semibold tracking-tight text-[var(--color-fg)]">
+        <code className="break-words font-mono text-[var(--color-fg)]">
+          rosetta {spec.name}
+        </code>
       </h2>
       <p className="text-[var(--color-fg-muted)] mb-4 max-w-prose leading-relaxed">
         {spec.summary}

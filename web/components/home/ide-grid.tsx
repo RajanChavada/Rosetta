@@ -5,7 +5,7 @@ import { IDES } from '@/lib/content/ides';
 
 export function IdeGrid() {
   return (
-    <section className="py-24 px-6 border-t border-[var(--color-border)]">
+    <section className="border-t border-[var(--color-border)] px-4 py-16 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-5xl">
         <FadeIn>
           <p className="text-xs font-mono uppercase tracking-wider text-[var(--color-fg-faint)] mb-3">
@@ -18,10 +18,10 @@ export function IdeGrid() {
             Skills, rules, and memory translate automatically into each IDE&apos;s native format. Add a new one with a single command.
           </p>
         </FadeIn>
-        <Stagger className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <Stagger className="mt-10 grid grid-cols-1 gap-3 min-[380px]:grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
           {IDES.map((ide) => (
             <StaggerItem key={ide.id}>
-              <div className="flex items-center gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elev)] px-4 py-3 hover:border-[var(--color-border-strong)] transition-colors">
+              <div className="flex min-h-12 items-center gap-3 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elev)] px-4 py-3 transition-colors hover:border-[var(--color-border-strong)]">
                 <Terminal
                   size={16}
                   className="text-[var(--color-fg-faint)] flex-shrink-0"

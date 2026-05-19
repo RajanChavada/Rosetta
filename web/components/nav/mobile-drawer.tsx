@@ -24,7 +24,7 @@ export function MobileDrawer() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="md:hidden text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
+        className="inline-flex min-h-10 min-w-10 items-center justify-center rounded-md text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] md:hidden"
         aria-label="Open menu"
       >
         <Menu size={20} />
@@ -48,7 +48,7 @@ export function MobileDrawer() {
             >
               <button
                 onClick={() => setOpen(false)}
-                className="text-[var(--color-fg-muted)] hover:text-[var(--color-fg)] mb-6"
+                className="mb-6 inline-flex min-h-10 min-w-10 items-center justify-center rounded-md text-[var(--color-fg-muted)] hover:text-[var(--color-fg)]"
                 aria-label="Close menu"
               >
                 <X size={20} />

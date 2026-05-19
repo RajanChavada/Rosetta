@@ -29,16 +29,16 @@ export function CopyButton({ text, className, variant = 'floating' }: Props) {
       onClick={onClick}
       aria-label={copied ? 'Copied to clipboard' : 'Copy to clipboard'}
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-md text-xs font-mono',
+        'inline-flex min-h-9 min-w-9 items-center justify-center gap-1.5 rounded-md text-xs font-mono',
         'transition-all duration-150',
         variant === 'floating' && [
-          'px-2 py-1',
+          'px-2 py-1.5',
           'text-[var(--color-fg-faint)] hover:text-[var(--color-fg)]',
           'bg-[var(--color-bg-elev)] hover:bg-[var(--color-bg-inline)]',
           'border border-[var(--color-border)] hover:border-[var(--color-border-strong)]',
         ],
         variant === 'inline' && [
-          'px-1.5 py-0.5',
+          'px-2 py-1',
           'text-[var(--color-fg-faint)] hover:text-[var(--color-fg)]',
         ],
         className,

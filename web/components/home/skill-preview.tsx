@@ -6,7 +6,7 @@ import { FEATURED_SKILLS } from '@/lib/content/skills';
 
 export function SkillPreview() {
   return (
-    <section className="py-24 px-6 border-t border-[var(--color-border)]">
+    <section className="border-t border-[var(--color-border)] px-4 py-16 sm:px-6 sm:py-24">
       <div className="mx-auto max-w-5xl">
         <FadeIn>
           <p className="text-xs font-mono uppercase tracking-wider text-[var(--color-fg-faint)] mb-3">
@@ -23,7 +23,7 @@ export function SkillPreview() {
           {FEATURED_SKILLS.map((s) => (
             <StaggerItem key={s.name}>
               <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elev)] p-5 h-full">
-                <div className="flex items-start justify-between gap-4 mb-3">
+                <div className="mb-3 flex flex-col items-start gap-2 sm:flex-row sm:justify-between sm:gap-4">
                   <h3 className="text-[var(--color-fg)] font-medium">{s.displayName}</h3>
                   <span className="font-mono text-xs text-[var(--color-fg-faint)] whitespace-nowrap">
                     {s.name}

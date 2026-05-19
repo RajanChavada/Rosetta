@@ -40,13 +40,13 @@ export async function CodeBlock({
 
       <div className="relative">
         {!title && !noCopy && (
-          <div className="absolute right-3 top-3 z-10 opacity-0 transition-opacity duration-150 group-hover:opacity-100 focus-within:opacity-100">
+          <div className="absolute right-3 top-3 z-10 opacity-100 transition-opacity duration-150 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100">
             <CopyButton text={trimmed} />
           </div>
         )}
 
         <div
-          className="overflow-x-auto px-4 py-4 text-sm leading-relaxed [&_pre]:!bg-transparent [&_pre]:!m-0 [&_pre]:!p-0 [&_code]:font-mono"
+          className="overflow-x-auto px-4 py-4 pr-16 text-sm leading-relaxed [&_pre]:!bg-transparent [&_pre]:!m-0 [&_pre]:!p-0 [&_code]:font-mono"
           dangerouslySetInnerHTML={{ __html: html }}
         />
       </div>

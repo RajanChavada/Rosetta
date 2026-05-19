@@ -35,11 +35,11 @@ rosetta uninstall my-skill    # remove a skill`}
       >
         Featured skills
       </h2>
-      <Stagger className="grid md:grid-cols-2 gap-4">
+      <Stagger className="grid gap-4 md:grid-cols-2">
         {FEATURED_SKILLS.map((s) => (
           <StaggerItem key={s.name}>
             <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-elev)] p-5 h-full">
-              <div className="flex items-start justify-between gap-4 mb-3">
+              <div className="mb-3 flex flex-col items-start gap-2 sm:flex-row sm:justify-between sm:gap-4">
                 <h3 className="text-[var(--color-fg)] font-medium">{s.displayName}</h3>
                 <span className="font-mono text-xs text-[var(--color-fg-faint)] whitespace-nowrap">
                   {s.name}
