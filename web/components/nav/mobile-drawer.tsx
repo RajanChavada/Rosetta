@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
 import { Sidebar } from '@/components/docs/sidebar';
@@ -8,15 +8,24 @@ import { standardEase } from '@/components/motion/variants';
 
 export function MobileDrawer() {
   const [open, setOpen] = useState(false);
+  const scrollYRef = useRef(0);
 
   useEffect(() => {
     if (open) {
-      document.body.style.overflow = 'hidden';
+      scrollYRef.current = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollYRef.current}px`;
+      document.body.style.width = '100%';
     } else {
-      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollYRef.current);
     }
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
     };
   }, [open]);
 
@@ -35,7 +44,7 @@ export function MobileDrawer() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-[var(--color-bg)]/80 backdrop-blur-sm md:hidden"
+            className="fixed inset-0 z-50 cursor-pointer bg-[var(--color-bg)]/80 backdrop-blur-sm md:hidden"
             onClick={() => setOpen(false)}
           >
             <motion.aside
